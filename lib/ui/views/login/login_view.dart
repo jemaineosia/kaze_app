@@ -11,7 +11,7 @@ import 'login_view.form.dart';
 import 'login_viewmodel.dart';
 
 @FormView(fields: [
-  FormTextField(name: 'email'),
+  FormTextField(name: 'username'),
   FormTextField(name: 'password'),
 ])
 class LoginView extends StackedView<LoginViewModel> with $LoginView {
@@ -53,8 +53,8 @@ class LoginView extends StackedView<LoginViewModel> with $LoginView {
               ),
               Gap(20.h),
               KazeTextfield(
-                hintText: "Email",
-                controller: emailController,
+                hintText: "Username",
+                controller: usernameController,
               ),
               Gap(10.h),
               KazeTextfield(

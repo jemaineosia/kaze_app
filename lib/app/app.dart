@@ -9,6 +9,8 @@ import 'package:kaze_app/ui/views/inbox/inbox_view.dart';
 import 'package:kaze_app/ui/views/settings/settings_view.dart';
 import 'package:kaze_app/ui/views/login/login_view.dart';
 import 'package:kaze_app/ui/views/register/register_view.dart';
+import 'package:kaze_app/ui/views/reset_password/reset_password_view.dart';
+import 'package:kaze_app/ui/views/forgot_password/forgot_password_view.dart';
 // @stacked-import
 
 @StackedApp(
@@ -20,6 +22,8 @@ import 'package:kaze_app/ui/views/register/register_view.dart';
     MaterialRoute(page: SettingsView),
     MaterialRoute(page: LoginView),
     MaterialRoute(page: RegisterView),
+    MaterialRoute(page: ResetPasswordView),
+    MaterialRoute(page: ForgotPasswordView),
 // @stacked-route
   ],
   dependencies: [
