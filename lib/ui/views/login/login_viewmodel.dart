@@ -1,3 +1,3 @@
 import 'package:stacked/stacked.dart';
 
-class LoginViewModel extends BaseViewModel {}
+class LoginViewModel extends FormViewModel {}
