@@ -7,6 +7,8 @@ import 'package:stacked_services/stacked_services.dart';
 import 'package:kaze_app/ui/views/bets/bets_view.dart';
 import 'package:kaze_app/ui/views/inbox/inbox_view.dart';
 import 'package:kaze_app/ui/views/settings/settings_view.dart';
+import 'package:kaze_app/ui/views/login/login_view.dart';
+import 'package:kaze_app/ui/views/register/register_view.dart';
 // @stacked-import
 
 @StackedApp(
@@ -16,6 +18,8 @@ import 'package:kaze_app/ui/views/settings/settings_view.dart';
     MaterialRoute(page: BetsView),
     MaterialRoute(page: InboxView),
     MaterialRoute(page: SettingsView),
+    MaterialRoute(page: LoginView),
+    MaterialRoute(page: RegisterView),
 // @stacked-route
   ],
   dependencies: [

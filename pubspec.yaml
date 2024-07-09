@@ -25,3 +25,46 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/
+  fonts:
+    - family: Lato
+      fonts:
+        - asset: assets/fonts/lato/Lato-Black.ttf
+          weight: 900
+        - asset: assets/fonts/lato/Lato-BlackItalic.ttf
+          weight: 800
+        - asset: assets/fonts/lato/Lato-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/lato/Lato-BoldItalic.ttf
+          weight: 600
+        - asset: assets/fonts/lato/Lato-Italic.ttf
+          weight: 500
+        - asset: assets/fonts/lato/Lato-Light.ttf
+          weight: 400
+        - asset: assets/fonts/lato/Lato-LightItalic.ttf
+          weight: 300
+        - asset: assets/fonts/lato/Lato-Regular.ttf
+          weight: 200
+        - asset: assets/fonts/lato/Lato-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/lato/Lato-ThinItalic.ttf
+          weight: 100
+    - family: Pilat
+      fonts:
+        - asset: assets/fonts/pilat/PilatExtended-Black.ttf
+          weight: 900
+        - asset: assets/fonts/pilat/PilatExtended-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/pilat/PilatExtended-Book.ttf
+          weight: 500
+        - asset: assets/fonts/pilat/PilatExtended-DemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/pilat/PilatExtended-Heavy.ttf
+          weight: 800
+        - asset: assets/fonts/pilat/PilatExtended-Light.ttf
+          weight: 300
+        - asset: assets/fonts/pilat/PilatExtended-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/pilat/PilatExtended-Thin.ttf
+          weight: 100
