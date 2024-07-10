@@ -93,7 +93,11 @@ class RegisterView extends StackedView<RegisterViewModel> with $RegisterView {
               const Spacer(),
               KazeButton(
                 text: "Sign Up",
-                onTap: () {},
+                onTap: () => viewModel.register(
+                  username: usernameController.text,
+                  email: emailController.text,
+                  password: passwordController.text,
+                ),
               ),
               Gap(20.h),
               Row(
@@ -101,7 +105,7 @@ class RegisterView extends StackedView<RegisterViewModel> with $RegisterView {
                 children: [
                   const Text("Already have an account? "),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () => viewModel.navigateToLogin(),
                     child: const Text(
                       "Sign in here",
                       style: TextStyle(

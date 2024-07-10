@@ -92,7 +92,7 @@ class LoginView extends StackedView<LoginViewModel> with $LoginView {
                 children: [
                   const Text("Don't have an account? "),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () => viewModel.navigateToRegister(),
                     child: const Text(
                       "Sign Up",
                       style: TextStyle(

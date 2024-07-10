@@ -30,6 +30,10 @@ class LoginViewModel extends FormViewModel {
     }
   }
 
+  void navigateToRegister() {
+    _navigationService.navigateTo(Routes.registerView);
+  }
+
   @override
   void setFormStatus() {}
 }
