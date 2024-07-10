@@ -81,7 +81,10 @@ class LoginView extends StackedView<LoginViewModel> with $LoginView {
               const Spacer(),
               KazeButton(
                 text: "Login",
-                onTap: () {},
+                onTap: () => viewModel.login(
+                  usernameController.text,
+                  passwordController.text,
+                ),
               ),
               Gap(20.h),
               Row(

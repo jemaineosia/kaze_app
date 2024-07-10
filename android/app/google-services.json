@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "12791516192",
+    "project_id": "kaze-app-db8e3",
+    "storage_bucket": "kaze-app-db8e3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:12791516192:android:ed36aa506363ea6dc28045",
+        "android_client_info": {
+          "package_name": "com.skilla.kaze"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7PlH3FV4R_kEWqSYm7CvKoB520b6GgRw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

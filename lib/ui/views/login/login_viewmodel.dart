@@ -1,3 +1,35 @@
+import 'package:kaze_app/app/app.router.dart';
+import 'package:kaze_app/services/auth_service.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 
-class LoginViewModel extends FormViewModel {}
+class LoginViewModel extends FormViewModel {
+  final AuthService _authService = AuthService();
+  final DialogService _dialogService = DialogService();
+  final NavigationService _navigationService = NavigationService();
+
+  Future<void> login(String email, String password) async {
+    try {
+      setBusy(true);
+      var result = await _authService.signInWithEmailPassword(email, password);
+      setBusy(false);
+
+      if (result.user != null) {
+        _navigationService.replaceWithHomeView();
+      } else {
+        await _dialogService.showDialog(
+          title: 'Login Failure',
+          description: 'General login failure. Please try again later.',
+        );
+      }
+    } on Exception catch (e) {
+      await _dialogService.showDialog(
+        title: 'Login Failure',
+        description: e.toString(),
+      );
+    }
+  }
+
+  @override
+  void setFormStatus() {}
+}

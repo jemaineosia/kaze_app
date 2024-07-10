@@ -37,12 +37,12 @@ class HomeView extends StackedView<HomeViewModel> {
           ],
         ),
         elevation: 0,
-        actions: const [
+        actions: [
           Padding(
-            padding: EdgeInsets.only(right: 20.0),
-            child: Icon(
-              Icons.settings,
-              color: Colors.black,
+            padding: const EdgeInsets.only(right: 20.0),
+            child: IconButton(
+              icon: const Icon(Icons.logout),
+              onPressed: () => viewModel.signOut(),
             ),
           ),
         ],

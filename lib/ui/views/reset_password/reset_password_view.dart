@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked/stacked_annotations.dart';
 
 import 'reset_password_viewmodel.dart';
 
+@FormView(fields: [
+  FormTextField(name: 'email'),
+])
 class ResetPasswordView extends StackedView<ResetPasswordViewModel> {
   const ResetPasswordView({Key? key}) : super(key: key);
 
