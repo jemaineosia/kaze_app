@@ -1,11 +1,11 @@
-class User {
+class AppUser {
   final String id;
   final String username;
   final String email;
   final String fullName;
   final String userRole;
 
-  User({
+  AppUser({
     required this.id,
     required this.username,
     required this.email,
@@ -13,7 +13,7 @@ class User {
     this.userRole = "user",
   });
 
-  User.fromData(Map<String, dynamic> data)
+  AppUser.fromData(Map<String, dynamic> data)
       : id = data['id'],
         username = data['username'],
         email = data['email'],

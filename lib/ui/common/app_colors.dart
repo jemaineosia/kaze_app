@@ -11,4 +11,5 @@ const Color kcBackgroundColor = kcWhite;
 const Color kcOrange = Color(0xFFFF4B00);
 const Color kcBlack = Color(0xFF000000);
 const Color kcGreyLight = Color(0xFFF3F4F5);
+const Color kcGrey20 = Color(0x33C4C4C4);
 const Color kcWhite = Color(0xFFFFFFFF);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kaze_app/ui/common/app_colors.dart';
 import 'package:stacked/stacked.dart';
 
 import 'kaze_textfield_model.dart';
@@ -8,12 +9,14 @@ class KazeTextfield extends StackedView<KazeTextfieldModel> {
   final String hintText;
   final TextEditingController controller;
   final bool obscureText;
+  final Icon suffixIcon;
 
   const KazeTextfield({
     super.key,
     required this.hintText,
     required this.controller,
     this.obscureText = false,
+    this.suffixIcon = const Icon(Icons.person_outline),
   });
 
   @override
@@ -31,13 +34,13 @@ class KazeTextfield extends StackedView<KazeTextfieldModel> {
       ),
       decoration: InputDecoration(
         hintText: hintText,
+        filled: true,
+        fillColor: kcGrey20,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5.87.w),
-          borderSide: BorderSide(
-            color: Colors.black45,
-            width: 0.5.w,
-          ),
+          borderSide: BorderSide.none,
         ),
+        suffixIcon: suffixIcon,
       ),
     );
   }

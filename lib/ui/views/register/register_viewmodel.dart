@@ -32,6 +32,7 @@ class RegisterViewModel extends FormViewModel {
         title: 'Registration Failure',
         description: e.toString(),
       );
+      setBusy(false);
     }
   }
 

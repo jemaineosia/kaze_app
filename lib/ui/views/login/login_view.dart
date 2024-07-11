@@ -55,12 +55,14 @@ class LoginView extends StackedView<LoginViewModel> with $LoginView {
               KazeTextfield(
                 hintText: "Username",
                 controller: usernameController,
+                suffixIcon: const Icon(Icons.person_outline),
               ),
               Gap(10.h),
               KazeTextfield(
                 hintText: "Password",
                 controller: passwordController,
                 obscureText: true,
+                suffixIcon: const Icon(Icons.lock_outline),
               ),
               Gap(20.h),
               Row(
@@ -85,16 +87,17 @@ class LoginView extends StackedView<LoginViewModel> with $LoginView {
                   usernameController.text,
                   passwordController.text,
                 ),
+                isLoading: viewModel.isBusy,
               ),
               Gap(20.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Don't have an account? "),
+                  const Text("New Member? "),
                   GestureDetector(
                     onTap: () => viewModel.navigateToRegister(),
                     child: const Text(
-                      "Sign Up",
+                      "Register Now",
                       style: TextStyle(
                         color: kcOrange,
                         fontWeight: FontWeight.bold,

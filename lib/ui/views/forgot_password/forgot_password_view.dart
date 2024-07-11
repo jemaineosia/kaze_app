@@ -75,6 +75,7 @@ class ForgotPasswordView extends StackedView<ForgotPasswordViewModel>
               KazeButton(
                 text: "Password Reset",
                 onTap: () {},
+                isLoading: viewModel.isBusy,
               ),
               const Spacer(),
               Row(

@@ -1,18 +1,21 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:kaze_app/models/user.dart' as k_user;
+import 'package:kaze_app/models/app_user.dart';
 import 'package:kaze_app/services/firestore_service.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirestoreService _firestoreService = FirestoreService();
 
-  k_user.User? _currentUser;
-  k_user.User? get currentUser => _currentUser;
+  AppUser? _currentUser;
+  AppUser? get currentUser => _currentUser;
 
-  Future<UserCredential> signInWithEmailPassword(String email, password) async {
+  Future<UserCredential> signInWithUsernamePassword(
+      String username, password) async {
     try {
+      var user = await _firestoreService.getUserByUsername(username);
+
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-        email: email,
+        email: user.email,
         password: password,
       );
 
@@ -35,7 +38,7 @@ class AuthService {
       );
 
       //Create a new user profile on firestore
-      _currentUser = k_user.User(
+      _currentUser = AppUser(
         id: userCredential.user!.uid,
         email: email,
         username: username,

@@ -14,6 +14,7 @@ import 'package:kaze_app/ui/views/forgot_password/forgot_password_view.dart';
 import 'package:kaze_app/services/auth_service.dart';
 import 'package:kaze_app/services/auth_service.dart';
 import 'package:kaze_app/services/firestore_service.dart';
+import 'package:kaze_app/services/chat_service.dart';
 // @stacked-import
 
 @StackedApp(
@@ -36,6 +37,7 @@ import 'package:kaze_app/services/firestore_service.dart';
     LazySingleton(classType: AuthService),
     LazySingleton(classType: AuthService),
     LazySingleton(classType: FirestoreService),
+    LazySingleton(classType: ChatService),
 // @stacked-service
   ],
   bottomsheets: [

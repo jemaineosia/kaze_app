@@ -56,16 +56,19 @@ class RegisterView extends StackedView<RegisterViewModel> with $RegisterView {
               KazeTextfield(
                 hintText: "Username",
                 controller: usernameController,
+                suffixIcon: const Icon(Icons.person_outline),
               ),
               Gap(10.h),
               KazeTextfield(
                 hintText: "Email",
                 controller: emailController,
+                suffixIcon: const Icon(Icons.email_outlined),
               ),
               Gap(10.h),
               KazeTextfield(
                 hintText: "Password",
                 controller: passwordController,
+                suffixIcon: const Icon(Icons.lock_outline),
                 obscureText: true,
               ),
               Gap(20.h),
@@ -98,16 +101,17 @@ class RegisterView extends StackedView<RegisterViewModel> with $RegisterView {
                   email: emailController.text,
                   password: passwordController.text,
                 ),
+                isLoading: viewModel.isBusy,
               ),
               Gap(20.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Already have an account? "),
+                  const Text("Already a member? "),
                   GestureDetector(
                     onTap: () => viewModel.navigateToLogin(),
                     child: const Text(
-                      "Sign in here",
+                      "Log In",
                       style: TextStyle(
                         color: kcOrange,
                         fontWeight: FontWeight.bold,

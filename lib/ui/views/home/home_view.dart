@@ -20,33 +20,33 @@ class HomeView extends StackedView<HomeViewModel> {
     Widget? child,
   ) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: kcBackgroundColor,
-        title: const Row(
-          children: [
-            Text(
-              "KAZE ",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            Text(
-              "APP",
-              style: TextStyle(
-                color: Colors.black45,
-              ),
-            ),
-          ],
-        ),
-        elevation: 0,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 20.0),
-            child: IconButton(
-              icon: const Icon(Icons.logout),
-              onPressed: () => viewModel.signOut(),
-            ),
-          ),
-        ],
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: kcBackgroundColor,
+      //   title: const Row(
+      //     children: [
+      //       Text(
+      //         "KAZE ",
+      //         style: TextStyle(fontWeight: FontWeight.bold),
+      //       ),
+      //       Text(
+      //         "APP",
+      //         style: TextStyle(
+      //           color: Colors.black45,
+      //         ),
+      //       ),
+      //     ],
+      //   ),
+      //   elevation: 0,
+      //   actions: [
+      //     Padding(
+      //       padding: const EdgeInsets.only(right: 20.0),
+      //       child: IconButton(
+      //         icon: const Icon(Icons.logout),
+      //         onPressed: () => viewModel.signOut(),
+      //       ),
+      //     ),
+      //   ],
+      // ),
       backgroundColor: kcBackgroundColor,
       body: getViewForIndex(viewModel.currentIndex),
       bottomNavigationBar: Padding(

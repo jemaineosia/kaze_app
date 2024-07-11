@@ -10,6 +10,7 @@ class KazeButton extends StackedView<KazeButtonModel> {
   final VoidCallback onTap;
   final Color color;
   final Color textColor;
+  final bool isLoading;
 
   const KazeButton({
     super.key,
@@ -17,6 +18,7 @@ class KazeButton extends StackedView<KazeButtonModel> {
     required this.onTap,
     this.color = kcOrange,
     this.textColor = Colors.white,
+    required this.isLoading,
   });
 
   @override
@@ -35,15 +37,17 @@ class KazeButton extends StackedView<KazeButtonModel> {
           borderRadius: BorderRadius.circular(5),
         ),
         child: Center(
-          child: Text(
-            text,
-            style: TextStyle(
-              fontFamily: "Pilat",
-              color: textColor,
-              fontSize: 12.sp,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          child: isLoading
+              ? const CircularProgressIndicator()
+              : Text(
+                  text,
+                  style: TextStyle(
+                    fontFamily: "Pilat",
+                    color: textColor,
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
         ),
       ),
     );

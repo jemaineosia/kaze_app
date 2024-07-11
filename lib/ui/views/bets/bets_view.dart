@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kaze_app/ui/common/app_colors.dart';
 import 'package:stacked/stacked.dart';
 
@@ -15,9 +16,48 @@ class BetsView extends StackedView<BetsViewModel> {
   ) {
     return Scaffold(
       backgroundColor: kcBackgroundColor,
-      body: Container(
-        padding: const EdgeInsets.only(left: 25.0, right: 25.0),
-        child: const Center(child: Text('Bets View')),
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: 20.w,
+            right: 20.w,
+            top: 30.h,
+          ),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Text(
+                    "Hello SKILLA",
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  const Spacer(),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8.w),
+                    child: SizedBox(
+                      width: 32.w,
+                      height: 32.h,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: kcOrange,
+                          borderRadius: BorderRadius.circular(8.w),
+                        ),
+                        child: Icon(
+                          Icons.add,
+                          size: 24.sp,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

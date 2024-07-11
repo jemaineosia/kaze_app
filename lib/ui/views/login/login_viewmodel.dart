@@ -8,10 +8,11 @@ class LoginViewModel extends FormViewModel {
   final DialogService _dialogService = DialogService();
   final NavigationService _navigationService = NavigationService();
 
-  Future<void> login(String email, String password) async {
+  Future<void> login(String username, String password) async {
     try {
       setBusy(true);
-      var result = await _authService.signInWithEmailPassword(email, password);
+      var result =
+          await _authService.signInWithUsernamePassword(username, password);
       setBusy(false);
 
       if (result.user != null) {
@@ -27,6 +28,7 @@ class LoginViewModel extends FormViewModel {
         title: 'Login Failure',
         description: e.toString(),
       );
+      setBusy(false);
     }
   }
 
