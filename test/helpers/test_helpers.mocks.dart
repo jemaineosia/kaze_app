@@ -861,4 +861,16 @@ class MockFirestoreService extends _i1.Mock implements _i10.FirestoreService {
 /// A class which mocks [ChatService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockChatService extends _i1.Mock implements _i11.ChatService {}
+class MockChatService extends _i1.Mock implements _i11.ChatService {
+  @override
+  _i7.Stream<List<Map<String, dynamic>>> getUserStream(String? chatId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getUserStream,
+          [chatId],
+        ),
+        returnValue: _i7.Stream<List<Map<String, dynamic>>>.empty(),
+        returnValueForMissingStub:
+            _i7.Stream<List<Map<String, dynamic>>>.empty(),
+      ) as _i7.Stream<List<Map<String, dynamic>>>);
+}

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:kaze_app/ui/common/app_colors.dart';
-import 'package:kaze_app/ui/views/bets/bets_view.dart';
+import 'package:kaze_app/ui/views/dashboard/dashboard_view.dart';
 import 'package:kaze_app/ui/views/inbox/inbox_view.dart';
 import 'package:kaze_app/ui/views/settings/settings_view.dart';
 import 'package:line_icons/line_icons.dart';
@@ -100,13 +100,13 @@ class HomeView extends StackedView<HomeViewModel> {
   Widget getViewForIndex(int index) {
     switch (index) {
       case 0:
-        return const BetsView();
+        return const DashboardView();
       case 1:
         return const InboxView();
       case 2:
         return const SettingsView();
       default:
-        return const BetsView();
+        return const DashboardView();
     }
   }
 

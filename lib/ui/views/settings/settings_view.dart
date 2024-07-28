@@ -15,9 +15,11 @@ class SettingsView extends StackedView<SettingsViewModel> {
   ) {
     return Scaffold(
       backgroundColor: kcBackgroundColor,
-      body: Container(
-        padding: const EdgeInsets.only(left: 25.0, right: 25.0),
-        child: const Center(child: Text('Settings View')),
+      body: Center(
+        child: TextButton(
+          onPressed: () => viewModel.signOut(),
+          child: const Text('Sign Out'),
+        ),
       ),
     );
   }

@@ -30,7 +30,6 @@ Future<void> setupLocator({
   locator.registerLazySingleton(() => DialogService());
   locator.registerLazySingleton(() => NavigationService());
   locator.registerLazySingleton(() => AuthService());
-  locator.registerLazySingleton(() => AuthService());
   locator.registerLazySingleton(() => FirestoreService());
   locator.registerLazySingleton(() => ChatService());
 }
