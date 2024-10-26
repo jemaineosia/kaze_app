@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kaze_app/ui/common/app_colors.dart';
+import 'package:kaze_app/ui/widgets/common/kaze_drawer/kaze_drawer.dart';
 import 'package:stacked/stacked.dart';
 
 import 'settings_viewmodel.dart';
@@ -14,13 +14,14 @@ class SettingsView extends StackedView<SettingsViewModel> {
     Widget? child,
   ) {
     return Scaffold(
-      backgroundColor: kcBackgroundColor,
-      body: Center(
-        child: TextButton(
-          onPressed: () => viewModel.signOut(),
-          child: const Text('Sign Out'),
+      appBar: AppBar(
+        title: Text(
+          "KAZE",
         ),
+        centerTitle: true,
+        elevation: 0,
       ),
+      drawer: KazeDrawer(),
     );
   }
 

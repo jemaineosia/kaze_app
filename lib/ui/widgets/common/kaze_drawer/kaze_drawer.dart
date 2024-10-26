@@ -35,18 +35,18 @@ class KazeDrawer extends StackedView<KazeDrawerModel> {
               KazeDrawerTile(
                 title: 'H O M E',
                 icon: Icons.home,
-                onTap: () {},
+                onTap: () => viewModel.navigateToHome(),
               ),
               KazeDrawerTile(
                 title: 'S E T T I N G S',
-                icon: Icons.home,
-                onTap: () {},
+                icon: Icons.settings,
+                onTap: () => viewModel.navigateToSettings(),
               ),
               Spacer(),
               KazeDrawerTile(
                 title: 'L O G O U T',
-                icon: Icons.home,
-                onTap: () {},
+                icon: Icons.logout,
+                onTap: () => viewModel.logout(),
               ),
               SizedBox(height: 50.h),
             ],
