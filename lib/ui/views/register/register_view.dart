@@ -16,6 +16,7 @@ import 'register_viewmodel.dart';
 ])
 class RegisterView extends StackedView<RegisterViewModel> with $RegisterView {
   const RegisterView({super.key});
+  static final formKey = GlobalKey<FormState>();
 
   @override
   Widget builder(
@@ -27,104 +28,107 @@ class RegisterView extends StackedView<RegisterViewModel> with $RegisterView {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Spacer(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "KAZE ",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30.sp,
-                    ),
-                  ),
-                  Text(
-                    "APP",
-                    style: TextStyle(
-                      color: Colors.black45,
-                      fontSize: 30.sp,
-                    ),
-                  ),
-                ],
-              ),
-              Gap(20.h),
-              KazeTextfield(
-                hintText: "Username",
-                controller: usernameController,
-                suffixIcon: const Icon(Icons.person_outline),
-              ),
-              Gap(10.h),
-              KazeTextfield(
-                hintText: "Email",
-                controller: emailController,
-                suffixIcon: const Icon(Icons.email_outlined),
-              ),
-              Gap(10.h),
-              KazeTextfield(
-                hintText: "Password",
-                controller: passwordController,
-                suffixIcon: const Icon(Icons.lock_outline),
-                obscureText: true,
-              ),
-              Gap(20.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "By continuing, you agree to our ",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: Text(
-                      "terms of service.",
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "KAZE ",
                       style: TextStyle(
-                        color: Theme.of(context).colorScheme.inversePrimary,
                         fontWeight: FontWeight.bold,
+                        fontSize: 30.sp,
                       ),
                     ),
-                  ),
-                ],
-              ),
-              const Spacer(),
-              KazeButton(
-                text: "Sign Up",
-                onTap: () => viewModel.register(
-                  username: usernameController.text,
-                  email: emailController.text,
-                  password: passwordController.text,
+                    Text(
+                      "APP",
+                      style: TextStyle(
+                        color: Colors.black45,
+                        fontSize: 30.sp,
+                      ),
+                    ),
+                  ],
                 ),
-                isLoading: viewModel.isBusy,
-              ),
-              Gap(20.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Already a member? ",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () => viewModel.navigateToLogin(),
-                    child: Text(
-                      "Log In",
+                Gap(20.h),
+                KazeTextfield(
+                  hintText: "Username",
+                  controller: usernameController,
+                  suffixIcon: const Icon(Icons.person_outline),
+                ),
+                Gap(10.h),
+                KazeTextfield(
+                  hintText: "Email",
+                  controller: emailController,
+                  suffixIcon: const Icon(Icons.email_outlined),
+                ),
+                Gap(10.h),
+                KazeTextfield(
+                  hintText: "Password",
+                  controller: passwordController,
+                  suffixIcon: const Icon(Icons.lock_outline),
+                  obscureText: true,
+                ),
+                Gap(20.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "By continuing, you agree to our ",
                       style: TextStyle(
-                        color: Theme.of(context).colorScheme.inversePrimary,
-                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
+                    GestureDetector(
+                      onTap: () {},
+                      child: Text(
+                        "terms of service.",
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.inversePrimary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                KazeButton(
+                  text: "Sign Up",
+                  onTap: () => viewModel.register(
+                    username: usernameController.text,
+                    email: emailController.text,
+                    password: passwordController.text,
                   ),
-                ],
-              ),
-              Gap(40.h),
-            ],
+                  isLoading: viewModel.isBusy,
+                ),
+                Gap(20.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Already a member? ",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => viewModel.navigateToLogin(),
+                      child: Text(
+                        "Log In",
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.inversePrimary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Gap(40.h),
+              ],
+            ),
           ),
         ),
       ),
