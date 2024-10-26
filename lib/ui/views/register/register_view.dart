@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:kaze_app/ui/common/app_colors.dart';
 import 'package:kaze_app/ui/widgets/common/kaze_button/kaze_button.dart';
 import 'package:kaze_app/ui/widgets/common/kaze_textfield/kaze_textfield.dart';
 import 'package:stacked/stacked.dart';
@@ -16,7 +15,7 @@ import 'register_viewmodel.dart';
   FormTextField(name: 'password'),
 ])
 class RegisterView extends StackedView<RegisterViewModel> with $RegisterView {
-  const RegisterView({Key? key}) : super(key: key);
+  const RegisterView({super.key});
 
   @override
   Widget builder(
@@ -25,7 +24,6 @@ class RegisterView extends StackedView<RegisterViewModel> with $RegisterView {
     Widget? child,
   ) {
     return Scaffold(
-      backgroundColor: kcBackgroundColor,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -75,18 +73,18 @@ class RegisterView extends StackedView<RegisterViewModel> with $RegisterView {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
+                  Text(
                     "By continuing, you agree to our ",
                     style: TextStyle(
-                      color: Colors.black45,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                   GestureDetector(
                     onTap: () {},
-                    child: const Text(
+                    child: Text(
                       "terms of service.",
                       style: TextStyle(
-                        color: kcOrange,
+                        color: Theme.of(context).colorScheme.inversePrimary,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -107,13 +105,18 @@ class RegisterView extends StackedView<RegisterViewModel> with $RegisterView {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Already a member? "),
+                  Text(
+                    "Already a member? ",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
                   GestureDetector(
                     onTap: () => viewModel.navigateToLogin(),
-                    child: const Text(
+                    child: Text(
                       "Log In",
                       style: TextStyle(
-                        color: kcOrange,
+                        color: Theme.of(context).colorScheme.inversePrimary,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

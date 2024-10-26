@@ -6,7 +6,7 @@ import 'package:stacked/stacked.dart';
 import 'dashboard_viewmodel.dart';
 
 class DashboardView extends StackedView<DashboardViewModel> {
-  const DashboardView({Key? key}) : super(key: key);
+  const DashboardView({super.key});
 
   @override
   Widget builder(
@@ -50,7 +50,7 @@ class DashboardView extends StackedView<DashboardViewModel> {
                             Icons.add,
                             color: Colors.white,
                           ),
-                          onPressed: () {},
+                          onPressed: () => viewModel.navigateToBet(),
                         ),
                       ),
                     ),

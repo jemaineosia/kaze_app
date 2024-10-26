@@ -12,6 +12,7 @@ import 'package:stacked_services/src/navigation/navigation_service.dart';
 import 'package:stacked_shared/stacked_shared.dart';
 
 import '../services/auth_service.dart';
+import '../services/bet_service.dart';
 import '../services/chat_service.dart';
 import '../services/firestore_service.dart';
 
@@ -32,4 +33,5 @@ Future<void> setupLocator({
   locator.registerLazySingleton(() => AuthService());
   locator.registerLazySingleton(() => FirestoreService());
   locator.registerLazySingleton(() => ChatService());
+  locator.registerLazySingleton(() => BetService());
 }

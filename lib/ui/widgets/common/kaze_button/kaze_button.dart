@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kaze_app/ui/common/app_colors.dart';
 import 'package:stacked/stacked.dart';
 
 import 'kaze_button_model.dart';
@@ -8,16 +7,16 @@ import 'kaze_button_model.dart';
 class KazeButton extends StackedView<KazeButtonModel> {
   final String text;
   final VoidCallback onTap;
-  final Color color;
-  final Color textColor;
+  final Color? color;
+  final Color? textColor;
   final bool isLoading;
 
   const KazeButton({
     super.key,
     required this.text,
     required this.onTap,
-    this.color = kcOrange,
-    this.textColor = Colors.white,
+    this.color,
+    this.textColor,
     required this.isLoading,
   });
 
@@ -31,10 +30,10 @@ class KazeButton extends StackedView<KazeButtonModel> {
       onTap: onTap,
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+        padding: const EdgeInsets.all(25),
         decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(5),
+          color: color ?? Theme.of(context).colorScheme.tertiary,
+          borderRadius: BorderRadius.circular(12.w),
         ),
         child: Center(
           child: isLoading
@@ -42,7 +41,6 @@ class KazeButton extends StackedView<KazeButtonModel> {
               : Text(
                   text,
                   style: TextStyle(
-                    fontFamily: "Pilat",
                     color: textColor,
                     fontSize: 12.sp,
                     fontWeight: FontWeight.bold,

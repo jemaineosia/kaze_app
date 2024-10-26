@@ -5,7 +5,7 @@ import 'package:stacked/stacked.dart';
 import 'inbox_viewmodel.dart';
 
 class InboxView extends StackedView<InboxViewModel> {
-  const InboxView({Key? key}) : super(key: key);
+  const InboxView({super.key});
 
   @override
   Widget builder(

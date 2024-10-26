@@ -15,7 +15,7 @@ import 'forgot_password_viewmodel.dart';
 ])
 class ForgotPasswordView extends StackedView<ForgotPasswordViewModel>
     with $ForgotPasswordView {
-  const ForgotPasswordView({Key? key}) : super(key: key);
+  const ForgotPasswordView({super.key});
 
   @override
   Widget builder(

@@ -6,6 +6,7 @@ import 'package:kaze_app/app/app.dialogs.dart';
 import 'package:kaze_app/app/app.locator.dart';
 import 'package:kaze_app/app/app.router.dart';
 import 'package:kaze_app/firebase_options.dart';
+import 'package:kaze_app/ui/common/light_mode.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 Future<void> main() async {
@@ -28,6 +29,7 @@ class MainApp extends StatelessWidget {
       builder: (_, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
+          theme: lightMode,
           initialRoute: Routes.startupView,
           onGenerateRoute: StackedRouter().onGenerateRoute,
           navigatorKey: StackedService.navigatorKey,

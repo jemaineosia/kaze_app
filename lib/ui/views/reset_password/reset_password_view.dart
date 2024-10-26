@@ -8,7 +8,7 @@ import 'reset_password_viewmodel.dart';
   FormTextField(name: 'email'),
 ])
 class ResetPasswordView extends StackedView<ResetPasswordViewModel> {
-  const ResetPasswordView({Key? key}) : super(key: key);
+  const ResetPasswordView({super.key});
 
   @override
   Widget builder(

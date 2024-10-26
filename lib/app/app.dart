@@ -15,6 +15,7 @@ import 'package:kaze_app/ui/views/startup/startup_view.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:kaze_app/ui/views/dashboard/dashboard_view.dart';
+import 'package:kaze_app/services/bet_service.dart';
 // @stacked-import
 
 @StackedApp(
@@ -39,11 +40,12 @@ import 'package:kaze_app/ui/views/dashboard/dashboard_view.dart';
     LazySingleton(classType: AuthService),
     LazySingleton(classType: FirestoreService),
     LazySingleton(classType: ChatService),
+    LazySingleton(classType: BetService),
 // @stacked-service
   ],
   bottomsheets: [
     StackedBottomsheet(classType: NoticeSheet),
-    // @stacked-bottom-sheet
+// @stacked-bottom-sheet
   ],
   dialogs: [
     StackedDialog(classType: InfoAlertDialog),

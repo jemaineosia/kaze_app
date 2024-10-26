@@ -10,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart' as _i2;
 import 'package:flutter/material.dart' as _i6;
 import 'package:kaze_app/models/app_user.dart' as _i3;
 import 'package:kaze_app/services/auth_service.dart' as _i9;
+import 'package:kaze_app/services/bet_service.dart' as _i12;
 import 'package:kaze_app/services/chat_service.dart' as _i11;
 import 'package:kaze_app/services/firestore_service.dart' as _i10;
 import 'package:mockito/mockito.dart' as _i1;
@@ -874,3 +875,8 @@ class MockChatService extends _i1.Mock implements _i11.ChatService {
             _i7.Stream<List<Map<String, dynamic>>>.empty(),
       ) as _i7.Stream<List<Map<String, dynamic>>>);
 }
+
+/// A class which mocks [BetService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockBetService extends _i1.Mock implements _i12.BetService {}

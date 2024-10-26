@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kaze_app/ui/common/app_colors.dart';
 import 'package:stacked/stacked.dart';
 
 import 'kaze_textfield_model.dart';
@@ -10,13 +9,17 @@ class KazeTextfield extends StackedView<KazeTextfieldModel> {
   final TextEditingController controller;
   final bool obscureText;
   final Icon suffixIcon;
+  final Function()? onTap;
+  final String? Function(String?)? validator;
 
   const KazeTextfield({
     super.key,
     required this.hintText,
     required this.controller,
     this.obscureText = false,
-    this.suffixIcon = const Icon(Icons.person_outline),
+    this.suffixIcon = const Icon(null),
+    this.onTap,
+    this.validator,
   });
 
   @override
@@ -26,21 +29,30 @@ class KazeTextfield extends StackedView<KazeTextfieldModel> {
     Widget? child,
   ) {
     return TextFormField(
+      validator: validator,
+      onTap: onTap,
       controller: controller,
       obscureText: obscureText,
-      style: TextStyle(
-        fontSize: 12.sp,
-        fontFamily: "Pilat",
-      ),
       decoration: InputDecoration(
         hintText: hintText,
+        hintStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
+        errorStyle: TextStyle(color: Colors.redAccent),
+        fillColor: Theme.of(context).colorScheme.secondary,
         filled: true,
-        fillColor: kcGrey20,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(5.87.w),
-          borderSide: BorderSide.none,
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.h),
+          borderSide: BorderSide(color: Theme.of(context).colorScheme.tertiary),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.h),
+          borderSide: BorderSide(color: Colors.redAccent),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.w),
+          borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
         ),
         suffixIcon: suffixIcon,
+        suffixIconColor: Theme.of(context).colorScheme.primary,
       ),
     );
   }

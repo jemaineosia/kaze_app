@@ -6,6 +6,7 @@ import 'package:stacked_services/stacked_services.dart';
 import 'package:kaze_app/services/auth_service.dart';
 import 'package:kaze_app/services/firestore_service.dart';
 import 'package:kaze_app/services/chat_service.dart';
+import 'package:kaze_app/services/bet_service.dart';
 // @stacked-import
 
 import 'test_helpers.mocks.dart';
@@ -17,6 +18,7 @@ import 'test_helpers.mocks.dart';
   MockSpec<AuthService>(onMissingStub: OnMissingStub.returnDefault),
   MockSpec<FirestoreService>(onMissingStub: OnMissingStub.returnDefault),
   MockSpec<ChatService>(onMissingStub: OnMissingStub.returnDefault),
+  MockSpec<BetService>(onMissingStub: OnMissingStub.returnDefault),
 // @stacked-mock-spec
 ])
 void registerServices() {
@@ -26,6 +28,7 @@ void registerServices() {
   getAndRegisterAuthService();
   getAndRegisterFirestoreService();
   getAndRegisterChatService();
+  getAndRegisterBetService();
 // @stacked-mock-register
 }
 
@@ -97,6 +100,13 @@ MockChatService getAndRegisterChatService() {
   _removeRegistrationIfExists<ChatService>();
   final service = MockChatService();
   locator.registerSingleton<ChatService>(service);
+  return service;
+}
+
+MockBetService getAndRegisterBetService() {
+  _removeRegistrationIfExists<BetService>();
+  final service = MockBetService();
+  locator.registerSingleton<BetService>(service);
   return service;
 }
 // @stacked-mock-create
