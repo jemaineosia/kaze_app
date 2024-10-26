@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kaze_app/ui/widgets/common/kaze_drawer/kaze_drawer.dart';
 import 'package:stacked/stacked.dart';
 
 import 'settings_viewmodel.dart';
@@ -21,7 +20,9 @@ class SettingsView extends StackedView<SettingsViewModel> {
         centerTitle: true,
         elevation: 0,
       ),
-      drawer: KazeDrawer(),
+      body: Center(
+        child: Text('Settings View'),
+      ),
     );
   }
 
