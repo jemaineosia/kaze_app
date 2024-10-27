@@ -38,7 +38,14 @@ class SettingsView extends StackedView<SettingsViewModel> {
       SettingsViewModel();
 
   @override
-  void onViewModelReady(SettingsViewModel viewModel) =>
-      SchedulerBinding.instance
-          .addPostFrameCallback((timeStamp) => viewModel.runStartupLogic());
+  void onViewModelReady(SettingsViewModel viewModel) {
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
+      try {
+        await viewModel.runStartupLogic();
+      } catch (e) {
+        // Display error message or toast
+        print('Error loading profile: $e');
+      }
+    });
+  }
 }
