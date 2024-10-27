@@ -15,6 +15,7 @@ import '../services/auth_service.dart';
 import '../services/bet_service.dart';
 import '../services/chat_service.dart';
 import '../services/firestore_service.dart';
+import '../services/profile_service.dart';
 
 final locator = StackedLocator.instance;
 
@@ -34,4 +35,5 @@ Future<void> setupLocator({
   locator.registerLazySingleton(() => FirestoreService());
   locator.registerLazySingleton(() => ChatService());
   locator.registerLazySingleton(() => BetService());
+  locator.registerLazySingleton<ProfileService>(() => ProfileServiceImpl());
 }

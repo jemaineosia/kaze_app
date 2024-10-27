@@ -13,6 +13,7 @@ import 'package:kaze_app/services/auth_service.dart' as _i9;
 import 'package:kaze_app/services/bet_service.dart' as _i12;
 import 'package:kaze_app/services/chat_service.dart' as _i11;
 import 'package:kaze_app/services/firestore_service.dart' as _i10;
+import 'package:kaze_app/services/profile_service.dart' as _i13;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i5;
 import 'package:stacked_services/stacked_services.dart' as _i4;
@@ -880,3 +881,8 @@ class MockChatService extends _i1.Mock implements _i11.ChatService {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockBetService extends _i1.Mock implements _i12.BetService {}
+
+/// A class which mocks [ProfileService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockProfileService extends _i1.Mock implements _i13.ProfileService {}

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:stacked/stacked.dart';
 
 import 'settings_viewmodel.dart';
@@ -20,8 +21,12 @@ class SettingsView extends StackedView<SettingsViewModel> {
         centerTitle: true,
         elevation: 0,
       ),
-      body: Center(
-        child: Text('Settings View'),
+      body: Column(
+        children: [
+          Center(
+            child: Text(viewModel.user?.email ?? 'No email'),
+          )
+        ],
       ),
     );
   }
@@ -31,4 +36,9 @@ class SettingsView extends StackedView<SettingsViewModel> {
     BuildContext context,
   ) =>
       SettingsViewModel();
+
+  @override
+  void onViewModelReady(SettingsViewModel viewModel) =>
+      SchedulerBinding.instance
+          .addPostFrameCallback((timeStamp) => viewModel.runStartupLogic());
 }
