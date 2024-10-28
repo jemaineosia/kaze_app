@@ -1,4 +1,3 @@
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:kaze_app/app/app.locator.dart';
 import 'package:kaze_app/app/app.router.dart';
 import 'package:kaze_app/models/profile_user.dart';
@@ -11,7 +10,6 @@ class SettingsViewModel extends BaseViewModel {
   final _authService = locator<AuthService>();
   final _navigationService = locator<NavigationService>();
   final _profileService = locator<ProfileService>();
-  final _storage = FlutterSecureStorage();
 
   SettingsViewModel() {
     runStartupLogic();
@@ -27,10 +25,12 @@ class SettingsViewModel extends BaseViewModel {
 
   Future runStartupLogic() async {
     try {
-      var userId = await _storage.read(key: 'userId');
-      if (userId != null) {
-        _user = await _profileService.fetchUserProfile(userId);
+      var currentUser = _authService.currentUser;
+      if (currentUser != null) {
+        _user = await _profileService.fetchUserProfile(currentUser.id);
         notifyListeners();
+      } else {
+        _navigationService.replaceWithLoginView();
       }
     } catch (e) {
       print('Error loading profile: $e');

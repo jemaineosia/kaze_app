@@ -7,13 +7,10 @@ class KazeDrawerModel extends BaseViewModel {
   final NavigationService _navigationService = NavigationService();
   final AuthService _authService = AuthService();
 
-  void navigateToHome() {
-    _navigationService.navigateTo(Routes.homeView);
-  }
+  void navigateToHome() => _navigationService.navigateTo(Routes.homeView);
 
-  void navigateToSettings() {
-    _navigationService.navigateTo(Routes.settingsView);
-  }
+  void navigateToSettings() =>
+      _navigationService.navigateTo(Routes.settingsView);
 
   void logout() {
     _authService.signOut();

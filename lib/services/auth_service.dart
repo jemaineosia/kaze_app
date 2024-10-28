@@ -1,15 +1,19 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:kaze_app/models/app_user.dart';
 import 'package:kaze_app/services/firestore_service.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirestoreService _firestoreService = FirestoreService();
-  final storage = FlutterSecureStorage();
 
   AppUser? _currentUser;
   AppUser? get currentUser => _currentUser;
+
+  AuthService() {
+    _auth.authStateChanges().listen((user) async {
+      await _populateCurrentUser(user);
+    });
+  }
 
   Future<UserCredential> signInWithUsernamePassword(
       String username, password) async {
@@ -57,18 +61,17 @@ class AuthService {
 
   Future<bool> isUserLoggedIn() async {
     var user = _auth.currentUser;
-    if (user != null) {
-      var currentUser = await _firestoreService.getUser(user.uid);
-      await storage.write(key: 'userId', value: currentUser.id);
-    }
+    await _populateCurrentUser(user);
     return user != null;
   }
 
-  // Future _populateCurrentUser(User? user) async {
-  //   if (user != null) {
-  //     _currentUser = await _firestoreService.getUser(user.uid);
-  //   }
-  // }
+  Future _populateCurrentUser(User? user) async {
+    if (user != null) {
+      _currentUser = await _firestoreService.getUser(user.uid);
+    } else {
+      _currentUser = null;
+    }
+  }
 
   Future<void> signOut() async {
     await _auth.signOut();

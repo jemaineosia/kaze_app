@@ -35,7 +35,10 @@ class KazeDrawer extends StackedView<KazeDrawerModel> {
               KazeDrawerTile(
                 title: 'H O M E',
                 icon: Icons.home,
-                onTap: () => viewModel.navigateToHome(),
+                onTap: () {
+                  viewModel.navigateToHome();
+                  Navigator.of(context).pop();
+                },
               ),
               KazeDrawerTile(
                 title: 'S E T T I N G S',

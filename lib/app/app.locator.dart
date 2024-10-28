@@ -35,5 +35,5 @@ Future<void> setupLocator({
   locator.registerLazySingleton(() => FirestoreService());
   locator.registerLazySingleton(() => ChatService());
   locator.registerLazySingleton(() => BetService());
-  locator.registerLazySingleton(() => ProfileService());
+  locator.registerLazySingleton<ProfileService>(() => ProfileServiceImpl());
 }
