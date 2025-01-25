@@ -6,15 +6,14 @@ class DatabaseService {
   final appUserTable = Supabase.instance.client.from('appusers');
 
   Future createAppUser(AppUser newAppUser) async {
-    print(newAppUser.toMap());
-    await appUserTable.upsert(newAppUser.toMap());
+    await appUserTable.insert(newAppUser.toMap());
   }
 
   Future? getUserByUsername(String username) async {
     final response =
-        await appUserTable.select().eq('username', username).single();
+        await appUserTable.select().eq('username', username).maybeSingle();
 
-    if (response.isEmpty) return null;
+    if (response == null) return null;
 
     return AppUser.fromMap(response);
   }

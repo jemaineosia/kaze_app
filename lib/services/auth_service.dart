@@ -16,10 +16,23 @@ class AuthService {
   //   });
   // }
 
-  Future<AuthResponse> signInWithEmailPassword(
-      String email, String password) async {
-    return await _supabase.auth
-        .signInWithPassword(password: password, email: email);
+  Future<dynamic> signInWithEmailPassword(
+      String username, String password) async {
+    try {
+      final currentUser = await _databaseService.getUserByUsername(username);
+
+      if (currentUser == null) return "Username or Password is invalid";
+
+      if (currentUser is AppUser) {
+        return await _supabase.auth.signInWithPassword(
+          password: password,
+          email: currentUser.email,
+        );
+      }
+    } on AuthException catch (e) {
+      print('AUTHSERVICE - Signin: ${e.message}');
+      return e.message;
+    }
   }
 
   Future<dynamic> signUpWithEmailPassword(
@@ -28,7 +41,7 @@ class AuthService {
     String password,
   ) async {
     try {
-      await _supabase.auth.signUp(
+      final response = await _supabase.auth.signUp(
         email: email,
         password: password,
       );
@@ -40,7 +53,7 @@ class AuthService {
 
       await _databaseService.createAppUser(appUser);
 
-      return appUser;
+      return response;
     } on AuthException catch (e) {
       print('AUTHSERVICE - Signup: ${e.message}');
       return 'Registration Error. Contact admin.';

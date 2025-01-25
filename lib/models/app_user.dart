@@ -1,7 +1,7 @@
 class AppUser {
   String username;
   String email;
-  String fullname;
+  String? fullname;
   String userRole;
   DateTime createdAt;
 
@@ -17,9 +17,9 @@ class AppUser {
     return AppUser(
       username: map['username'] as String,
       email: map['email'] as String,
-      fullname: map['fullName'] as String,
-      userRole: map['userRole'] as String,
-      createdAt: DateTime.parse(map['createdAt'] as String),
+      fullname: map['fullname'] as String? ?? '',
+      userRole: map['user_role'] as String,
+      createdAt: DateTime.parse(map['created_at'] as String),
     );
   }
 

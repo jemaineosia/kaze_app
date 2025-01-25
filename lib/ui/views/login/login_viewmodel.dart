@@ -3,6 +3,7 @@ import 'package:kaze_app/app/app.router.dart';
 import 'package:kaze_app/services/auth_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginViewModel extends FormViewModel {
   final AuthService _authService = locator<AuthService>();
@@ -10,26 +11,19 @@ class LoginViewModel extends FormViewModel {
   final NavigationService _navigationService = locator<NavigationService>();
 
   Future<void> login(String username, String password) async {
-    try {
-      setBusy(true);
-      var result =
-          await _authService.signInWithEmailPassword(username, password);
-      setBusy(false);
+    setBusy(true);
+    var result = await _authService.signInWithEmailPassword(username, password);
+    setBusy(false);
 
-      if (result.user != null) {
-        _navigationService.replaceWithHomeView();
-      } else {
-        await _dialogService.showDialog(
-          title: 'Login Failure',
-          description: 'General login failure. Please try again later.',
-        );
-      }
-    } on Exception catch (e) {
+    if (result is String) {
       await _dialogService.showDialog(
         title: 'Login Failure',
-        description: e.toString(),
+        description: result,
       );
-      setBusy(false);
+    }
+
+    if (result is AuthResponse) {
+      _navigationService.replaceWithHomeView();
     }
   }
 
