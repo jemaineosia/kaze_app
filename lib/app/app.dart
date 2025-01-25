@@ -7,6 +7,7 @@ import 'package:stacked_services/stacked_services.dart';
 import 'package:kaze_app/ui/views/login/login_view.dart';
 import 'package:kaze_app/ui/views/register/register_view.dart';
 import 'package:kaze_app/services/auth_service.dart';
+import 'package:kaze_app/services/database_service.dart';
 // @stacked-import
 
 @StackedApp(
@@ -22,6 +23,7 @@ import 'package:kaze_app/services/auth_service.dart';
     LazySingleton(classType: DialogService),
     LazySingleton(classType: NavigationService),
     LazySingleton(classType: AuthService),
+    LazySingleton(classType: DatabaseService),
 // @stacked-service
   ],
   bottomsheets: [
