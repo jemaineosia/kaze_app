@@ -1,6 +1,6 @@
+import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:kaze_app/ui/views/home/home_view.dart';
-import 'package:kaze_app/ui/views/wallet/wallet_view.dart';
+import 'package:kaze_app/ui/common/app_colors.dart';
 import 'package:stacked/stacked.dart';
 
 import 'bottomnav_viewmodel.dart';
@@ -16,43 +16,40 @@ class BottomnavView extends StackedView<BottomnavViewModel> {
   ) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      body: _getSelectedScreen(viewModel.currentIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: viewModel.currentIndex,
-        onTap: (index) {
-          viewModel.onTabTapped(index);
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.wallet),
-            label: 'Wallet',
-          ),
-        ],
+      body: viewModel.screensList[viewModel.currentIndex],
+      floatingActionButton: Container(
+        width: 60, // Width of the FAB
+        height: 60, // Height of the FAB (making it circular)
+        decoration: const BoxDecoration(
+          shape: BoxShape.circle, // Ensuring the FAB is circular
+          color: kcDarkGreyColor, // FAB color
+        ),
+        child: FloatingActionButton(
+          onPressed: () {
+            // Handle the floating action button press
+            print("Floating Button Pressed");
+          }, // Icon inside the FAB
+          backgroundColor: Colors
+              .transparent, // Transparent background (as it's inside a container)
+          elevation: 0,
+          child: const Icon(Icons.add), // Remove shadow for a flat look
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          print("Floating button pressed");
-        },
-        backgroundColor: Colors.blue,
-        child: const Icon(Icons.add),
+      bottomNavigationBar: AnimatedBottomNavigationBar(
+        icons: viewModel.iconsList, // List of icons for the navigation items
+        activeIndex: viewModel.currentIndex, // Currently selected index
+        gapLocation: GapLocation.center, // Place the items in the center
+        notchSmoothness: NotchSmoothness.softEdge, // Smooth curve for the notch
+        onTap: viewModel.onTabTapped, // Handle item tap
+        // Optional: Customize animation duration, colors, and more
+        // animationDuration: const Duration(milliseconds: 300),
+        backgroundColor:
+            kcDarkGreyColor, // Background color of the navigation bar
+        activeColor: Colors.white, // Color of the selected icon
+        inactiveColor: Colors.white30, // Color of the unselected icons
       ),
     );
-  }
-
-  Widget _getSelectedScreen(int selectedIndex) {
-    switch (selectedIndex) {
-      case 0:
-        return const HomeView();
-      case 1:
-        return const WalletView();
-      default:
-        return const HomeView();
-    }
   }
 
   @override

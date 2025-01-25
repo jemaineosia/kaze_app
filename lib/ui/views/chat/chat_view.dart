@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-import 'wallet_viewmodel.dart';
+import 'chat_viewmodel.dart';
 
-class WalletView extends StackedView<WalletViewModel> {
-  const WalletView({Key? key}) : super(key: key);
+class ChatView extends StackedView<ChatViewModel> {
+  const ChatView({Key? key}) : super(key: key);
 
   @override
   Widget builder(
     BuildContext context,
-    WalletViewModel viewModel,
+    ChatViewModel viewModel,
     Widget? child,
   ) {
     return Scaffold(
@@ -18,14 +18,14 @@ class WalletView extends StackedView<WalletViewModel> {
         centerTitle: true,
       ),
       body: const Center(
-        child: Text('W A L L E T'),
+        child: Text('C H A T'),
       ),
     );
   }
 
   @override
-  WalletViewModel viewModelBuilder(
+  ChatViewModel viewModelBuilder(
     BuildContext context,
   ) =>
-      WalletViewModel();
+      ChatViewModel();
 }

@@ -10,6 +10,8 @@ import 'package:kaze_app/services/auth_service.dart';
 import 'package:kaze_app/services/database_service.dart';
 import 'package:kaze_app/ui/views/bottomnav/bottomnav_view.dart';
 import 'package:kaze_app/ui/views/wallet/wallet_view.dart';
+import 'package:kaze_app/ui/views/settings/settings_view.dart';
+import 'package:kaze_app/ui/views/chat/chat_view.dart';
 // @stacked-import
 
 @StackedApp(
@@ -20,6 +22,8 @@ import 'package:kaze_app/ui/views/wallet/wallet_view.dart';
     MaterialRoute(page: RegisterView),
     MaterialRoute(page: BottomnavView),
     MaterialRoute(page: WalletView),
+    MaterialRoute(page: SettingsView),
+    MaterialRoute(page: ChatView),
 // @stacked-route
   ],
   dependencies: [
