@@ -1,20 +1,11 @@
 import 'package:kaze_app/app/app.locator.dart';
 import 'package:kaze_app/models/app_user.dart';
 import 'package:kaze_app/services/database_service.dart';
-import 'package:stacked_services/stacked_services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthService {
   final _supabase = Supabase.instance.client;
   final _databaseService = locator<DatabaseService>();
-  final _dialogService = locator<DialogService>();
-
-  // AuthService() {
-  //   _supabase.auth.onAuthStateChange.listen((data) async {
-  //     final session = data.session;
-  //     await _populateCurrentUser(session?.user);
-  //   });
-  // }
 
   Future<dynamic> signInWithEmailPassword(
       String username, String password) async {
@@ -67,7 +58,6 @@ class AuthService {
   String? getCurrentUserEmail() {
     final session = _supabase.auth.currentSession;
     final user = session?.user;
-
     return user?.email;
   }
 

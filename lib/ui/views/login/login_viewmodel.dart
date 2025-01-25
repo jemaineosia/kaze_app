@@ -23,7 +23,7 @@ class LoginViewModel extends FormViewModel {
     }
 
     if (result is AuthResponse) {
-      _navigationService.replaceWithHomeView();
+      _navigationService.replaceWithBottomnavView();
     }
   }
 

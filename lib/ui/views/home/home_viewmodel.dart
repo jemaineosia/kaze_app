@@ -15,6 +15,14 @@ class HomeViewModel extends BaseViewModel {
 
   String get counterLabel => 'Logout';
 
+  String? _userEmail;
+  String? get getUserEmail => _userEmail;
+
+  Future<void> fetchUserEmail() async {
+    _userEmail = _authService.getCurrentUserEmail();
+    notifyListeners();
+  }
+
   final int _counter = 0;
 
   void incrementCounter() {

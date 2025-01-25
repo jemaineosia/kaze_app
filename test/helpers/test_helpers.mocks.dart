@@ -7,6 +7,7 @@ import 'dart:async' as _i6;
 import 'dart:ui' as _i7;
 
 import 'package:flutter/material.dart' as _i5;
+import 'package:kaze_app/models/app_user.dart' as _i10;
 import 'package:kaze_app/services/auth_service.dart' as _i8;
 import 'package:kaze_app/services/database_service.dart' as _i9;
 import 'package:mockito/mockito.dart' as _i1;
@@ -28,8 +29,9 @@ import 'package:supabase_flutter/supabase_flutter.dart' as _i2;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
-class _FakeAuthResponse_0 extends _i1.SmartFake implements _i2.AuthResponse {
-  _FakeAuthResponse_0(
+class _FakeSupabaseQueryBuilder_0 extends _i1.SmartFake
+    implements _i2.SupabaseQueryBuilder {
+  _FakeSupabaseQueryBuilder_0(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -702,43 +704,25 @@ class MockDialogService extends _i1.Mock implements _i3.DialogService {
 /// See the documentation for Mockito's code generation for more information.
 class MockAuthService extends _i1.Mock implements _i8.AuthService {
   @override
-  _i6.Future<_i2.AuthResponse> signInWithEmailPassword(
-    String? email,
+  _i6.Future<dynamic> signInWithEmailPassword(
+    String? username,
     String? password,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
           #signInWithEmailPassword,
           [
-            email,
+            username,
             password,
           ],
         ),
-        returnValue: _i6.Future<_i2.AuthResponse>.value(_FakeAuthResponse_0(
-          this,
-          Invocation.method(
-            #signInWithEmailPassword,
-            [
-              email,
-              password,
-            ],
-          ),
-        )),
-        returnValueForMissingStub:
-            _i6.Future<_i2.AuthResponse>.value(_FakeAuthResponse_0(
-          this,
-          Invocation.method(
-            #signInWithEmailPassword,
-            [
-              email,
-              password,
-            ],
-          ),
-        )),
-      ) as _i6.Future<_i2.AuthResponse>);
+        returnValue: _i6.Future<dynamic>.value(),
+        returnValueForMissingStub: _i6.Future<dynamic>.value(),
+      ) as _i6.Future<dynamic>);
 
   @override
-  _i6.Future<_i2.AuthResponse> signUpWithEmailPassword(
+  _i6.Future<dynamic> signUpWithEmailPassword(
+    String? username,
     String? email,
     String? password,
   ) =>
@@ -746,32 +730,14 @@ class MockAuthService extends _i1.Mock implements _i8.AuthService {
         Invocation.method(
           #signUpWithEmailPassword,
           [
+            username,
             email,
             password,
           ],
         ),
-        returnValue: _i6.Future<_i2.AuthResponse>.value(_FakeAuthResponse_0(
-          this,
-          Invocation.method(
-            #signUpWithEmailPassword,
-            [
-              email,
-              password,
-            ],
-          ),
-        )),
-        returnValueForMissingStub:
-            _i6.Future<_i2.AuthResponse>.value(_FakeAuthResponse_0(
-          this,
-          Invocation.method(
-            #signUpWithEmailPassword,
-            [
-              email,
-              password,
-            ],
-          ),
-        )),
-      ) as _i6.Future<_i2.AuthResponse>);
+        returnValue: _i6.Future<dynamic>.value(),
+        returnValueForMissingStub: _i6.Future<dynamic>.value(),
+      ) as _i6.Future<dynamic>);
 
   @override
   _i6.Future<void> signOut() => (super.noSuchMethod(
@@ -797,4 +763,38 @@ class MockAuthService extends _i1.Mock implements _i8.AuthService {
 /// A class which mocks [DatabaseService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockDatabaseService extends _i1.Mock implements _i9.DatabaseService {}
+class MockDatabaseService extends _i1.Mock implements _i9.DatabaseService {
+  @override
+  _i2.SupabaseQueryBuilder get appUserTable => (super.noSuchMethod(
+        Invocation.getter(#appUserTable),
+        returnValue: _FakeSupabaseQueryBuilder_0(
+          this,
+          Invocation.getter(#appUserTable),
+        ),
+        returnValueForMissingStub: _FakeSupabaseQueryBuilder_0(
+          this,
+          Invocation.getter(#appUserTable),
+        ),
+      ) as _i2.SupabaseQueryBuilder);
+
+  @override
+  _i6.Future<dynamic> createAppUser(_i10.AppUser? newAppUser) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #createAppUser,
+          [newAppUser],
+        ),
+        returnValue: _i6.Future<dynamic>.value(),
+        returnValueForMissingStub: _i6.Future<dynamic>.value(),
+      ) as _i6.Future<dynamic>);
+
+  @override
+  _i6.Future<dynamic>? getUserByUsername(String? username) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getUserByUsername,
+          [username],
+        ),
+        returnValueForMissingStub: null,
+      ) as _i6.Future<dynamic>?);
+}
