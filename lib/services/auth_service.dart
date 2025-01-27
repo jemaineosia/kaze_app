@@ -61,6 +61,11 @@ class AuthService {
     return user?.email;
   }
 
+  User? getCurrentUser() {
+    final session = _supabase.auth.currentSession;
+    return session?.user;
+  }
+
   bool isUserLoggedIn() {
     final session = _supabase.auth.currentSession;
     if (session != null) _populateCurrentUser(session.user);

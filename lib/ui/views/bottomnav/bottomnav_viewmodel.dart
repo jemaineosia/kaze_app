@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kaze_app/models/bar_item.dart';
 import 'package:kaze_app/ui/views/chat/chat_view.dart';
 import 'package:kaze_app/ui/views/home/home_view.dart';
 import 'package:kaze_app/ui/views/settings/settings_view.dart';
@@ -22,5 +23,12 @@ class BottomnavViewModel extends IndexTrackingViewModel {
     const ChatView(),
     const WalletView(),
     const SettingsView(),
+  ];
+
+  List<BarItem> barItems = [
+    BarItem(icon: Icons.home, label: "Home"),
+    BarItem(icon: Icons.chat, label: "Chat"),
+    BarItem(icon: Icons.wallet, label: "Wallet"),
+    BarItem(icon: Icons.settings, label: "Settings"),
   ];
 }

@@ -18,36 +18,48 @@ class BottomnavView extends StackedView<BottomnavViewModel> {
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: viewModel.screensList[viewModel.currentIndex],
       floatingActionButton: Container(
-        width: 60, // Width of the FAB
-        height: 60, // Height of the FAB (making it circular)
+        width: 60,
+        height: 60,
         decoration: const BoxDecoration(
-          shape: BoxShape.circle, // Ensuring the FAB is circular
-          color: kcDarkGreyColor, // FAB color
+          shape: BoxShape.circle,
+          color: kcDarkGreyColor,
         ),
         child: FloatingActionButton(
           onPressed: () {
-            // Handle the floating action button press
             print("Floating Button Pressed");
-          }, // Icon inside the FAB
-          backgroundColor: Colors
-              .transparent, // Transparent background (as it's inside a container)
+          },
+          backgroundColor: Colors.transparent,
           elevation: 0,
-          child: const Icon(Icons.add), // Remove shadow for a flat look
+          child: const Icon(Icons.add),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: AnimatedBottomNavigationBar(
-        icons: viewModel.iconsList, // List of icons for the navigation items
-        activeIndex: viewModel.currentIndex, // Currently selected index
-        gapLocation: GapLocation.center, // Place the items in the center
-        notchSmoothness: NotchSmoothness.softEdge, // Smooth curve for the notch
-        onTap: viewModel.onTabTapped, // Handle item tap
-        // Optional: Customize animation duration, colors, and more
-        // animationDuration: const Duration(milliseconds: 300),
-        backgroundColor:
-            kcDarkGreyColor, // Background color of the navigation bar
-        activeColor: Colors.white, // Color of the selected icon
-        inactiveColor: Colors.white30, // Color of the unselected icons
+      bottomNavigationBar: AnimatedBottomNavigationBar.builder(
+        itemCount: viewModel.barItems.length,
+        tabBuilder: (int index, bool isActive) {
+          final item = viewModel.barItems[index];
+          final color = isActive ? Colors.white : Colors.white30;
+
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(item.icon, size: 24, color: color),
+              const SizedBox(height: 4),
+              Text(
+                item.label,
+                style: TextStyle(color: color, fontSize: 12),
+              ),
+            ],
+          );
+        },
+        activeIndex: viewModel.currentIndex,
+        gapLocation: GapLocation.center,
+        notchSmoothness: NotchSmoothness.softEdge,
+        onTap: viewModel.onTabTapped,
+        backgroundColor: kcDarkGreyColor,
+        // activeColor: Colors.white,
+        // inactiveColor: Colors.white30,
       ),
     );
   }

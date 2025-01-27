@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kaze_app/ui/widgets/common/kaze_appbar/kaze_appbar.dart';
 import 'package:stacked/stacked.dart';
 
 import 'home_viewmodel.dart';
@@ -12,14 +13,8 @@ class HomeView extends StackedView<HomeViewModel> {
     HomeViewModel viewModel,
     Widget? child,
   ) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('K A Z E'),
-        centerTitle: true,
-      ),
-      body: const Center(
-        child: Text('H O M E'),
-      ),
+    return const Scaffold(
+      appBar: KazeAppBar(),
     );
   }
 

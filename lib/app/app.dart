@@ -12,6 +12,7 @@ import 'package:kaze_app/ui/views/bottomnav/bottomnav_view.dart';
 import 'package:kaze_app/ui/views/wallet/wallet_view.dart';
 import 'package:kaze_app/ui/views/settings/settings_view.dart';
 import 'package:kaze_app/ui/views/chat/chat_view.dart';
+import 'package:kaze_app/ui/views/topup/topup_view.dart';
 // @stacked-import
 
 @StackedApp(
@@ -24,6 +25,7 @@ import 'package:kaze_app/ui/views/chat/chat_view.dart';
     MaterialRoute(page: WalletView),
     MaterialRoute(page: SettingsView),
     MaterialRoute(page: ChatView),
+    MaterialRoute(page: TopupView),
 // @stacked-route
   ],
   dependencies: [
@@ -36,7 +38,7 @@ import 'package:kaze_app/ui/views/chat/chat_view.dart';
   ],
   bottomsheets: [
     StackedBottomsheet(classType: NoticeSheet),
-    // @stacked-bottom-sheet
+// @stacked-bottom-sheet
   ],
   dialogs: [
     StackedDialog(classType: InfoAlertDialog),
