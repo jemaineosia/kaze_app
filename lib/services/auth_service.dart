@@ -38,6 +38,7 @@ class AuthService {
       );
 
       AppUser appUser = AppUser(
+        id: response.user!.id,
         username: username,
         email: email,
       );

@@ -1,4 +1,0 @@
-enum PaymentMethod {
-  gcash,
-  bank,
-}

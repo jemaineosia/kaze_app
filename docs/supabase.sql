@@ -3,8 +3,8 @@ CREATE TABLE appUsers (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   username text NOT NULL UNIQUE,
   email text NOT NULL UNIQUE,
-  fullName text NOT NULL,
-  role text NOT NULL,                          -- e.g., 'user', 'admin'
+  fullName text NULL,
+  role text DEFAULT 'user',                          -- e.g., 'user', 'admin'
   status text DEFAULT 'active',               -- e.g., 'active', 'suspended'
   createdAt timestamp with time zone DEFAULT now()
 );

@@ -1,106 +1,54 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
+import 'package:kaze_app/common/enums/transaction_type.dart';
 
 class Transaction {
-  int id;
-  int userId;
-  num amount;
-  TransactionType transactionType;
-  String? receipImage;
-  DateTime createdAt;
+  final String id;
+  final String userId;
+  final String? matchId;
+  final double amount;
+  final TransactionType transactionType; // Using TransactionType enum
+  final String? referenceNote;
+  final DateTime createdAt;
+  final DateTime? deletedAt;
 
   Transaction({
     required this.id,
     required this.userId,
+    this.matchId,
     required this.amount,
-    required this.receipImage,
-    required this.transactionType,
-    required this.createdAt,
-  });
-
-  Transaction copyWith({
-    int? id,
-    int? userId,
-    int? matchId,
-    num? amount,
-    String? receipImage,
+    required this.transactionType, // Enum type
+    this.referenceNote,
     DateTime? createdAt,
-  }) {
+    this.deletedAt,
+  }) : createdAt = createdAt ?? DateTime.now(); // Default to now
+
+  factory Transaction.fromJson(Map<String, dynamic> json) {
     return Transaction(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      amount: amount ?? this.amount,
-      receipImage: receipImage ?? this.receipImage,
-      transactionType: transactionType,
-      createdAt: createdAt ?? this.createdAt,
+      id: json['id'],
+      userId: json['user_id'],
+      matchId: json['match_id'],
+      amount: (json['amount'] as num).toDouble(),
+      transactionType:
+          TransactionType.fromString(json['transaction_type']), // Parse type
+      referenceNote: json['reference_note'],
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'])
+          : DateTime.now(),
+      deletedAt: json['deleted_at'] != null
+          ? DateTime.parse(json['deleted_at'])
+          : null,
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
+  Map<String, dynamic> toJson() {
+    return {
       'id': id,
-      'userId': userId,
+      'user_id': userId,
+      'match_id': matchId,
       'amount': amount,
-      'receipImage': receipImage,
-      'createdAt': createdAt.millisecondsSinceEpoch,
+      'transaction_type': transactionType.toValue(), // Convert enum to string
+      'reference_note': referenceNote,
+      'created_at': createdAt.toIso8601String(),
+      'deleted_at': deletedAt?.toIso8601String(),
     };
   }
-
-  factory Transaction.fromMap(Map<String, dynamic> map) {
-    return Transaction(
-      id: map['id'] as int,
-      userId: map['userId'] as int,
-      amount: map['amount'] as num,
-      receipImage: map['receipImage'] as String,
-      createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
-      transactionType:
-          transactionTypeFromString(map['transactionType'] as String),
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory Transaction.fromJson(String source) =>
-      Transaction.fromMap(json.decode(source) as Map<String, dynamic>);
-
-  @override
-  String toString() {
-    return 'Transaction(id: $id, userId: $userId, amount: $amount, receipImage: $receipImage, createdAt: $createdAt)';
-  }
-
-  @override
-  bool operator ==(covariant Transaction other) {
-    if (identical(this, other)) return true;
-
-    return other.id == id &&
-        other.userId == userId &&
-        other.amount == amount &&
-        other.receipImage == receipImage &&
-        other.createdAt == createdAt;
-  }
-
-  @override
-  int get hashCode {
-    return id.hashCode ^
-        userId.hashCode ^
-        amount.hashCode ^
-        receipImage.hashCode ^
-        createdAt.hashCode;
-  }
-}
-
-TransactionType transactionTypeFromString(String value) {
-  switch (value) {
-    case 'deposit':
-      return TransactionType.cashin;
-    case 'bet':
-      return TransactionType.cashout;
-    default:
-      throw Exception('Unknown transaction type: $value');
-  }
-}
-
-enum TransactionType {
-  cashin,
-  cashout,
 }

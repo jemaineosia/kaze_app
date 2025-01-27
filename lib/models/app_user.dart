@@ -1,34 +1,47 @@
+import 'package:kaze_app/common/enums/app_user_status.dart';
+
 class AppUser {
-  String username;
-  String email;
-  String? fullname;
-  String userRole;
-  DateTime createdAt;
+  final String id;
+  final String username;
+  final String email;
+  final String? fullName; // Nullable
+  final String role;
+  final AppUserStatus status;
+  final DateTime createdAt;
 
   AppUser({
+    required this.id,
     required this.username,
     required this.email,
-    this.fullname = "",
-    this.userRole = "user",
-    DateTime? createdAt,
+    this.fullName, // Nullable
+    this.role = 'user', // Default to 'user'
+    this.status = AppUserStatus.active, // Default to 'active'
+    DateTime? createdAt, // Optional, defaults to now
   }) : createdAt = createdAt ?? DateTime.now();
 
-  factory AppUser.fromMap(Map<String, dynamic> map) {
+  factory AppUser.fromJson(Map<String, dynamic> json) {
     return AppUser(
-      username: map['username'] as String,
-      email: map['email'] as String,
-      fullname: map['fullname'] as String? ?? '',
-      userRole: map['user_role'] as String,
-      createdAt: DateTime.parse(map['created_at'] as String),
+      id: json['id'],
+      username: json['username'],
+      email: json['email'],
+      fullName: json['full_name'], // Handles null
+      role: json['role'] ?? 'user', // Default to 'user'
+      status: AppUserStatus.fromString(
+          json['status'] ?? 'active'), // Default to 'active'
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'])
+          : DateTime.now(), // Default to now if null
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'username': username,
       'email': email,
-      'fullname': fullname,
-      'user_role': userRole,
+      'full_name': fullName,
+      'role': role,
+      'status': status.toValue(), // Convert enum to string
       'created_at': createdAt.toIso8601String(),
     };
   }

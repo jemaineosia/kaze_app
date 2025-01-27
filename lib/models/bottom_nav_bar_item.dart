@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class BarItem {
+class BottomNavBarItem {
   final IconData icon;
   final String label;
 
-  BarItem({required this.icon, required this.label});
+  BottomNavBarItem({required this.icon, required this.label});
 }

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:kaze_app/app/app.locator.dart';
 import 'package:kaze_app/app/app.router.dart';
-import 'package:kaze_app/common/enums.dart';
+import 'package:kaze_app/common/enums/payment_method.dart';
 import 'package:kaze_app/services/auth_service.dart';
 import 'package:kaze_app/services/database_service.dart';
 import 'package:stacked/stacked.dart';

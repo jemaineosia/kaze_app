@@ -10,7 +10,7 @@ class DatabaseService {
   final appUserTable = Supabase.instance.client.from('appusers');
 
   Future createAppUser(AppUser newAppUser) async {
-    await appUserTable.insert(newAppUser.toMap());
+    await appUserTable.insert(newAppUser.toJson());
   }
 
   Future? getUserByUsername(String username) async {
@@ -19,7 +19,7 @@ class DatabaseService {
 
     if (response == null) return null;
 
-    return AppUser.fromMap(response);
+    return AppUser.fromJson(response);
   }
 
   Future<String> uploadImage(File imageFile) async {

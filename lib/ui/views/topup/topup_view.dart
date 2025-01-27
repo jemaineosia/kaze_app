@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:kaze_app/common/enums.dart';
+import 'package:kaze_app/common/enums/payment_method.dart';
 import 'package:kaze_app/ui/common/app_colors.dart';
 import 'package:kaze_app/ui/widgets/common/kaze_button/kaze_button.dart';
 import 'package:stacked/stacked.dart';
@@ -122,7 +122,7 @@ class TopupView extends StackedView<TopupViewModel> with $TopupView {
             Row(
               children: [
                 Radio<PaymentMethod>(
-                  value: PaymentMethod.bank,
+                  value: PaymentMethod.paymaya,
                   groupValue: viewModel.selectedMethod,
                   onChanged: (PaymentMethod? newValue) {
                     if (newValue != null) {
@@ -130,7 +130,7 @@ class TopupView extends StackedView<TopupViewModel> with $TopupView {
                     }
                   },
                 ),
-                const Text('Bank'),
+                const Text('Paymaya'),
               ],
             ),
           ],
