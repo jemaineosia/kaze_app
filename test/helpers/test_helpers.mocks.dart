@@ -4,12 +4,14 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i6;
+import 'dart:io' as _i11;
 import 'dart:ui' as _i7;
 
 import 'package:flutter/material.dart' as _i5;
 import 'package:kaze_app/models/app_user.dart' as _i10;
 import 'package:kaze_app/services/auth_service.dart' as _i8;
 import 'package:kaze_app/services/database_service.dart' as _i9;
+import 'package:kaze_app/services/logger_service.dart' as _i12;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i4;
 import 'package:stacked_services/stacked_services.dart' as _i3;
@@ -721,7 +723,7 @@ class MockAuthService extends _i1.Mock implements _i8.AuthService {
       ) as _i6.Future<dynamic>);
 
   @override
-  _i6.Future<dynamic> signUpWithEmailPassword(
+  _i6.Future<String?> signUpWithEmailPassword(
     String? username,
     String? email,
     String? password,
@@ -735,9 +737,9 @@ class MockAuthService extends _i1.Mock implements _i8.AuthService {
             password,
           ],
         ),
-        returnValue: _i6.Future<dynamic>.value(),
-        returnValueForMissingStub: _i6.Future<dynamic>.value(),
-      ) as _i6.Future<dynamic>);
+        returnValue: _i6.Future<String?>.value(),
+        returnValueForMissingStub: _i6.Future<String?>.value(),
+      ) as _i6.Future<String?>);
 
   @override
   _i6.Future<void> signOut() => (super.noSuchMethod(
@@ -778,23 +780,51 @@ class MockDatabaseService extends _i1.Mock implements _i9.DatabaseService {
       ) as _i2.SupabaseQueryBuilder);
 
   @override
-  _i6.Future<dynamic> createAppUser(_i10.AppUser? newAppUser) =>
-      (super.noSuchMethod(
+  _i6.Future<bool> isUsernameTaken(String? username) => (super.noSuchMethod(
         Invocation.method(
-          #createAppUser,
-          [newAppUser],
+          #isUsernameTaken,
+          [username],
         ),
-        returnValue: _i6.Future<dynamic>.value(),
-        returnValueForMissingStub: _i6.Future<dynamic>.value(),
-      ) as _i6.Future<dynamic>);
+        returnValue: _i6.Future<bool>.value(false),
+        returnValueForMissingStub: _i6.Future<bool>.value(false),
+      ) as _i6.Future<bool>);
 
   @override
-  _i6.Future<dynamic>? getUserByUsername(String? username) =>
+  _i6.Future<_i10.AppUser?> getUserByUsername(String? username) =>
       (super.noSuchMethod(
         Invocation.method(
           #getUserByUsername,
           [username],
         ),
-        returnValueForMissingStub: null,
-      ) as _i6.Future<dynamic>?);
+        returnValue: _i6.Future<_i10.AppUser?>.value(),
+        returnValueForMissingStub: _i6.Future<_i10.AppUser?>.value(),
+      ) as _i6.Future<_i10.AppUser?>);
+
+  @override
+  _i6.Future<String> uploadImage(_i11.File? imageFile) => (super.noSuchMethod(
+        Invocation.method(
+          #uploadImage,
+          [imageFile],
+        ),
+        returnValue: _i6.Future<String>.value(_i4.dummyValue<String>(
+          this,
+          Invocation.method(
+            #uploadImage,
+            [imageFile],
+          ),
+        )),
+        returnValueForMissingStub:
+            _i6.Future<String>.value(_i4.dummyValue<String>(
+          this,
+          Invocation.method(
+            #uploadImage,
+            [imageFile],
+          ),
+        )),
+      ) as _i6.Future<String>);
 }
+
+/// A class which mocks [LoggerService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockLoggerService extends _i1.Mock implements _i12.LoggerService {}

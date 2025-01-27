@@ -1,70 +1,106 @@
 import 'dart:io';
 
+import 'package:kaze_app/app/app.locator.dart';
 import 'package:kaze_app/models/app_user.dart';
+import 'package:kaze_app/services/logger_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 class DatabaseService {
-  // appUser Table
+  // Supabase client
   final _supabase = Supabase.instance.client;
   final appUserTable = Supabase.instance.client.from('appusers');
 
+  // LoggerService instance
+  final LoggerService _loggerService = locator<LoggerService>();
+
   Future<bool> isUsernameTaken(String username) async {
     try {
+      _loggerService.info('Checking if username is taken: $username');
+
       final response = await appUserTable
           .select('username')
           .eq('username', username)
           .limit(1)
           .maybeSingle();
 
-      return response != null; // Returns true if a matching username exists
-    } catch (e) {
-      print('DATABASESERVICE - isUsernameTaken Error: $e');
+      final isTaken = response != null;
+      _loggerService.debug(isTaken
+          ? 'Username is taken: $username'
+          : 'Username is available: $username');
+      return isTaken;
+    } catch (e, stackTrace) {
+      _loggerService.error(
+        'Error checking if username is taken: $username',
+        error: e,
+        stackTrace: stackTrace,
+      );
       return false; // Fail gracefully
     }
   }
 
   Future<AppUser?> getUserByUsername(String username) async {
     try {
+      _loggerService.info('Fetching user by username: $username');
+
       final response =
           await appUserTable.select().eq('username', username).maybeSingle();
 
-      if (response == null) return null;
+      if (response == null) {
+        _loggerService.warning('No user found with username: $username');
+        return null;
+      }
 
+      _loggerService.debug('User fetched successfully: $username');
       return AppUser.fromJson(response);
-    } catch (e) {
-      print('DATABASESERVICE - Error fetching user by username: $e');
+    } catch (e, stackTrace) {
+      _loggerService.error(
+        'Error fetching user by username: $username',
+        error: e,
+        stackTrace: stackTrace,
+      );
       return null; // Return null if an error occurs
     }
   }
 
   Future<String> uploadImage(File imageFile) async {
     final fileExt = imageFile.path.split('.').last;
-    final fileName = const Uuid().v4(); // e.g. random UUID
+    final fileName = const Uuid().v4(); // e.g., random UUID
     final filePath = 'receipts/$fileName.$fileExt';
 
-    final bytes = await imageFile.readAsBytes();
+    _loggerService.info('Uploading image to storage: $filePath');
 
-    // v2.8.3: Use the Supabase storage upload
-    final response = await _supabase.storage
-        .from('receipts') // bucket name
-        .uploadBinary(
-          filePath,
-          bytes,
-          fileOptions: FileOptions(
-            contentType: 'image/$fileExt',
-          ),
-        );
+    try {
+      final bytes = await imageFile.readAsBytes();
 
-    // Check for errors or success
-    // The `uploadBinary()` returns a String? containing the file path if successful, or an error if there's a failure.
-    if (response.startsWith('receipts/')) {
-      // Generate public URL (if your bucket is public) or create signed URL (if private)
-      final publicUrl =
-          _supabase.storage.from('receipts').getPublicUrl(filePath);
-      return publicUrl;
-    } else {
-      throw Exception('Error uploading image: $response');
+      // Upload image to Supabase storage
+      final response = await _supabase.storage
+          .from('receipts') // Bucket name
+          .uploadBinary(
+            filePath,
+            bytes,
+            fileOptions: FileOptions(
+              contentType: 'image/$fileExt',
+            ),
+          );
+
+      if (response.startsWith('receipts/')) {
+        // Generate public URL (assuming bucket is public)
+        final publicUrl =
+            _supabase.storage.from('receipts').getPublicUrl(filePath);
+
+        _loggerService.info('Image uploaded successfully: $publicUrl');
+        return publicUrl;
+      } else {
+        throw Exception('Unexpected response: $response');
+      }
+    } catch (e, stackTrace) {
+      _loggerService.error(
+        'Error uploading image: $filePath',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      rethrow; // Re-throw the exception to be handled by the caller
     }
   }
 }

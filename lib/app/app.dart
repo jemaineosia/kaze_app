@@ -13,6 +13,7 @@ import 'package:kaze_app/ui/views/wallet/wallet_view.dart';
 import 'package:kaze_app/ui/views/settings/settings_view.dart';
 import 'package:kaze_app/ui/views/chat/chat_view.dart';
 import 'package:kaze_app/ui/views/topup/topup_view.dart';
+import 'package:kaze_app/services/logger_service.dart';
 // @stacked-import
 
 @StackedApp(
@@ -34,6 +35,7 @@ import 'package:kaze_app/ui/views/topup/topup_view.dart';
     LazySingleton(classType: NavigationService),
     LazySingleton(classType: AuthService),
     LazySingleton(classType: DatabaseService),
+    LazySingleton(classType: LoggerService),
 // @stacked-service
   ],
   bottomsheets: [

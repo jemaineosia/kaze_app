@@ -4,6 +4,7 @@ import 'package:kaze_app/app/app.locator.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:kaze_app/services/auth_service.dart';
 import 'package:kaze_app/services/database_service.dart';
+import 'package:kaze_app/services/logger_service.dart';
 // @stacked-import
 
 import 'test_helpers.mocks.dart';
@@ -14,6 +15,7 @@ import 'test_helpers.mocks.dart';
   MockSpec<DialogService>(onMissingStub: OnMissingStub.returnDefault),
   MockSpec<AuthService>(onMissingStub: OnMissingStub.returnDefault),
   MockSpec<DatabaseService>(onMissingStub: OnMissingStub.returnDefault),
+  MockSpec<LoggerService>(onMissingStub: OnMissingStub.returnDefault),
 // @stacked-mock-spec
 ])
 void registerServices() {
@@ -22,6 +24,7 @@ void registerServices() {
   getAndRegisterDialogService();
   getAndRegisterAuthService();
   getAndRegisterDatabaseService();
+  getAndRegisterLoggerService();
 // @stacked-mock-register
 }
 
@@ -86,6 +89,13 @@ MockDatabaseService getAndRegisterDatabaseService() {
   _removeRegistrationIfExists<DatabaseService>();
   final service = MockDatabaseService();
   locator.registerSingleton<DatabaseService>(service);
+  return service;
+}
+
+MockLoggerService getAndRegisterLoggerService() {
+  _removeRegistrationIfExists<LoggerService>();
+  final service = MockLoggerService();
+  locator.registerSingleton<LoggerService>(service);
   return service;
 }
 // @stacked-mock-create
