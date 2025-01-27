@@ -7,6 +7,7 @@ class Transaction {
   final double amount;
   final TransactionType transactionType; // Using TransactionType enum
   final String? referenceNote;
+  final String? receiptImageUrl; // New field for the receipt image URL
   final DateTime createdAt;
   final DateTime? deletedAt;
 
@@ -17,6 +18,7 @@ class Transaction {
     required this.amount,
     required this.transactionType,
     this.referenceNote,
+    this.receiptImageUrl, // New field
     DateTime? createdAt,
     this.deletedAt,
   }) : createdAt = createdAt ?? DateTime.now();
@@ -24,29 +26,33 @@ class Transaction {
   factory Transaction.fromJson(Map<String, dynamic> json) {
     return Transaction(
       id: json['id'],
-      userId: json['userId'],
-      matchId: json['matchId'],
+      userId: json['user_id'], // Updated to snake_case
+      matchId: json['match_id'], // Updated to snake_case
       amount: (json['amount'] as num).toDouble(),
-      transactionType: TransactionType.fromString(json['transactionType']),
-      referenceNote: json['referenceNote'],
-      createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'])
+      transactionType: TransactionType.fromString(
+          json['transaction_type']), // Updated to snake_case
+      referenceNote: json['reference_note'], // Updated to snake_case
+      receiptImageUrl: json['receipt_image_url'], // Updated to snake_case
+      createdAt: json['created_at'] != null // Updated to snake_case
+          ? DateTime.parse(json['created_at'])
           : DateTime.now(),
-      deletedAt:
-          json['deletedAt'] != null ? DateTime.parse(json['deletedAt']) : null,
+      deletedAt: json['deleted_at'] != null // Updated to snake_case
+          ? DateTime.parse(json['deleted_at'])
+          : null,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'userId': userId,
-      'matchId': matchId,
+      'user_id': userId, // Updated to snake_case
+      'match_id': matchId, // Updated to snake_case
       'amount': amount,
-      'transactionType': transactionType.toValue(),
-      'referenceNote': referenceNote,
-      'createdAt': createdAt.toIso8601String(),
-      'deletedAt': deletedAt?.toIso8601String(),
+      'transaction_type': transactionType.toValue(), // Updated to snake_case
+      'reference_note': referenceNote, // Updated to snake_case
+      'receipt_image_url': receiptImageUrl, // Updated to snake_case
+      'created_at': createdAt.toIso8601String(), // Updated to snake_case
+      'deleted_at': deletedAt?.toIso8601String(), // Updated to snake_case
     };
   }
 }

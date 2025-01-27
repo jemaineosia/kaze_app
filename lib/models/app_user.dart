@@ -24,11 +24,11 @@ class AppUser {
       id: json['id'],
       username: json['username'],
       email: json['email'],
-      fullName: json['fullName'],
+      fullName: json['full_name'], // Updated to snake_case
       role: json['role'] ?? 'user',
       status: AppUserStatus.fromString(json['status'] ?? 'active'),
-      createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'])
+      createdAt: json['created_at'] != null // Updated to snake_case
+          ? DateTime.parse(json['created_at'])
           : DateTime.now(),
     );
   }
@@ -38,10 +38,10 @@ class AppUser {
       'id': id,
       'username': username,
       'email': email,
-      'fullName': fullName,
+      'full_name': fullName, // Updated to snake_case
       'role': role,
       'status': status.toValue(),
-      'createdAt': createdAt.toIso8601String(),
+      'created_at': createdAt.toIso8601String(), // Updated to snake_case
     };
   }
 }

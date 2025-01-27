@@ -1,6 +1,8 @@
 enum TransactionType {
   cashIn,
+  cashInPending,
   cashOut,
+  cashOutPending,
   betHold,
   betRelease;
 
@@ -9,8 +11,12 @@ enum TransactionType {
     switch (type.toLowerCase()) {
       case 'cash_in':
         return TransactionType.cashIn;
+      case 'cash_in_pending':
+        return TransactionType.cashInPending;
       case 'cash_out':
         return TransactionType.cashOut;
+      case 'cash_out_pending':
+        return TransactionType.cashOutPending;
       case 'bet_hold':
         return TransactionType.betHold;
       case 'bet_release':
@@ -25,8 +31,12 @@ enum TransactionType {
     switch (this) {
       case TransactionType.cashIn:
         return 'cash_in';
+      case TransactionType.cashInPending:
+        return 'cash_in_pending';
       case TransactionType.cashOut:
         return 'cash_out';
+      case TransactionType.cashOutPending:
+        return 'cash_out_pending';
       case TransactionType.betHold:
         return 'bet_hold';
       case TransactionType.betRelease:

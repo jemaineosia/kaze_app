@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:kaze_app/app/app.locator.dart';
 import 'package:kaze_app/models/app_user.dart';
+import 'package:kaze_app/models/transaction.dart';
 import 'package:kaze_app/services/logger_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
@@ -10,6 +12,10 @@ class DatabaseService {
   // Supabase client
   final _supabase = Supabase.instance.client;
   final appUserTable = Supabase.instance.client.from('appusers');
+  final matchesTable = Supabase.instance.client.from('matches');
+  final matchParticipantsTable =
+      Supabase.instance.client.from('match_participants');
+  final transactionTable = Supabase.instance.client.from('transactions');
 
   // LoggerService instance
   final LoggerService _loggerService = locator<LoggerService>();
@@ -101,6 +107,43 @@ class DatabaseService {
         stackTrace: stackTrace,
       );
       rethrow; // Re-throw the exception to be handled by the caller
+    }
+  }
+
+  Future<bool> createTransaction(Transaction transaction) async {
+    try {
+      _loggerService.info(
+          const JsonEncoder.withIndent('  ').convert(transaction.toJson()));
+
+      final response = await transactionTable.insert(transaction.toJson());
+
+      if (response == null) {
+        _loggerService
+            .info('Transaction created successfully: ${transaction.id}');
+        return true;
+      }
+
+      if (response.error != null) {
+        _loggerService.error('Error occurred: ${response.error!.message}');
+      }
+
+      if (response.error == null) {
+        _loggerService
+            .info('Transaction created successfully: ${transaction.id}');
+        return true;
+      } else {
+        _loggerService.error(
+          'Failed to create transaction: ${response.error?.message}',
+        );
+        return false;
+      }
+    } catch (e, stackTrace) {
+      _loggerService.error(
+        'Unexpected error occurred while creating transaction',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      return false;
     }
   }
 }

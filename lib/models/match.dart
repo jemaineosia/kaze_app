@@ -42,55 +42,61 @@ class Match {
   factory Match.fromJson(Map<String, dynamic> json) {
     return Match(
       id: json['id'],
-      creatorId: json['creatorId'],
-      opponentId: json['opponentId'],
-      winnerId: json['winnerId'],
-      matchTitle: json['matchTitle'],
-      matchDescription: json['matchDescription'],
+      creatorId: json['creator_id'], // Updated to snake_case
+      opponentId: json['opponent_id'], // Updated to snake_case
+      winnerId: json['winner_id'], // Updated to snake_case
+      matchTitle: json['match_title'], // Updated to snake_case
+      matchDescription: json['match_description'], // Updated to snake_case
       schedule:
           json['schedule'] != null ? DateTime.parse(json['schedule']) : null,
-      creatorBetAmount: (json['creatorBetAmount'] as num).toDouble(),
-      totalCreatorBetAmount: (json['totalCreatorBetAmount'] as num).toDouble(),
-      opponentBetAmount: (json['opponentBetAmount'] as num).toDouble(),
+      creatorBetAmount:
+          (json['creator_bet_amount'] as num).toDouble(), // Updated
+      totalCreatorBetAmount:
+          (json['total_creator_bet_amount'] as num).toDouble(), // Updated
+      opponentBetAmount:
+          (json['opponent_bet_amount'] as num).toDouble(), // Updated
       totalOpponentBetAmount:
-          (json['totalOpponentBetAmount'] as num).toDouble(),
+          (json['total_opponent_bet_amount'] as num).toDouble(), // Updated
       status: MatchStatus.fromString(json['status'] ?? 'pending'),
-      creatorUpdatedAt: json['creatorUpdatedAt'] != null
-          ? DateTime.parse(json['creatorUpdatedAt'])
+      creatorUpdatedAt: json['creator_updated_at'] != null // Updated
+          ? DateTime.parse(json['creator_updated_at'])
           : null,
-      opponentUpdatedAt: json['opponentUpdatedAt'] != null
-          ? DateTime.parse(json['opponentUpdatedAt'])
+      opponentUpdatedAt: json['opponent_updated_at'] != null // Updated
+          ? DateTime.parse(json['opponent_updated_at'])
           : null,
-      adminUpdatedAt: json['adminUpdatedAt'] != null
-          ? DateTime.parse(json['adminUpdatedAt'])
+      adminUpdatedAt: json['admin_updated_at'] != null // Updated
+          ? DateTime.parse(json['admin_updated_at'])
           : null,
-      createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'])
+      createdAt: json['created_at'] != null // Updated
+          ? DateTime.parse(json['created_at'])
           : DateTime.now(),
-      deletedAt:
-          json['deletedAt'] != null ? DateTime.parse(json['deletedAt']) : null,
+      deletedAt: json['deleted_at'] != null // Updated
+          ? DateTime.parse(json['deleted_at'])
+          : null,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'creatorId': creatorId,
-      'opponentId': opponentId,
-      'winnerId': winnerId,
-      'matchTitle': matchTitle,
-      'matchDescription': matchDescription,
+      'creator_id': creatorId, // Updated to snake_case
+      'opponent_id': opponentId, // Updated to snake_case
+      'winner_id': winnerId, // Updated to snake_case
+      'match_title': matchTitle, // Updated to snake_case
+      'match_description': matchDescription, // Updated to snake_case
       'schedule': schedule?.toIso8601String(),
-      'creatorBetAmount': creatorBetAmount,
-      'totalCreatorBetAmount': totalCreatorBetAmount,
-      'opponentBetAmount': opponentBetAmount,
-      'totalOpponentBetAmount': totalOpponentBetAmount,
+      'creator_bet_amount': creatorBetAmount, // Updated to snake_case
+      'total_creator_bet_amount':
+          totalCreatorBetAmount, // Updated to snake_case
+      'opponent_bet_amount': opponentBetAmount, // Updated to snake_case
+      'total_opponent_bet_amount':
+          totalOpponentBetAmount, // Updated to snake_case
       'status': status.toValue(),
-      'creatorUpdatedAt': creatorUpdatedAt?.toIso8601String(),
-      'opponentUpdatedAt': opponentUpdatedAt?.toIso8601String(),
-      'adminUpdatedAt': adminUpdatedAt?.toIso8601String(),
-      'createdAt': createdAt.toIso8601String(),
-      'deletedAt': deletedAt?.toIso8601String(),
+      'creator_updated_at': creatorUpdatedAt?.toIso8601String(), // Updated
+      'opponent_updated_at': opponentUpdatedAt?.toIso8601String(), // Updated
+      'admin_updated_at': adminUpdatedAt?.toIso8601String(), // Updated
+      'created_at': createdAt.toIso8601String(), // Updated to snake_case
+      'deleted_at': deletedAt?.toIso8601String(), // Updated to snake_case
     };
   }
 }

@@ -20,25 +20,27 @@ class MatchParticipant {
   factory MatchParticipant.fromJson(Map<String, dynamic> json) {
     return MatchParticipant(
       id: json['id'],
-      matchId: json['matchId'],
-      userId: json['userId'],
+      matchId: json['match_id'], // Updated to snake_case
+      userId: json['user_id'], // Updated to snake_case
       team: json['team'],
-      contributionAmount: (json['contributionAmount'] as num).toDouble(),
-      createdAt: DateTime.parse(json['createdAt']),
-      deletedAt:
-          json['deletedAt'] != null ? DateTime.parse(json['deletedAt']) : null,
+      contributionAmount: (json['contribution_amount'] as num)
+          .toDouble(), // Updated to snake_case
+      createdAt: DateTime.parse(json['created_at']), // Updated to snake_case
+      deletedAt: json['deleted_at'] != null // Updated to snake_case
+          ? DateTime.parse(json['deleted_at'])
+          : null,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'matchId': matchId,
-      'userId': userId,
+      'match_id': matchId, // Updated to snake_case
+      'user_id': userId, // Updated to snake_case
       'team': team,
-      'contributionAmount': contributionAmount,
-      'createdAt': createdAt.toIso8601String(),
-      'deletedAt': deletedAt?.toIso8601String(),
+      'contribution_amount': contributionAmount, // Updated to snake_case
+      'created_at': createdAt.toIso8601String(), // Updated to snake_case
+      'deleted_at': deletedAt?.toIso8601String(), // Updated to snake_case
     };
   }
 }
