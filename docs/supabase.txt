@@ -142,3 +142,21 @@ BEGIN
   END;
 END;
 $$ LANGUAGE plpgsql;
+
+-- log table
+CREATE TABLE logs (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  logLevel text NOT NULL, -- 'info', 'debug', 'error'
+  message text NOT NULL,
+  metadata jsonb, -- Optional additional data
+  createdAt timestamp with time zone DEFAULT NOW()
+);
+CREATE INDEX idx_logs_created_at ON logs (createdAt);
+CREATE INDEX idx_logs_log_level ON logs (logLevel);
+-- cron logs
+SELECT cron.schedule(
+  'delete_old_logs', -- Unique name for the job
+  '0 0 * * *',       -- Cron schedule (daily at midnight)
+  $$DELETE FROM logs WHERE created_at < NOW() - INTERVAL '30 days';$$
+);
+--DELETE FROM logs WHERE created_at < NOW() - INTERVAL '30 days';
