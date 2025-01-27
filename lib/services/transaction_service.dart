@@ -73,10 +73,13 @@ class TransactionService {
     locator<LoggerService>()
         .info('Approving transaction with ID: $transactionId');
     try {
-      final response = await _transactionTable.update({
-        'transaction_type':
-            TransactionType.cashIn.toValue(), // Update the status to 'cash_in'
-      }).eq('id', transactionId);
+      final response = await _transactionTable
+          .update({
+            'transaction_type': TransactionType.cashIn
+                .toValue(), // Update the status to 'cash_in'
+          })
+          .eq('id', transactionId)
+          .select();
 
       if (response.isEmpty) {
         locator<LoggerService>().error(

@@ -43,7 +43,8 @@ class AdminView extends StackedView<AdminViewModel> {
                           title: Text('Username: ${transaction.username}'),
                           subtitle: Text('Amount: ${transaction.amount}'),
                           trailing: TextButton(
-                            onPressed: () {},
+                            onPressed: () =>
+                                viewModel.approveTransaction(transaction.id),
                             child: const Text('Approve'),
                           ),
                         ),
