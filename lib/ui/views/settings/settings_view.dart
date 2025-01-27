@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:stacked/stacked.dart';
 
 import 'settings_viewmodel.dart';
@@ -18,9 +19,18 @@ class SettingsView extends StackedView<SettingsViewModel> {
         centerTitle: true,
       ),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () => viewModel.signOut(),
-          child: const Text('Sign Out'),
+        child: Column(
+          children: [
+            ElevatedButton(
+              onPressed: () => viewModel.signOut(),
+              child: const Text('Sign Out'),
+            ),
+            const Gap(40),
+            ElevatedButton(
+              onPressed: () => viewModel.navigateToAdmin(),
+              child: const Text('Admin'),
+            ),
+          ],
         ),
       ),
     );

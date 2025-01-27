@@ -1,10 +1,14 @@
+import 'package:kaze_app/app/app.locator.dart';
+import 'package:kaze_app/services/appuser_service.dart';
+import 'package:kaze_app/services/auth_service.dart';
+import 'package:kaze_app/services/image_service.dart';
+import 'package:kaze_app/services/logger_service.dart';
+import 'package:kaze_app/services/notification_service.dart';
+import 'package:kaze_app/services/transaction_service.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:kaze_app/app/app.locator.dart';
 import 'package:stacked_services/stacked_services.dart';
-import 'package:kaze_app/services/auth_service.dart';
-import 'package:kaze_app/services/database_service.dart';
-import 'package:kaze_app/services/logger_service.dart';
+
 // @stacked-import
 
 import 'test_helpers.mocks.dart';
@@ -14,8 +18,11 @@ import 'test_helpers.mocks.dart';
   MockSpec<BottomSheetService>(onMissingStub: OnMissingStub.returnDefault),
   MockSpec<DialogService>(onMissingStub: OnMissingStub.returnDefault),
   MockSpec<AuthService>(onMissingStub: OnMissingStub.returnDefault),
-  MockSpec<DatabaseService>(onMissingStub: OnMissingStub.returnDefault),
   MockSpec<LoggerService>(onMissingStub: OnMissingStub.returnDefault),
+  MockSpec<TransactionService>(onMissingStub: OnMissingStub.returnDefault),
+  MockSpec<ImageService>(onMissingStub: OnMissingStub.returnDefault),
+  MockSpec<AppuserService>(onMissingStub: OnMissingStub.returnDefault),
+  MockSpec<NotificationService>(onMissingStub: OnMissingStub.returnDefault),
 // @stacked-mock-spec
 ])
 void registerServices() {
@@ -23,8 +30,11 @@ void registerServices() {
   getAndRegisterBottomSheetService();
   getAndRegisterDialogService();
   getAndRegisterAuthService();
-  getAndRegisterDatabaseService();
   getAndRegisterLoggerService();
+  getAndRegisterTransactionService();
+  getAndRegisterImageService();
+  getAndRegisterAppuserService();
+  getAndRegisterNotificationService();
 // @stacked-mock-register
 }
 
@@ -85,17 +95,38 @@ MockAuthService getAndRegisterAuthService() {
   return service;
 }
 
-MockDatabaseService getAndRegisterDatabaseService() {
-  _removeRegistrationIfExists<DatabaseService>();
-  final service = MockDatabaseService();
-  locator.registerSingleton<DatabaseService>(service);
-  return service;
-}
-
 MockLoggerService getAndRegisterLoggerService() {
   _removeRegistrationIfExists<LoggerService>();
   final service = MockLoggerService();
   locator.registerSingleton<LoggerService>(service);
+  return service;
+}
+
+MockTransactionService getAndRegisterTransactionService() {
+  _removeRegistrationIfExists<TransactionService>();
+  final service = MockTransactionService();
+  locator.registerSingleton<TransactionService>(service);
+  return service;
+}
+
+MockImageService getAndRegisterImageService() {
+  _removeRegistrationIfExists<ImageService>();
+  final service = MockImageService();
+  locator.registerSingleton<ImageService>(service);
+  return service;
+}
+
+MockAppuserService getAndRegisterAppuserService() {
+  _removeRegistrationIfExists<AppuserService>();
+  final service = MockAppuserService();
+  locator.registerSingleton<AppuserService>(service);
+  return service;
+}
+
+MockNotificationService getAndRegisterNotificationService() {
+  _removeRegistrationIfExists<NotificationService>();
+  final service = MockNotificationService();
+  locator.registerSingleton<NotificationService>(service);
   return service;
 }
 // @stacked-mock-create

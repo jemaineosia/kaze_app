@@ -1,11 +1,11 @@
 import 'package:kaze_app/app/app.locator.dart';
-import 'package:kaze_app/services/database_service.dart';
+import 'package:kaze_app/services/appuser_service.dart';
 import 'package:kaze_app/services/logger_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthService {
   final _supabase = Supabase.instance.client;
-  final _databaseService = locator<DatabaseService>();
+  final _appUserService = locator<AppuserService>();
   final LoggerService _loggerService = locator<LoggerService>();
 
   Future<dynamic> signInWithEmailPassword(
@@ -14,7 +14,7 @@ class AuthService {
       _loggerService.info("Attempting to log in with username: $username");
 
       // Fetch the user from the database
-      final currentUser = await _databaseService.getUserByUsername(username);
+      final currentUser = await _appUserService.getUserByUsername(username);
 
       if (currentUser == null) {
         _loggerService.warning("No user found for username: $username");

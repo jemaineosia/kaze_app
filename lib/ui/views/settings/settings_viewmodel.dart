@@ -12,4 +12,8 @@ class SettingsViewModel extends BaseViewModel {
     await _authService.signOut();
     _navigationService.navigateTo(Routes.loginView);
   }
+
+  void navigateToAdmin() async {
+    await _navigationService.navigateTo(Routes.adminView);
+  }
 }

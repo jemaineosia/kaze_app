@@ -186,3 +186,39 @@ FROM pg_policies
 WHERE tablename = 'objects';
 
 
+ALTER TABLE transactions
+ADD CONSTRAINT fk_transactions_user_id
+FOREIGN KEY (user_id)
+REFERENCES appUsers(id)
+ON DELETE CASCADE;
+
+-- table for notif
+CREATE TABLE notifications (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id uuid REFERENCES appUsers(id) ON DELETE CASCADE, -- Notification belongs to a user
+  title text NOT NULL, -- Notification title
+  message text NOT NULL, -- Detailed notification message
+  type text NOT NULL, -- Type of notification
+  is_read boolean DEFAULT false, -- Whether the notification has been read
+  created_at timestamp with time zone DEFAULT now(), -- Timestamp of when the notification was created
+  read_at timestamp with time zone DEFAULT NULL -- Timestamp of when the notification was read
+);
+
+CREATE INDEX idx_notifications_user_id ON notifications(user_id);
+CREATE INDEX idx_notifications_is_read ON notifications(is_read);
+
+--NOTE MAKE SURE THE TABLE Notifications is realtime enabled
+ALTER TABLE notifications ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow user to read their notifications"
+ON notifications
+FOR SELECT
+USING (
+  auth.uid() = user_id
+);
+
+CREATE POLICY "Allow admin to read all notifications"
+ON notifications
+FOR SELECT
+USING (
+  auth.role() = 'service_role'
+);

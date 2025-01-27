@@ -4,7 +4,7 @@ import 'package:kaze_app/app/app.locator.dart';
 import '../helpers/test_helpers.dart';
 
 void main() {
-  group('DatabaseServiceTest -', () {
+  group('NotificationServiceTest -', () {
     setUp(() => registerServices());
     tearDown(() => locator.reset());
   });

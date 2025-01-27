@@ -7,13 +7,17 @@ import 'package:stacked_services/stacked_services.dart';
 import 'package:kaze_app/ui/views/login/login_view.dart';
 import 'package:kaze_app/ui/views/register/register_view.dart';
 import 'package:kaze_app/services/auth_service.dart';
-import 'package:kaze_app/services/database_service.dart';
 import 'package:kaze_app/ui/views/bottomnav/bottomnav_view.dart';
 import 'package:kaze_app/ui/views/wallet/wallet_view.dart';
 import 'package:kaze_app/ui/views/settings/settings_view.dart';
 import 'package:kaze_app/ui/views/chat/chat_view.dart';
 import 'package:kaze_app/ui/views/topup/topup_view.dart';
 import 'package:kaze_app/services/logger_service.dart';
+import 'package:kaze_app/ui/views/admin/admin_view.dart';
+import 'package:kaze_app/services/transaction_service.dart';
+import 'package:kaze_app/services/image_service.dart';
+import 'package:kaze_app/services/appuser_service.dart';
+import 'package:kaze_app/services/notification_service.dart';
 // @stacked-import
 
 @StackedApp(
@@ -27,6 +31,7 @@ import 'package:kaze_app/services/logger_service.dart';
     MaterialRoute(page: SettingsView),
     MaterialRoute(page: ChatView),
     MaterialRoute(page: TopupView),
+    MaterialRoute(page: AdminView),
 // @stacked-route
   ],
   dependencies: [
@@ -34,8 +39,11 @@ import 'package:kaze_app/services/logger_service.dart';
     LazySingleton(classType: DialogService),
     LazySingleton(classType: NavigationService),
     LazySingleton(classType: AuthService),
-    LazySingleton(classType: DatabaseService),
     LazySingleton(classType: LoggerService),
+    LazySingleton(classType: TransactionService),
+    LazySingleton(classType: ImageService),
+    LazySingleton(classType: AppuserService),
+    LazySingleton(classType: NotificationService),
 // @stacked-service
   ],
   bottomsheets: [

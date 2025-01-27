@@ -7,15 +7,17 @@ import 'package:kaze_app/common/enums/payment_method.dart';
 import 'package:kaze_app/common/enums/transaction_type.dart';
 import 'package:kaze_app/models/transaction.dart';
 import 'package:kaze_app/services/auth_service.dart';
-import 'package:kaze_app/services/database_service.dart';
+import 'package:kaze_app/services/image_service.dart';
 import 'package:kaze_app/services/logger_service.dart';
+import 'package:kaze_app/services/transaction_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:uuid/uuid.dart';
 
 class TopupViewModel extends FormViewModel {
   final ImagePicker _imagePicker = ImagePicker();
-  final _databaseService = locator<DatabaseService>();
+  final _transactionService = locator<TransactionService>();
+  final _imageService = locator<ImageService>();
   final _authService = locator<AuthService>();
   final _navigationService = locator<NavigationService>();
   final _dialogService = locator<DialogService>();
@@ -93,7 +95,7 @@ class TopupViewModel extends FormViewModel {
       _loggerService.info('User ${user.id} is submitting a top-up of $amount.');
 
       // Upload the receipt image to Supabase storage
-      final receiptUrl = await _databaseService.uploadImage(_receiptImage!);
+      final receiptUrl = await _imageService.uploadImage(_receiptImage!);
       _loggerService.info('Receipt image uploaded to Supabase: $receiptUrl');
 
       // Save the top-up transaction to the database
@@ -109,7 +111,7 @@ class TopupViewModel extends FormViewModel {
       );
 
       // Call the method to save the transaction
-      final success = await _databaseService.createTransaction(transaction);
+      final success = await _transactionService.createTransaction(transaction);
 
       if (success) {
         _loggerService

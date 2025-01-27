@@ -4,14 +4,19 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i6;
-import 'dart:io' as _i11;
+import 'dart:io' as _i14;
 import 'dart:ui' as _i7;
 
 import 'package:flutter/material.dart' as _i5;
-import 'package:kaze_app/models/app_user.dart' as _i10;
+import 'package:kaze_app/models/app_user.dart' as _i16;
+import 'package:kaze_app/models/transaction.dart' as _i11;
+import 'package:kaze_app/models/transaction_dto.dart' as _i12;
+import 'package:kaze_app/services/appuser_service.dart' as _i15;
 import 'package:kaze_app/services/auth_service.dart' as _i8;
-import 'package:kaze_app/services/database_service.dart' as _i9;
-import 'package:kaze_app/services/logger_service.dart' as _i12;
+import 'package:kaze_app/services/image_service.dart' as _i13;
+import 'package:kaze_app/services/logger_service.dart' as _i9;
+import 'package:kaze_app/services/notification_service.dart' as _i17;
+import 'package:kaze_app/services/transaction_service.dart' as _i10;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i4;
 import 'package:stacked_services/stacked_services.dart' as _i3;
@@ -762,46 +767,116 @@ class MockAuthService extends _i1.Mock implements _i8.AuthService {
       ) as bool);
 }
 
-/// A class which mocks [DatabaseService].
+/// A class which mocks [LoggerService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockDatabaseService extends _i1.Mock implements _i9.DatabaseService {
+class MockLoggerService extends _i1.Mock implements _i9.LoggerService {
   @override
-  _i2.SupabaseQueryBuilder get appUserTable => (super.noSuchMethod(
-        Invocation.getter(#appUserTable),
+  void debug(String? message) => super.noSuchMethod(
+        Invocation.method(
+          #debug,
+          [message],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void info(String? message) => super.noSuchMethod(
+        Invocation.method(
+          #info,
+          [message],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void warning(String? message) => super.noSuchMethod(
+        Invocation.method(
+          #warning,
+          [message],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void error(
+    String? message, {
+    dynamic error,
+    StackTrace? stackTrace,
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #error,
+          [message],
+          {
+            #error: error,
+            #stackTrace: stackTrace,
+          },
+        ),
+        returnValueForMissingStub: null,
+      );
+}
+
+/// A class which mocks [TransactionService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockTransactionService extends _i1.Mock
+    implements _i10.TransactionService {
+  @override
+  _i2.SupabaseQueryBuilder get _transactionTable => (super.noSuchMethod(
+        Invocation.getter(#transactionTable),
         returnValue: _FakeSupabaseQueryBuilder_0(
           this,
-          Invocation.getter(#appUserTable),
+          Invocation.getter(#transactionTable),
         ),
         returnValueForMissingStub: _FakeSupabaseQueryBuilder_0(
           this,
-          Invocation.getter(#appUserTable),
+          Invocation.getter(#transactionTable),
         ),
       ) as _i2.SupabaseQueryBuilder);
 
   @override
-  _i6.Future<bool> isUsernameTaken(String? username) => (super.noSuchMethod(
+  _i6.Future<bool> createTransaction(_i11.Transaction? transaction) =>
+      (super.noSuchMethod(
         Invocation.method(
-          #isUsernameTaken,
-          [username],
+          #createTransaction,
+          [transaction],
         ),
         returnValue: _i6.Future<bool>.value(false),
         returnValueForMissingStub: _i6.Future<bool>.value(false),
       ) as _i6.Future<bool>);
 
   @override
-  _i6.Future<_i10.AppUser?> getUserByUsername(String? username) =>
+  _i6.Future<List<_i12.TransactionDTO>> getPendingTransactions() =>
       (super.noSuchMethod(
         Invocation.method(
-          #getUserByUsername,
-          [username],
+          #getPendingTransactions,
+          [],
         ),
-        returnValue: _i6.Future<_i10.AppUser?>.value(),
-        returnValueForMissingStub: _i6.Future<_i10.AppUser?>.value(),
-      ) as _i6.Future<_i10.AppUser?>);
+        returnValue: _i6.Future<List<_i12.TransactionDTO>>.value(
+            <_i12.TransactionDTO>[]),
+        returnValueForMissingStub: _i6.Future<List<_i12.TransactionDTO>>.value(
+            <_i12.TransactionDTO>[]),
+      ) as _i6.Future<List<_i12.TransactionDTO>>);
 
   @override
-  _i6.Future<String> uploadImage(_i11.File? imageFile) => (super.noSuchMethod(
+  _i6.Future<bool> approveTransaction(String? transactionId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #approveTransaction,
+          [transactionId],
+        ),
+        returnValue: _i6.Future<bool>.value(false),
+        returnValueForMissingStub: _i6.Future<bool>.value(false),
+      ) as _i6.Future<bool>);
+}
+
+/// A class which mocks [ImageService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockImageService extends _i1.Mock implements _i13.ImageService {
+  @override
+  _i6.Future<String> uploadImage(_i14.File? imageFile) => (super.noSuchMethod(
         Invocation.method(
           #uploadImage,
           [imageFile],
@@ -824,7 +899,47 @@ class MockDatabaseService extends _i1.Mock implements _i9.DatabaseService {
       ) as _i6.Future<String>);
 }
 
-/// A class which mocks [LoggerService].
+/// A class which mocks [AppuserService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockLoggerService extends _i1.Mock implements _i12.LoggerService {}
+class MockAppuserService extends _i1.Mock implements _i15.AppuserService {
+  @override
+  _i2.SupabaseQueryBuilder get _appUserTable => (super.noSuchMethod(
+        Invocation.getter(#appUserTable),
+        returnValue: _FakeSupabaseQueryBuilder_0(
+          this,
+          Invocation.getter(#appUserTable),
+        ),
+        returnValueForMissingStub: _FakeSupabaseQueryBuilder_0(
+          this,
+          Invocation.getter(#appUserTable),
+        ),
+      ) as _i2.SupabaseQueryBuilder);
+
+  @override
+  _i6.Future<bool> isUsernameTaken(String? username) => (super.noSuchMethod(
+        Invocation.method(
+          #isUsernameTaken,
+          [username],
+        ),
+        returnValue: _i6.Future<bool>.value(false),
+        returnValueForMissingStub: _i6.Future<bool>.value(false),
+      ) as _i6.Future<bool>);
+
+  @override
+  _i6.Future<_i16.AppUser?> getUserByUsername(String? username) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getUserByUsername,
+          [username],
+        ),
+        returnValue: _i6.Future<_i16.AppUser?>.value(),
+        returnValueForMissingStub: _i6.Future<_i16.AppUser?>.value(),
+      ) as _i6.Future<_i16.AppUser?>);
+}
+
+/// A class which mocks [NotificationService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockNotificationService extends _i1.Mock
+    implements _i17.NotificationService {}

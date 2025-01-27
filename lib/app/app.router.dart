@@ -5,8 +5,9 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:flutter/material.dart' as _i11;
+import 'package:flutter/material.dart' as _i12;
 import 'package:flutter/material.dart';
+import 'package:kaze_app/ui/views/admin/admin_view.dart' as _i11;
 import 'package:kaze_app/ui/views/bottomnav/bottomnav_view.dart' as _i6;
 import 'package:kaze_app/ui/views/chat/chat_view.dart' as _i9;
 import 'package:kaze_app/ui/views/home/home_view.dart' as _i2;
@@ -17,7 +18,7 @@ import 'package:kaze_app/ui/views/startup/startup_view.dart' as _i3;
 import 'package:kaze_app/ui/views/topup/topup_view.dart' as _i10;
 import 'package:kaze_app/ui/views/wallet/wallet_view.dart' as _i7;
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i12;
+import 'package:stacked_services/stacked_services.dart' as _i13;
 
 class Routes {
   static const homeView = '/home-view';
@@ -38,6 +39,8 @@ class Routes {
 
   static const topupView = '/topup-view';
 
+  static const adminView = '/admin-view';
+
   static const all = <String>{
     homeView,
     startupView,
@@ -48,6 +51,7 @@ class Routes {
     settingsView,
     chatView,
     topupView,
+    adminView,
   };
 }
 
@@ -89,17 +93,21 @@ class StackedRouter extends _i1.RouterBase {
       Routes.topupView,
       page: _i10.TopupView,
     ),
+    _i1.RouteDef(
+      Routes.adminView,
+      page: _i11.AdminView,
+    ),
   ];
 
   final _pagesMap = <Type, _i1.StackedRouteFactory>{
     _i2.HomeView: (data) {
-      return _i11.MaterialPageRoute<dynamic>(
+      return _i12.MaterialPageRoute<dynamic>(
         builder: (context) => const _i2.HomeView(),
         settings: data,
       );
     },
     _i3.StartupView: (data) {
-      return _i11.MaterialPageRoute<dynamic>(
+      return _i12.MaterialPageRoute<dynamic>(
         builder: (context) => const _i3.StartupView(),
         settings: data,
       );
@@ -108,7 +116,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<LoginViewArguments>(
         orElse: () => const LoginViewArguments(),
       );
-      return _i11.MaterialPageRoute<dynamic>(
+      return _i12.MaterialPageRoute<dynamic>(
         builder: (context) => _i4.LoginView(key: args.key),
         settings: data,
       );
@@ -117,31 +125,31 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<RegisterViewArguments>(
         orElse: () => const RegisterViewArguments(),
       );
-      return _i11.MaterialPageRoute<dynamic>(
+      return _i12.MaterialPageRoute<dynamic>(
         builder: (context) => _i5.RegisterView(key: args.key),
         settings: data,
       );
     },
     _i6.BottomnavView: (data) {
-      return _i11.MaterialPageRoute<dynamic>(
+      return _i12.MaterialPageRoute<dynamic>(
         builder: (context) => const _i6.BottomnavView(),
         settings: data,
       );
     },
     _i7.WalletView: (data) {
-      return _i11.MaterialPageRoute<dynamic>(
+      return _i12.MaterialPageRoute<dynamic>(
         builder: (context) => const _i7.WalletView(),
         settings: data,
       );
     },
     _i8.SettingsView: (data) {
-      return _i11.MaterialPageRoute<dynamic>(
+      return _i12.MaterialPageRoute<dynamic>(
         builder: (context) => const _i8.SettingsView(),
         settings: data,
       );
     },
     _i9.ChatView: (data) {
-      return _i11.MaterialPageRoute<dynamic>(
+      return _i12.MaterialPageRoute<dynamic>(
         builder: (context) => const _i9.ChatView(),
         settings: data,
       );
@@ -150,8 +158,14 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<TopupViewArguments>(
         orElse: () => const TopupViewArguments(),
       );
-      return _i11.MaterialPageRoute<dynamic>(
+      return _i12.MaterialPageRoute<dynamic>(
         builder: (context) => _i10.TopupView(key: args.key),
+        settings: data,
+      );
+    },
+    _i11.AdminView: (data) {
+      return _i12.MaterialPageRoute<dynamic>(
+        builder: (context) => const _i11.AdminView(),
         settings: data,
       );
     },
@@ -167,7 +181,7 @@ class StackedRouter extends _i1.RouterBase {
 class LoginViewArguments {
   const LoginViewArguments({this.key});
 
-  final _i11.Key? key;
+  final _i12.Key? key;
 
   @override
   String toString() {
@@ -189,7 +203,7 @@ class LoginViewArguments {
 class RegisterViewArguments {
   const RegisterViewArguments({this.key});
 
-  final _i11.Key? key;
+  final _i12.Key? key;
 
   @override
   String toString() {
@@ -211,7 +225,7 @@ class RegisterViewArguments {
 class TopupViewArguments {
   const TopupViewArguments({this.key});
 
-  final _i11.Key? key;
+  final _i12.Key? key;
 
   @override
   String toString() {
@@ -230,7 +244,7 @@ class TopupViewArguments {
   }
 }
 
-extension NavigatorStateExtension on _i12.NavigationService {
+extension NavigatorStateExtension on _i13.NavigationService {
   Future<dynamic> navigateToHomeView([
     int? routerId,
     bool preventDuplicates = true,
@@ -260,7 +274,7 @@ extension NavigatorStateExtension on _i12.NavigationService {
   }
 
   Future<dynamic> navigateToLoginView({
-    _i11.Key? key,
+    _i12.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -276,7 +290,7 @@ extension NavigatorStateExtension on _i12.NavigationService {
   }
 
   Future<dynamic> navigateToRegisterView({
-    _i11.Key? key,
+    _i12.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -348,7 +362,7 @@ extension NavigatorStateExtension on _i12.NavigationService {
   }
 
   Future<dynamic> navigateToTopupView({
-    _i11.Key? key,
+    _i12.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -357,6 +371,20 @@ extension NavigatorStateExtension on _i12.NavigationService {
   }) async {
     return navigateTo<dynamic>(Routes.topupView,
         arguments: TopupViewArguments(key: key),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToAdminView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return navigateTo<dynamic>(Routes.adminView,
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -392,7 +420,7 @@ extension NavigatorStateExtension on _i12.NavigationService {
   }
 
   Future<dynamic> replaceWithLoginView({
-    _i11.Key? key,
+    _i12.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -408,7 +436,7 @@ extension NavigatorStateExtension on _i12.NavigationService {
   }
 
   Future<dynamic> replaceWithRegisterView({
-    _i11.Key? key,
+    _i12.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -480,7 +508,7 @@ extension NavigatorStateExtension on _i12.NavigationService {
   }
 
   Future<dynamic> replaceWithTopupView({
-    _i11.Key? key,
+    _i12.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -489,6 +517,20 @@ extension NavigatorStateExtension on _i12.NavigationService {
   }) async {
     return replaceWith<dynamic>(Routes.topupView,
         arguments: TopupViewArguments(key: key),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithAdminView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return replaceWith<dynamic>(Routes.adminView,
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
