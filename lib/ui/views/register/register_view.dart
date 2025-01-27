@@ -33,7 +33,6 @@ class RegisterView extends StackedView<RegisterViewModel> with $RegisterView {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Spacer(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -58,12 +57,18 @@ class RegisterView extends StackedView<RegisterViewModel> with $RegisterView {
                   hintText: "Username",
                   controller: usernameController,
                   suffixIcon: const Icon(Icons.person_outline),
+                  validator: (value) => value == null || value.isEmpty
+                      ? "Username is required"
+                      : null,
                 ),
                 Gap(10.h),
                 KazeTextfield(
                   hintText: "Email",
                   controller: emailController,
                   suffixIcon: const Icon(Icons.email_outlined),
+                  validator: (value) => value != null && value.contains('@')
+                      ? null
+                      : "Enter a valid email",
                 ),
                 Gap(10.h),
                 KazeTextfield(
@@ -71,37 +76,22 @@ class RegisterView extends StackedView<RegisterViewModel> with $RegisterView {
                   controller: passwordController,
                   suffixIcon: const Icon(Icons.lock_outline),
                   obscureText: true,
+                  validator: (value) => value != null && value.length >= 6
+                      ? null
+                      : "Password is too short",
                 ),
                 Gap(20.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "By continuing, you agree to our ",
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {},
-                      child: Text(
-                        "terms of service.",
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.inversePrimary,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const Spacer(),
                 KazeButton(
                   text: "Sign Up",
-                  onTap: () => viewModel.register(
-                    username: usernameController.text,
-                    email: emailController.text,
-                    password: passwordController.text,
-                  ),
+                  onTap: () {
+                    if (_formKey.currentState?.validate() ?? false) {
+                      viewModel.register(
+                        username: usernameController.text,
+                        email: emailController.text,
+                        password: passwordController.text,
+                      );
+                    }
+                  },
                   isLoading: viewModel.isBusy,
                 ),
                 Gap(20.h),
@@ -147,8 +137,6 @@ class RegisterView extends StackedView<RegisterViewModel> with $RegisterView {
   }
 
   @override
-  RegisterViewModel viewModelBuilder(
-    BuildContext context,
-  ) =>
+  RegisterViewModel viewModelBuilder(BuildContext context) =>
       RegisterViewModel();
 }

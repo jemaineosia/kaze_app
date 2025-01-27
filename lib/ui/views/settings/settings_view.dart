@@ -17,8 +17,11 @@ class SettingsView extends StackedView<SettingsViewModel> {
         title: const Text('K A Z E'),
         centerTitle: true,
       ),
-      body: const Center(
-        child: Text('S E T T I N G S'),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () => viewModel.signOut(),
+          child: const Text('Sign Out'),
+        ),
       ),
     );
   }

@@ -12,17 +12,23 @@ class LoginViewModel extends FormViewModel {
 
   Future<void> login(String username, String password) async {
     setBusy(true);
-    var result = await _authService.signInWithEmailPassword(username, password);
+
+    final result =
+        await _authService.signInWithEmailPassword(username, password);
+
     setBusy(false);
 
     if (result is String) {
+      // Display error dialog
       await _dialogService.showDialog(
         title: 'Login Failure',
         description: result,
       );
+      return;
     }
 
     if (result is AuthResponse) {
+      // Navigate to the bottom navigation view on success
       _navigationService.replaceWithBottomnavView();
     }
   }

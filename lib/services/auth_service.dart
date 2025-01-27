@@ -10,45 +10,80 @@ class AuthService {
   Future<dynamic> signInWithEmailPassword(
       String username, String password) async {
     try {
+      // Step 1: Fetch the user from the database using the username
       final currentUser = await _databaseService.getUserByUsername(username);
 
-      if (currentUser == null) return "Username or Password is invalid";
+      if (currentUser == null) {
+        return "Username or Password is invalid";
+      }
 
       if (currentUser is AppUser) {
-        return await _supabase.auth.signInWithPassword(
+        // Step 2: Authenticate the user with Supabase
+        final authResponse = await _supabase.auth.signInWithPassword(
           password: password,
           email: currentUser.email,
         );
+
+        if (authResponse.user == null) {
+          return "Authentication failed. Please check your credentials.";
+        }
+
+        // Step 3: Successful login
+        return authResponse;
       }
+
+      return "Unexpected error. Please try again.";
     } on AuthException catch (e) {
       print('AUTHSERVICE - Signin: ${e.message}');
-      return e.message;
+      return e.message; // Return Supabase error message
+    } catch (e) {
+      print('AUTHSERVICE - Unexpected Error: $e');
+      return "An unexpected error occurred. Please try again later.";
     }
   }
 
-  Future<dynamic> signUpWithEmailPassword(
+  Future<String?> signUpWithEmailPassword(
     String username,
     String email,
     String password,
   ) async {
     try {
-      final response = await _supabase.auth.signUp(
-        email: email,
-        password: password,
-      );
+      // Step 1: Create the user in authentication
+      final response =
+          await _supabase.auth.signUp(email: email, password: password);
 
-      AppUser appUser = AppUser(
-        id: response.user!.id,
-        username: username,
-        email: email,
-      );
+      if (response.user == null) {
+        return 'Unknown error occurred during signup.';
+      }
 
-      await _databaseService.createAppUser(appUser);
+      final userId = response.user!.id;
 
-      return response;
+      // Step 2: Call the Postgres RPC function to handle user creation in appUsers
+      final rpcResponse = await _supabase.rpc('handle_user_signup', params: {
+        'auth_user_id': userId,
+        'username': username,
+        'email': email,
+      });
+
+      if (rpcResponse.error != null) {
+        print('RPC Error: ${rpcResponse.error!.message}');
+        // Roll back: Delete the user from auth.users
+        await _supabase.auth.admin.deleteUser(userId);
+        return 'Failed to create user record in the database. Please try again.';
+      }
+
+      // If everything succeeds, return null (success)
+      return null;
     } on AuthException catch (e) {
-      print('AUTHSERVICE - Signup: ${e.message}');
-      return 'Registration Error. Contact admin.';
+      // Handle Supabase auth-specific errors
+      if (e.message.contains('email')) {
+        return 'The email "$email" is already registered. Please log in or use another email.';
+      }
+      return 'Authentication error: ${e.message}';
+    } catch (e) {
+      // Handle unexpected errors
+      print('AUTHSERVICE - Unexpected Error: $e');
+      return 'An unexpected error occurred. Please try again later.';
     }
   }
 

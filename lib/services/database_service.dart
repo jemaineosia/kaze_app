@@ -9,17 +9,33 @@ class DatabaseService {
   final _supabase = Supabase.instance.client;
   final appUserTable = Supabase.instance.client.from('appusers');
 
-  Future createAppUser(AppUser newAppUser) async {
-    await appUserTable.insert(newAppUser.toJson());
+  Future<bool> isUsernameTaken(String username) async {
+    try {
+      final response = await appUserTable
+          .select('username')
+          .eq('username', username)
+          .limit(1)
+          .maybeSingle();
+
+      return response != null; // Returns true if a matching username exists
+    } catch (e) {
+      print('DATABASESERVICE - isUsernameTaken Error: $e');
+      return false; // Fail gracefully
+    }
   }
 
-  Future? getUserByUsername(String username) async {
-    final response =
-        await appUserTable.select().eq('username', username).maybeSingle();
+  Future<AppUser?> getUserByUsername(String username) async {
+    try {
+      final response =
+          await appUserTable.select().eq('username', username).maybeSingle();
 
-    if (response == null) return null;
+      if (response == null) return null;
 
-    return AppUser.fromJson(response);
+      return AppUser.fromJson(response);
+    } catch (e) {
+      print('DATABASESERVICE - Error fetching user by username: $e');
+      return null; // Return null if an error occurs
+    }
   }
 
   Future<String> uploadImage(File imageFile) async {

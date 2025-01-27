@@ -9,18 +9,6 @@ CREATE TABLE appUsers (
   createdAt timestamp with time zone DEFAULT now()
 );
 
--- Create the transactions table
-CREATE TABLE transactions (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  userId uuid NOT NULL REFERENCES appUsers(id),
-  matchId uuid REFERENCES matches(id),        -- null if not a match-related transaction
-  amount numeric(14,2) NOT NULL CHECK (amount <> 0), -- Positive or negative as needed
-  transaction_type text NOT NULL,             -- e.g., 'cash_in', 'cash_out', 'bet_hold', 'bet_release'
-  reference_note text,                        -- Optional note or receipt
-  createdAt timestamp with time zone DEFAULT now(),
-  deletedAt timestamp with time zone DEFAULT NULL -- Default to NULL for soft delete
-);
-
 -- Create the matches table
 CREATE TABLE matches (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -40,6 +28,18 @@ CREATE TABLE matches (
   adminUpdatedAt timestamp with time zone,
   createdAt timestamp with time zone DEFAULT now(),
   deletedAt timestamp with time zone DEFAULT NULL       -- Default to NULL for soft delete
+);
+
+-- Create the transactions table
+CREATE TABLE transactions (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  userId uuid NOT NULL REFERENCES appUsers(id),
+  matchId uuid REFERENCES matches(id),        -- null if not a match-related transaction
+  amount numeric(14,2) NOT NULL CHECK (amount <> 0), -- Positive or negative as needed
+  transaction_type text NOT NULL,             -- e.g., 'cash_in', 'cash_out', 'bet_hold', 'bet_release'
+  reference_note text,                        -- Optional note or receipt
+  createdAt timestamp with time zone DEFAULT now(),
+  deletedAt timestamp with time zone DEFAULT NULL -- Default to NULL for soft delete
 );
 
 -- Create the matchParticipants table
@@ -101,3 +101,44 @@ AFTER INSERT OR UPDATE OR DELETE
 ON matchParticipants
 FOR EACH ROW
 EXECUTE FUNCTION update_total_bet_amounts();
+
+-- handle user signup
+CREATE OR REPLACE FUNCTION handle_user_signup(
+  auth_user_id uuid,
+  username text,
+  email text
+)
+RETURNS void AS $$
+BEGIN
+  -- Insert into appUsers table
+  BEGIN
+    INSERT INTO appusers (id, username, email)
+    VALUES (auth_user_id, username, email);
+  EXCEPTION WHEN unique_violation THEN
+    -- If insertion fails (e.g., username conflict), re-raise the error
+    DELETE FROM auth.users WHERE id = auth_user_id;
+    RAISE;
+  END;
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- save to appUsers after registration
+CREATE OR REPLACE FUNCTION handle_user_signup(
+  auth_user_id uuid,
+  username text,
+  email text
+)
+RETURNS void AS $$
+BEGIN
+  -- Insert into appUsers table
+  BEGIN
+    INSERT INTO appusers (id, username, email)
+    VALUES (auth_user_id, username, email);
+  EXCEPTION WHEN unique_violation THEN
+    -- Rollback: Delete the user from auth.users if insertion fails
+    DELETE FROM auth.users WHERE id = auth_user_id;
+    RAISE;
+  END;
+END;
+$$ LANGUAGE plpgsql;

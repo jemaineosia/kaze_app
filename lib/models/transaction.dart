@@ -15,40 +15,38 @@ class Transaction {
     required this.userId,
     this.matchId,
     required this.amount,
-    required this.transactionType, // Enum type
+    required this.transactionType,
     this.referenceNote,
     DateTime? createdAt,
     this.deletedAt,
-  }) : createdAt = createdAt ?? DateTime.now(); // Default to now
+  }) : createdAt = createdAt ?? DateTime.now();
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
     return Transaction(
       id: json['id'],
-      userId: json['user_id'],
-      matchId: json['match_id'],
+      userId: json['userId'],
+      matchId: json['matchId'],
       amount: (json['amount'] as num).toDouble(),
-      transactionType:
-          TransactionType.fromString(json['transaction_type']), // Parse type
-      referenceNote: json['reference_note'],
-      createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
+      transactionType: TransactionType.fromString(json['transactionType']),
+      referenceNote: json['referenceNote'],
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
           : DateTime.now(),
-      deletedAt: json['deleted_at'] != null
-          ? DateTime.parse(json['deleted_at'])
-          : null,
+      deletedAt:
+          json['deletedAt'] != null ? DateTime.parse(json['deletedAt']) : null,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'user_id': userId,
-      'match_id': matchId,
+      'userId': userId,
+      'matchId': matchId,
       'amount': amount,
-      'transaction_type': transactionType.toValue(), // Convert enum to string
-      'reference_note': referenceNote,
-      'created_at': createdAt.toIso8601String(),
-      'deleted_at': deletedAt?.toIso8601String(),
+      'transactionType': transactionType.toValue(),
+      'referenceNote': referenceNote,
+      'createdAt': createdAt.toIso8601String(),
+      'deletedAt': deletedAt?.toIso8601String(),
     };
   }
 }

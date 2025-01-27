@@ -2,7 +2,6 @@ import 'package:kaze_app/app/app.router.dart';
 import 'package:kaze_app/services/auth_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class RegisterViewModel extends FormViewModel {
   final AuthService _authService = AuthService();
@@ -15,20 +14,23 @@ class RegisterViewModel extends FormViewModel {
     required String password,
   }) async {
     setBusy(true);
-    var result =
+    var response =
         await _authService.signUpWithEmailPassword(username, email, password);
     setBusy(false);
 
-    if (result is String) {
+    if (response == null) {
       await _dialogService.showDialog(
         title: "Signup Error",
-        description: result,
+        description: "Failed to sign up. Please try again.",
       );
+      return;
     }
 
-    if (result is AuthResponse) {
-      _navigationService.replaceWithHomeView();
-    }
+    await _dialogService.showDialog(
+      title: "Signup Success",
+      description: "Welcome to Kaze! Your account has been created.",
+    );
+    _navigationService.replaceWithBottomnavView();
   }
 
   void navigateToLogin() {

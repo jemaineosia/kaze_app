@@ -31,69 +31,66 @@ class Match {
     required this.totalCreatorBetAmount,
     required this.opponentBetAmount,
     required this.totalOpponentBetAmount,
-    this.status = MatchStatus.pending, // Default to 'pending'
+    this.status = MatchStatus.pending,
     this.creatorUpdatedAt,
     this.opponentUpdatedAt,
     this.adminUpdatedAt,
     DateTime? createdAt,
     this.deletedAt,
-  }) : createdAt = createdAt ?? DateTime.now(); // Default to now
+  }) : createdAt = createdAt ?? DateTime.now();
 
   factory Match.fromJson(Map<String, dynamic> json) {
     return Match(
       id: json['id'],
-      creatorId: json['creator_id'],
-      opponentId: json['opponent_id'],
-      winnerId: json['winner_id'],
-      matchTitle: json['match_title'],
-      matchDescription: json['match_description'],
+      creatorId: json['creatorId'],
+      opponentId: json['opponentId'],
+      winnerId: json['winnerId'],
+      matchTitle: json['matchTitle'],
+      matchDescription: json['matchDescription'],
       schedule:
           json['schedule'] != null ? DateTime.parse(json['schedule']) : null,
-      creatorBetAmount: (json['creator_bet_amount'] as num).toDouble(),
-      totalCreatorBetAmount:
-          (json['total_creator_bet_amount'] as num).toDouble(),
-      opponentBetAmount: (json['opponent_bet_amount'] as num).toDouble(),
+      creatorBetAmount: (json['creatorBetAmount'] as num).toDouble(),
+      totalCreatorBetAmount: (json['totalCreatorBetAmount'] as num).toDouble(),
+      opponentBetAmount: (json['opponentBetAmount'] as num).toDouble(),
       totalOpponentBetAmount:
-          (json['total_opponent_bet_amount'] as num).toDouble(),
-      status: MatchStatus.fromString(
-          json['status'] ?? 'pending'), // Default to 'pending'
-      creatorUpdatedAt: json['creator_updated_at'] != null
-          ? DateTime.parse(json['creator_updated_at'])
+          (json['totalOpponentBetAmount'] as num).toDouble(),
+      status: MatchStatus.fromString(json['status'] ?? 'pending'),
+      creatorUpdatedAt: json['creatorUpdatedAt'] != null
+          ? DateTime.parse(json['creatorUpdatedAt'])
           : null,
-      opponentUpdatedAt: json['opponent_updated_at'] != null
-          ? DateTime.parse(json['opponent_updated_at'])
+      opponentUpdatedAt: json['opponentUpdatedAt'] != null
+          ? DateTime.parse(json['opponentUpdatedAt'])
           : null,
-      adminUpdatedAt: json['admin_updated_at'] != null
-          ? DateTime.parse(json['admin_updated_at'])
+      adminUpdatedAt: json['adminUpdatedAt'] != null
+          ? DateTime.parse(json['adminUpdatedAt'])
           : null,
-      createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
           : DateTime.now(),
-      deletedAt: json['deleted_at'] != null
-          ? DateTime.parse(json['deleted_at'])
-          : null,
+      deletedAt:
+          json['deletedAt'] != null ? DateTime.parse(json['deletedAt']) : null,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'creator_id': creatorId,
-      'opponent_id': opponentId,
-      'winner_id': winnerId,
-      'match_title': matchTitle,
-      'match_description': matchDescription,
+      'creatorId': creatorId,
+      'opponentId': opponentId,
+      'winnerId': winnerId,
+      'matchTitle': matchTitle,
+      'matchDescription': matchDescription,
       'schedule': schedule?.toIso8601String(),
-      'creator_bet_amount': creatorBetAmount,
-      'total_creator_bet_amount': totalCreatorBetAmount,
-      'opponent_bet_amount': opponentBetAmount,
-      'total_opponent_bet_amount': totalOpponentBetAmount,
-      'status': status.toValue(), // Convert enum to string
-      'creator_updated_at': creatorUpdatedAt?.toIso8601String(),
-      'opponent_updated_at': opponentUpdatedAt?.toIso8601String(),
-      'admin_updated_at': adminUpdatedAt?.toIso8601String(),
-      'created_at': createdAt.toIso8601String(),
-      'deleted_at': deletedAt?.toIso8601String(),
+      'creatorBetAmount': creatorBetAmount,
+      'totalCreatorBetAmount': totalCreatorBetAmount,
+      'opponentBetAmount': opponentBetAmount,
+      'totalOpponentBetAmount': totalOpponentBetAmount,
+      'status': status.toValue(),
+      'creatorUpdatedAt': creatorUpdatedAt?.toIso8601String(),
+      'opponentUpdatedAt': opponentUpdatedAt?.toIso8601String(),
+      'adminUpdatedAt': adminUpdatedAt?.toIso8601String(),
+      'createdAt': createdAt.toIso8601String(),
+      'deletedAt': deletedAt?.toIso8601String(),
     };
   }
 }
