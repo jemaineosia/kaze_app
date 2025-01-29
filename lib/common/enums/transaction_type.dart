@@ -26,41 +26,30 @@ enum TransactionType {
     }
   }
 
-  /// Convert a TransactionType enum to a string
+  /// Convert a TransactionType enum to a database-friendly string
   String toValue() {
+    return name.toLowerCase().replaceAllMapped(
+          RegExp(r'([a-z])([A-Z])'),
+          (match) => '${match.group(1)}_${match.group(2)?.toLowerCase()}',
+        );
+  }
+
+  /// Override default toString() for better readability
+  @override
+  String toString() {
     switch (this) {
       case TransactionType.cashIn:
-        return 'cash_in';
+        return 'Cash In';
       case TransactionType.cashInPending:
-        return 'cash_in_pending';
+        return 'Cash In Pending';
       case TransactionType.cashOut:
-        return 'cash_out';
+        return 'Cash Out';
       case TransactionType.cashOutPending:
-        return 'cash_out_pending';
+        return 'Cash Out Pending';
       case TransactionType.betHold:
-        return 'bet_hold';
+        return 'Bet On Hold';
       case TransactionType.betRelease:
-        return 'bet_release';
+        return 'Bet Released';
     }
   }
 }
-
-// void main() {
-//   // Create a new transaction instance
-//   Transaction newTransaction = Transaction(
-//     id: '123',
-//     userId: 'user_1',
-//     matchId: 'match_1',
-//     amount: 100.0,
-//     transactionType: TransactionType.cashIn, // Enum value
-//     referenceNote: 'Top-up via GCash',
-//   );
-
-//   // Convert transaction to JSON
-//   Map<String, dynamic> transactionJson = newTransaction.toJson();
-//   print(transactionJson);
-
-//   // Convert JSON back to Transaction
-//   Transaction transactionFromJson = Transaction.fromJson(transactionJson);
-//   print(transactionFromJson.transactionType); // Output: TransactionType.cashIn
-// }

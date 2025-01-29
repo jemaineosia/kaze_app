@@ -50,14 +50,26 @@ class WalletView extends StackedView<WalletViewModel> {
 
             Gap(20.h),
 
-            // Top-up Button
-            SizedBox(
-              width: 0.5.sw,
-              child: KazeButton(
-                text: 'Top-up',
-                onTap: () => viewModel.navigateToTopUp(),
-                isLoading: viewModel.isBusy,
-              ),
+            // Cash In and Cash Out Buttons
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: KazeButton(
+                    text: 'Cash In',
+                    onTap: () => viewModel.navigateToCashIn(),
+                    isLoading: viewModel.isBusy,
+                  ),
+                ),
+                Gap(10.w),
+                Expanded(
+                  child: KazeButton(
+                    text: 'Cash Out',
+                    onTap: () => viewModel.navigateToCashOut(),
+                    isLoading: viewModel.isBusy,
+                  ),
+                ),
+              ],
             ),
 
             Gap(20.h),
@@ -84,18 +96,19 @@ class WalletView extends StackedView<WalletViewModel> {
                                     : Colors.red,
                               ),
                               title: Text(
-                                "P${transaction.amount.toStringAsFixed(2)}",
+                                transaction.transactionType.toString(),
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14.sp,
                                 ),
                               ),
-                              subtitle:
-                                  Text(transaction.transactionType.toValue()),
+                              subtitle: Text(transaction.referenceNote ?? ''),
                               trailing: Text(
-                                transaction.createdAt.toLocal().toString(),
+                                "P${transaction.amount.toStringAsFixed(2)}",
                                 style: TextStyle(
-                                    fontSize: 12.sp, color: Colors.grey),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14.sp,
+                                ),
                               ),
                             );
                           },

@@ -771,42 +771,39 @@ class MockAuthService extends _i1.Mock implements _i8.AuthService {
 /// See the documentation for Mockito's code generation for more information.
 class MockLoggerService extends _i1.Mock implements _i2.LoggerService {
   @override
-  _i6.Future<void> debug(String? message) => (super.noSuchMethod(
+  void debug(String? message) => super.noSuchMethod(
         Invocation.method(
           #debug,
           [message],
         ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+        returnValueForMissingStub: null,
+      );
 
   @override
-  _i6.Future<void> info(String? message) => (super.noSuchMethod(
+  void info(String? message) => super.noSuchMethod(
         Invocation.method(
           #info,
           [message],
         ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+        returnValueForMissingStub: null,
+      );
 
   @override
-  _i6.Future<void> warning(String? message) => (super.noSuchMethod(
+  void warning(String? message) => super.noSuchMethod(
         Invocation.method(
           #warning,
           [message],
         ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+        returnValueForMissingStub: null,
+      );
 
   @override
-  _i6.Future<void> error(
+  void error(
     String? message, {
     dynamic error,
     StackTrace? stackTrace,
   }) =>
-      (super.noSuchMethod(
+      super.noSuchMethod(
         Invocation.method(
           #error,
           [message],
@@ -815,9 +812,8 @@ class MockLoggerService extends _i1.Mock implements _i2.LoggerService {
             #stackTrace: stackTrace,
           },
         ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+        returnValueForMissingStub: null,
+      );
 }
 
 /// A class which mocks [TransactionService].
@@ -870,6 +866,19 @@ class MockTransactionService extends _i1.Mock
         returnValue: _i6.Future<_i10.Transaction?>.value(),
         returnValueForMissingStub: _i6.Future<_i10.Transaction?>.value(),
       ) as _i6.Future<_i10.Transaction?>);
+
+  @override
+  _i6.Future<List<_i10.Transaction>> getUserTransactions(String? userId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getUserTransactions,
+          [userId],
+        ),
+        returnValue:
+            _i6.Future<List<_i10.Transaction>>.value(<_i10.Transaction>[]),
+        returnValueForMissingStub:
+            _i6.Future<List<_i10.Transaction>>.value(<_i10.Transaction>[]),
+      ) as _i6.Future<List<_i10.Transaction>>);
 }
 
 /// A class which mocks [ImageService].
@@ -935,6 +944,39 @@ class MockAppuserService extends _i1.Mock implements _i14.AppuserService {
         returnValue: _i6.Future<String?>.value(),
         returnValueForMissingStub: _i6.Future<String?>.value(),
       ) as _i6.Future<String?>);
+
+  @override
+  _i6.Future<double> getUserBalance(String? userId) => (super.noSuchMethod(
+        Invocation.method(
+          #getUserBalance,
+          [userId],
+        ),
+        returnValue: _i6.Future<double>.value(0.0),
+        returnValueForMissingStub: _i6.Future<double>.value(0.0),
+      ) as _i6.Future<double>);
+
+  @override
+  _i6.Future<double> getUserOnHoldBalance(String? userId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getUserOnHoldBalance,
+          [userId],
+        ),
+        returnValue: _i6.Future<double>.value(0.0),
+        returnValueForMissingStub: _i6.Future<double>.value(0.0),
+      ) as _i6.Future<double>);
+
+  @override
+  _i6.Future<Map<String, double>> getUserBalances(String? userId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getUserBalances,
+          [userId],
+        ),
+        returnValue: _i6.Future<Map<String, double>>.value(<String, double>{}),
+        returnValueForMissingStub:
+            _i6.Future<Map<String, double>>.value(<String, double>{}),
+      ) as _i6.Future<Map<String, double>>);
 }
 
 /// A class which mocks [NotificationService].

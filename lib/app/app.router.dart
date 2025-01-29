@@ -5,10 +5,11 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:flutter/material.dart' as _i12;
+import 'package:flutter/material.dart' as _i13;
 import 'package:flutter/material.dart';
 import 'package:kaze_app/ui/views/admin/admin_view.dart' as _i11;
 import 'package:kaze_app/ui/views/bottomnav/bottomnav_view.dart' as _i6;
+import 'package:kaze_app/ui/views/cashout/cashout_view.dart' as _i12;
 import 'package:kaze_app/ui/views/chat/chat_view.dart' as _i9;
 import 'package:kaze_app/ui/views/home/home_view.dart' as _i2;
 import 'package:kaze_app/ui/views/login/login_view.dart' as _i4;
@@ -18,7 +19,7 @@ import 'package:kaze_app/ui/views/startup/startup_view.dart' as _i3;
 import 'package:kaze_app/ui/views/topup/topup_view.dart' as _i10;
 import 'package:kaze_app/ui/views/wallet/wallet_view.dart' as _i7;
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i13;
+import 'package:stacked_services/stacked_services.dart' as _i14;
 
 class Routes {
   static const homeView = '/home-view';
@@ -41,6 +42,8 @@ class Routes {
 
   static const adminView = '/admin-view';
 
+  static const cashoutView = '/cashout-view';
+
   static const all = <String>{
     homeView,
     startupView,
@@ -52,6 +55,7 @@ class Routes {
     chatView,
     topupView,
     adminView,
+    cashoutView,
   };
 }
 
@@ -97,17 +101,21 @@ class StackedRouter extends _i1.RouterBase {
       Routes.adminView,
       page: _i11.AdminView,
     ),
+    _i1.RouteDef(
+      Routes.cashoutView,
+      page: _i12.CashoutView,
+    ),
   ];
 
   final _pagesMap = <Type, _i1.StackedRouteFactory>{
     _i2.HomeView: (data) {
-      return _i12.MaterialPageRoute<dynamic>(
+      return _i13.MaterialPageRoute<dynamic>(
         builder: (context) => const _i2.HomeView(),
         settings: data,
       );
     },
     _i3.StartupView: (data) {
-      return _i12.MaterialPageRoute<dynamic>(
+      return _i13.MaterialPageRoute<dynamic>(
         builder: (context) => const _i3.StartupView(),
         settings: data,
       );
@@ -116,7 +124,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<LoginViewArguments>(
         orElse: () => const LoginViewArguments(),
       );
-      return _i12.MaterialPageRoute<dynamic>(
+      return _i13.MaterialPageRoute<dynamic>(
         builder: (context) => _i4.LoginView(key: args.key),
         settings: data,
       );
@@ -125,31 +133,31 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<RegisterViewArguments>(
         orElse: () => const RegisterViewArguments(),
       );
-      return _i12.MaterialPageRoute<dynamic>(
+      return _i13.MaterialPageRoute<dynamic>(
         builder: (context) => _i5.RegisterView(key: args.key),
         settings: data,
       );
     },
     _i6.BottomnavView: (data) {
-      return _i12.MaterialPageRoute<dynamic>(
+      return _i13.MaterialPageRoute<dynamic>(
         builder: (context) => const _i6.BottomnavView(),
         settings: data,
       );
     },
     _i7.WalletView: (data) {
-      return _i12.MaterialPageRoute<dynamic>(
+      return _i13.MaterialPageRoute<dynamic>(
         builder: (context) => const _i7.WalletView(),
         settings: data,
       );
     },
     _i8.SettingsView: (data) {
-      return _i12.MaterialPageRoute<dynamic>(
+      return _i13.MaterialPageRoute<dynamic>(
         builder: (context) => const _i8.SettingsView(),
         settings: data,
       );
     },
     _i9.ChatView: (data) {
-      return _i12.MaterialPageRoute<dynamic>(
+      return _i13.MaterialPageRoute<dynamic>(
         builder: (context) => const _i9.ChatView(),
         settings: data,
       );
@@ -158,14 +166,20 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<TopupViewArguments>(
         orElse: () => const TopupViewArguments(),
       );
-      return _i12.MaterialPageRoute<dynamic>(
+      return _i13.MaterialPageRoute<dynamic>(
         builder: (context) => _i10.TopupView(key: args.key),
         settings: data,
       );
     },
     _i11.AdminView: (data) {
-      return _i12.MaterialPageRoute<dynamic>(
+      return _i13.MaterialPageRoute<dynamic>(
         builder: (context) => const _i11.AdminView(),
+        settings: data,
+      );
+    },
+    _i12.CashoutView: (data) {
+      return _i13.MaterialPageRoute<dynamic>(
+        builder: (context) => const _i12.CashoutView(),
         settings: data,
       );
     },
@@ -181,7 +195,7 @@ class StackedRouter extends _i1.RouterBase {
 class LoginViewArguments {
   const LoginViewArguments({this.key});
 
-  final _i12.Key? key;
+  final _i13.Key? key;
 
   @override
   String toString() {
@@ -203,7 +217,7 @@ class LoginViewArguments {
 class RegisterViewArguments {
   const RegisterViewArguments({this.key});
 
-  final _i12.Key? key;
+  final _i13.Key? key;
 
   @override
   String toString() {
@@ -225,7 +239,7 @@ class RegisterViewArguments {
 class TopupViewArguments {
   const TopupViewArguments({this.key});
 
-  final _i12.Key? key;
+  final _i13.Key? key;
 
   @override
   String toString() {
@@ -244,7 +258,7 @@ class TopupViewArguments {
   }
 }
 
-extension NavigatorStateExtension on _i13.NavigationService {
+extension NavigatorStateExtension on _i14.NavigationService {
   Future<dynamic> navigateToHomeView([
     int? routerId,
     bool preventDuplicates = true,
@@ -274,7 +288,7 @@ extension NavigatorStateExtension on _i13.NavigationService {
   }
 
   Future<dynamic> navigateToLoginView({
-    _i12.Key? key,
+    _i13.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -290,7 +304,7 @@ extension NavigatorStateExtension on _i13.NavigationService {
   }
 
   Future<dynamic> navigateToRegisterView({
-    _i12.Key? key,
+    _i13.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -362,7 +376,7 @@ extension NavigatorStateExtension on _i13.NavigationService {
   }
 
   Future<dynamic> navigateToTopupView({
-    _i12.Key? key,
+    _i13.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -385,6 +399,20 @@ extension NavigatorStateExtension on _i13.NavigationService {
         transition,
   ]) async {
     return navigateTo<dynamic>(Routes.adminView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToCashoutView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return navigateTo<dynamic>(Routes.cashoutView,
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -420,7 +448,7 @@ extension NavigatorStateExtension on _i13.NavigationService {
   }
 
   Future<dynamic> replaceWithLoginView({
-    _i12.Key? key,
+    _i13.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -436,7 +464,7 @@ extension NavigatorStateExtension on _i13.NavigationService {
   }
 
   Future<dynamic> replaceWithRegisterView({
-    _i12.Key? key,
+    _i13.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -508,7 +536,7 @@ extension NavigatorStateExtension on _i13.NavigationService {
   }
 
   Future<dynamic> replaceWithTopupView({
-    _i12.Key? key,
+    _i13.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -531,6 +559,20 @@ extension NavigatorStateExtension on _i13.NavigationService {
         transition,
   ]) async {
     return replaceWith<dynamic>(Routes.adminView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithCashoutView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return replaceWith<dynamic>(Routes.cashoutView,
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

@@ -52,9 +52,13 @@ class WalletViewModel extends BaseViewModel {
     }
   }
 
-  /// Navigate to Top-Up page
-  void navigateToTopUp() {
-    _loggerService.info("Navigating to Top-Up screen.");
+  void navigateToCashIn() {
+    _loggerService.info("Navigating to Cash In screen.");
     _navigationService.navigateTo(Routes.topupView);
+  }
+
+  void navigateToCashOut() {
+    _loggerService.info("Navigating to Cash Out screen.");
+    _navigationService.navigateTo(Routes.cashoutView);
   }
 }
