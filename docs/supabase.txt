@@ -9,6 +9,10 @@ CREATE TABLE appusers (
   created_at timestamp with time zone DEFAULT now()
 );
 
+ALTER TABLE appUsers 
+ADD COLUMN balance NUMERIC(14,2) DEFAULT 0,
+ADD COLUMN on_hold_balance NUMERIC(14,2) DEFAULT 0;
+
 
 -- Create the matches table
 CREATE TABLE matches (
@@ -207,7 +211,7 @@ CREATE TABLE notifications (
 CREATE INDEX idx_notifications_user_id ON notifications(user_id);
 CREATE INDEX idx_notifications_is_read ON notifications(is_read);
 
---NOTE MAKE SURE THE TABLE Notifications is realtime enabled
+--*** TODO: MAKE SURE THE TABLE Notifications is realtime enabled
 ALTER TABLE notifications ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Allow user to read their notifications"
 ON notifications
@@ -216,9 +220,110 @@ USING (
   auth.uid() = user_id
 );
 
+CREATE POLICY "allow insert for authenticated users"
+ON notifications
+FOR INSERT
+WITH CHECK (
+  auth.role() = 'authenticated' AND user_id = auth.uid()
+);
+
+CREATE POLICY "allow select for authenticated users"
+ON notifications
+FOR SELECT
+USING (
+  auth.role() = 'authenticated' AND user_id = auth.uid()
+);
+
+CREATE POLICY "allow insert for service role"
+ON notifications
+FOR INSERT
+WITH CHECK (
+  auth.role() = 'service_role'
+);
+
+CREATE POLICY "allow update is_read for authenticated users"
+ON notifications
+FOR UPDATE
+USING (
+  auth.role() = 'authenticated' AND user_id = auth.uid()
+)
+WITH CHECK (
+  user_id = auth.uid()
+);
+
+
 CREATE POLICY "Allow admin to read all notifications"
 ON notifications
 FOR SELECT
 USING (
   auth.role() = 'service_role'
 );
+
+--Trigger: Move Bet to On-Hold Balance (bet_hold)
+CREATE OR REPLACE FUNCTION hold_bet_amount()
+RETURNS TRIGGER AS $$
+BEGIN
+  -- Move amount from balance to on_hold_balance
+  UPDATE appUsers
+  SET balance = balance - NEW.amount,
+      on_hold_balance = on_hold_balance + NEW.amount
+  WHERE id = NEW.user_id;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+--Trigger: Release Bet (bet_release)
+CREATE TRIGGER trigger_hold_bet
+AFTER INSERT ON transactions
+FOR EACH ROW
+WHEN (NEW.transaction_type = 'bet_hold')
+EXECUTE FUNCTION hold_bet_amount();
+
+CREATE OR REPLACE FUNCTION release_bet_amount()
+RETURNS TRIGGER AS $$
+BEGIN
+  -- Remove amount from on_hold_balance
+  UPDATE appUsers
+  SET on_hold_balance = on_hold_balance - NEW.amount
+  WHERE id = NEW.user_id;
+
+  -- If user won, add to balance
+  IF NEW.winner = TRUE THEN
+    UPDATE appUsers
+    SET balance = balance + (NEW.amount * 2) -- Assume winnings are double the bet
+    WHERE id = NEW.user_id;
+  END IF;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER trigger_release_bet
+AFTER INSERT ON transactions
+FOR EACH ROW
+WHEN (NEW.transaction_type = 'bet_release')
+EXECUTE FUNCTION release_bet_amount();
+
+
+-- Update balance only when transaction status is changed to 'cash_in'
+CREATE OR REPLACE FUNCTION update_balance_on_transaction()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.transaction_type = 'cash_in' AND OLD.transaction_type = 'cash_in_pending' THEN
+    UPDATE appUsers SET balance = balance + NEW.amount WHERE id = NEW.user_id;
+  ELSIF NEW.transaction_type = 'cash_out' THEN
+    UPDATE appUsers SET balance = balance - NEW.amount WHERE id = NEW.user_id;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Modify the trigger to trigger on UPDATE instead of INSERT
+CREATE TRIGGER trigger_update_balance
+AFTER UPDATE OF transaction_type ON transactions
+FOR EACH ROW
+EXECUTE FUNCTION update_balance_on_transaction();
+
+

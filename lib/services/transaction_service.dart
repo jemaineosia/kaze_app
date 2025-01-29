@@ -69,7 +69,7 @@ class TransactionService {
     }
   }
 
-  Future<bool> approveTransaction(String transactionId) async {
+  Future<Transaction?> approveTransaction(String transactionId) async {
     locator<LoggerService>()
         .info('Approving transaction with ID: $transactionId');
     try {
@@ -79,25 +79,61 @@ class TransactionService {
                 .toValue(), // Update the status to 'cash_in'
           })
           .eq('id', transactionId)
-          .select();
+          .select()
+          .maybeSingle();
 
-      if (response.isEmpty) {
+      if (response == null) {
         locator<LoggerService>().error(
           'Transaction approval failed: No rows were updated for transaction ID: $transactionId',
         );
         throw Exception('Failed to update transaction.');
       }
 
-      locator<LoggerService>()
-          .info('Transaction approved successfully for ID: $transactionId');
-      return true; // Successful update
+      final transaction = Transaction.fromJson(response);
+      locator<LoggerService>().info(
+          'Transaction approved successfully: ${transaction.id}, amount: ${transaction.amount}');
+
+      return transaction; // Return the updated transaction object
     } catch (e, stackTrace) {
       locator<LoggerService>().error(
         'Error approving transaction with ID: $transactionId',
         error: e,
         stackTrace: stackTrace,
       );
-      return false;
+      return null;
     }
+  }
+
+  Future<Transaction?> getTransactionById(String transactionId) async {
+    try {
+      final response = await Supabase.instance.client
+          .from('transactions')
+          .select()
+          .eq('id', transactionId)
+          .maybeSingle();
+
+      if (response == null) return null;
+
+      return Transaction.fromJson(response);
+    } catch (e, stackTrace) {
+      locator<LoggerService>().error(
+        'Error fetching transaction with ID: $transactionId',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      return null;
+    }
+  }
+
+  Future<List<Transaction>> getUserTransactions(String userId) async {
+    final response = await _transactionTable
+        .select()
+        .eq('user_id', userId)
+        .or("transaction_type.eq.cash_in, transaction_type.eq.cash_out")
+        .order('created_at', ascending: false);
+
+    return (response as List)
+        .map((json) => Transaction.fromJson(json))
+        .toList();
   }
 }

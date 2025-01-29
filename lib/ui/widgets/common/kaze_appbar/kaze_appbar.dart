@@ -37,7 +37,13 @@ class KazeAppBar extends StackedView<KazeAppbarModel>
       centerTitle: centerTitle,
       leading: leading,
       actions: [
-        walletDisplay(viewModel),
+        IconButton(
+          onPressed: () {},
+          icon: const Icon(
+            Icons.notifications,
+            color: kcWhite,
+          ),
+        ),
         const Gap(10),
       ],
     );

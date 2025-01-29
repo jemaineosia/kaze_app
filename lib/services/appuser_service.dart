@@ -57,4 +57,66 @@ class AppuserService {
       return null; // Return null if an error occurs
     }
   }
+
+  Future<String?> getUsernameByUserId(String userId) async {
+    try {
+      _loggerService.info('Fetching username by userId: $userId');
+
+      final response =
+          await _appUserTable.select().eq('id', userId).maybeSingle();
+
+      if (response == null) {
+        _loggerService.warning('No user found with userId: $userId');
+        return null;
+      }
+
+      _loggerService.debug('User fetched successfully: $userId');
+
+      return AppUser.fromJson(response).username;
+    } catch (e, stackTrace) {
+      _loggerService.error(
+        'Error fetching username by userId: $userId',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      return null; // Return null if an error occurs
+    }
+  }
+
+  Future<double> getUserBalance(String userId) async {
+    final response =
+        await _appUserTable.select('balance').eq('id', userId).maybeSingle();
+
+    return response?['balance']?.toDouble() ?? 0.0;
+  }
+
+  Future<double> getUserOnHoldBalance(String userId) async {
+    final response = await _appUserTable
+        .select('on_hold_balance')
+        .eq('id', userId)
+        .maybeSingle();
+
+    return response?['on_hold_balance']?.toDouble() ?? 0.0;
+  }
+
+  Future<Map<String, double>> getUserBalances(String userId) async {
+    final response = await _appUserTable
+        .select('balance, on_hold_balance')
+        .eq('id', userId)
+        .maybeSingle();
+
+    if (response == null) {
+      return {'balance': 0.0, 'on_hold_balance': 0.0};
+    }
+
+    final totalBalance = (response['balance'] as num).toDouble();
+    final onHoldBalance = (response['on_hold_balance'] as num).toDouble();
+    final availableBalance = totalBalance - onHoldBalance;
+
+    return {
+      'balance': totalBalance,
+      'on_hold_balance': onHoldBalance,
+      'available_balance': availableBalance
+    };
+  }
 }
