@@ -54,7 +54,7 @@ class WalletViewModel extends BaseViewModel {
 
   void navigateToCashIn() {
     _loggerService.info("Navigating to Cash In screen.");
-    _navigationService.navigateTo(Routes.topupView);
+    _navigationService.navigateTo(Routes.cashinView);
   }
 
   void navigateToCashOut() {

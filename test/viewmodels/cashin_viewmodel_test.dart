@@ -4,7 +4,7 @@ import 'package:kaze_app/app/app.locator.dart';
 import '../helpers/test_helpers.dart';
 
 void main() {
-  group('TopupViewModel Tests -', () {
+  group('CashinViewModel Tests -', () {
     setUp(() => registerServices());
     tearDown(() => locator.reset());
   });

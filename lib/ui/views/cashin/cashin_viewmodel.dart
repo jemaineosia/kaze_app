@@ -14,7 +14,7 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:uuid/uuid.dart';
 
-class TopupViewModel extends FormViewModel {
+class CashinViewModel extends FormViewModel {
   final ImagePicker _imagePicker = ImagePicker();
   final _transactionService = locator<TransactionService>();
   final _imageService = locator<ImageService>();

@@ -13,15 +13,15 @@ const bool _autoTextFieldValidation = true;
 
 const String AmountValueKey = 'amount';
 
-final Map<String, TextEditingController> _TopupViewTextEditingControllers = {};
+final Map<String, TextEditingController> _CashinViewTextEditingControllers = {};
 
-final Map<String, FocusNode> _TopupViewFocusNodes = {};
+final Map<String, FocusNode> _CashinViewFocusNodes = {};
 
-final Map<String, String? Function(String?)?> _TopupViewTextValidations = {
+final Map<String, String? Function(String?)?> _CashinViewTextValidations = {
   AmountValueKey: null,
 };
 
-mixin $TopupView {
+mixin $CashinView {
   TextEditingController get amountController =>
       _getFormTextEditingController(AmountValueKey);
 
@@ -31,21 +31,21 @@ mixin $TopupView {
     String key, {
     String? initialValue,
   }) {
-    if (_TopupViewTextEditingControllers.containsKey(key)) {
-      return _TopupViewTextEditingControllers[key]!;
+    if (_CashinViewTextEditingControllers.containsKey(key)) {
+      return _CashinViewTextEditingControllers[key]!;
     }
 
-    _TopupViewTextEditingControllers[key] =
+    _CashinViewTextEditingControllers[key] =
         TextEditingController(text: initialValue);
-    return _TopupViewTextEditingControllers[key]!;
+    return _CashinViewTextEditingControllers[key]!;
   }
 
   FocusNode _getFormFocusNode(String key) {
-    if (_TopupViewFocusNodes.containsKey(key)) {
-      return _TopupViewFocusNodes[key]!;
+    if (_CashinViewFocusNodes.containsKey(key)) {
+      return _CashinViewFocusNodes[key]!;
     }
-    _TopupViewFocusNodes[key] = FocusNode();
-    return _TopupViewFocusNodes[key]!;
+    _CashinViewFocusNodes[key] = FocusNode();
+    return _CashinViewFocusNodes[key]!;
   }
 
   /// Registers a listener on every generated controller that calls [model.setData()]
@@ -91,15 +91,15 @@ mixin $TopupView {
   void disposeForm() {
     // The dispose function for a TextEditingController sets all listeners to null
 
-    for (var controller in _TopupViewTextEditingControllers.values) {
+    for (var controller in _CashinViewTextEditingControllers.values) {
       controller.dispose();
     }
-    for (var focusNode in _TopupViewFocusNodes.values) {
+    for (var focusNode in _CashinViewFocusNodes.values) {
       focusNode.dispose();
     }
 
-    _TopupViewTextEditingControllers.clear();
-    _TopupViewFocusNodes.clear();
+    _CashinViewTextEditingControllers.clear();
+    _CashinViewFocusNodes.clear();
   }
 }
 
@@ -122,8 +122,8 @@ extension ValueProperties on FormStateHelper {
       this.formValueMap..addAll({AmountValueKey: value}),
     );
 
-    if (_TopupViewTextEditingControllers.containsKey(AmountValueKey)) {
-      _TopupViewTextEditingControllers[AmountValueKey]?.text = value ?? '';
+    if (_CashinViewTextEditingControllers.containsKey(AmountValueKey)) {
+      _CashinViewTextEditingControllers[AmountValueKey]?.text = value ?? '';
     }
   }
 
@@ -157,11 +157,11 @@ extension Methods on FormStateHelper {
 
 /// Returns the validation message for the given key
 String? getValidationMessage(String key) {
-  final validatorForKey = _TopupViewTextValidations[key];
+  final validatorForKey = _CashinViewTextValidations[key];
   if (validatorForKey == null) return null;
 
   String? validationMessageForKey = validatorForKey(
-    _TopupViewTextEditingControllers[key]!.text,
+    _CashinViewTextEditingControllers[key]!.text,
   );
 
   return validationMessageForKey;

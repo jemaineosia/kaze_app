@@ -9,20 +9,21 @@ import 'package:kaze_app/ui/widgets/common/kaze_button/kaze_button.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 
-import 'topup_view.form.dart';
-import 'topup_viewmodel.dart';
+import 'cashin_view.form.dart';
+import 'cashin_viewmodel.dart';
 
 @FormView(fields: [
   FormTextField(name: 'amount'),
 ])
-class TopupView extends StackedView<TopupViewModel> with $TopupView {
-  TopupView({Key? key}) : super(key: key);
+class CashinView extends StackedView<CashinViewModel> with $CashinView {
+  CashinView({Key? key}) : super(key: key);
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget builder(
     BuildContext context,
-    TopupViewModel viewModel,
+    CashinViewModel viewModel,
     Widget? child,
   ) {
     return Scaffold(
@@ -43,7 +44,7 @@ class TopupView extends StackedView<TopupViewModel> with $TopupView {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                PaymentMode(viewModel),
+                _paymentMode(viewModel),
                 const Gap(20),
                 TextField(
                   controller: amountController,
@@ -92,7 +93,7 @@ class TopupView extends StackedView<TopupViewModel> with $TopupView {
     );
   }
 
-  Widget PaymentMode(TopupViewModel viewModel) {
+  Widget _paymentMode(CashinViewModel viewModel) {
     return Column(
       children: [
         Text(
@@ -139,9 +140,9 @@ class TopupView extends StackedView<TopupViewModel> with $TopupView {
         Builder(
           builder: (context) {
             if (viewModel.selectedMethod == PaymentMethod.gcash) {
-              return GcashWidget();
+              return _gcashWidget();
             } else {
-              return BankWidget();
+              return _bankWidget();
             }
           },
         ),
@@ -149,7 +150,7 @@ class TopupView extends StackedView<TopupViewModel> with $TopupView {
     );
   }
 
-  Widget GcashWidget() {
+  Widget _gcashWidget() {
     return const Column(
       children: [
         Text("Send Payment To"),
@@ -159,7 +160,7 @@ class TopupView extends StackedView<TopupViewModel> with $TopupView {
     );
   }
 
-  Widget BankWidget() {
+  Widget _bankWidget() {
     return const Column(
       children: [
         Text("Send Payment To"),
@@ -170,8 +171,8 @@ class TopupView extends StackedView<TopupViewModel> with $TopupView {
   }
 
   @override
-  TopupViewModel viewModelBuilder(
+  CashinViewModel viewModelBuilder(
     BuildContext context,
   ) =>
-      TopupViewModel();
+      CashinViewModel();
 }

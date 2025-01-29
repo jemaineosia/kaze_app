@@ -7,16 +7,16 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:flutter/material.dart' as _i13;
 import 'package:flutter/material.dart';
-import 'package:kaze_app/ui/views/admin/admin_view.dart' as _i11;
+import 'package:kaze_app/ui/views/admin/admin_view.dart' as _i10;
 import 'package:kaze_app/ui/views/bottomnav/bottomnav_view.dart' as _i6;
-import 'package:kaze_app/ui/views/cashout/cashout_view.dart' as _i12;
+import 'package:kaze_app/ui/views/cashin/cashin_view.dart' as _i12;
+import 'package:kaze_app/ui/views/cashout/cashout_view.dart' as _i11;
 import 'package:kaze_app/ui/views/chat/chat_view.dart' as _i9;
 import 'package:kaze_app/ui/views/home/home_view.dart' as _i2;
 import 'package:kaze_app/ui/views/login/login_view.dart' as _i4;
 import 'package:kaze_app/ui/views/register/register_view.dart' as _i5;
 import 'package:kaze_app/ui/views/settings/settings_view.dart' as _i8;
 import 'package:kaze_app/ui/views/startup/startup_view.dart' as _i3;
-import 'package:kaze_app/ui/views/topup/topup_view.dart' as _i10;
 import 'package:kaze_app/ui/views/wallet/wallet_view.dart' as _i7;
 import 'package:stacked/stacked.dart' as _i1;
 import 'package:stacked_services/stacked_services.dart' as _i14;
@@ -38,11 +38,11 @@ class Routes {
 
   static const chatView = '/chat-view';
 
-  static const topupView = '/topup-view';
-
   static const adminView = '/admin-view';
 
   static const cashoutView = '/cashout-view';
+
+  static const cashinView = '/cashin-view';
 
   static const all = <String>{
     homeView,
@@ -53,9 +53,9 @@ class Routes {
     walletView,
     settingsView,
     chatView,
-    topupView,
     adminView,
     cashoutView,
+    cashinView,
   };
 }
 
@@ -94,16 +94,16 @@ class StackedRouter extends _i1.RouterBase {
       page: _i9.ChatView,
     ),
     _i1.RouteDef(
-      Routes.topupView,
-      page: _i10.TopupView,
-    ),
-    _i1.RouteDef(
       Routes.adminView,
-      page: _i11.AdminView,
+      page: _i10.AdminView,
     ),
     _i1.RouteDef(
       Routes.cashoutView,
-      page: _i12.CashoutView,
+      page: _i11.CashoutView,
+    ),
+    _i1.RouteDef(
+      Routes.cashinView,
+      page: _i12.CashinView,
     ),
   ];
 
@@ -162,24 +162,24 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i10.TopupView: (data) {
-      final args = data.getArgs<TopupViewArguments>(
-        orElse: () => const TopupViewArguments(),
-      );
+    _i10.AdminView: (data) {
       return _i13.MaterialPageRoute<dynamic>(
-        builder: (context) => _i10.TopupView(key: args.key),
+        builder: (context) => const _i10.AdminView(),
         settings: data,
       );
     },
-    _i11.AdminView: (data) {
+    _i11.CashoutView: (data) {
       return _i13.MaterialPageRoute<dynamic>(
-        builder: (context) => const _i11.AdminView(),
+        builder: (context) => const _i11.CashoutView(),
         settings: data,
       );
     },
-    _i12.CashoutView: (data) {
+    _i12.CashinView: (data) {
+      final args = data.getArgs<CashinViewArguments>(
+        orElse: () => const CashinViewArguments(),
+      );
       return _i13.MaterialPageRoute<dynamic>(
-        builder: (context) => const _i12.CashoutView(),
+        builder: (context) => _i12.CashinView(key: args.key),
         settings: data,
       );
     },
@@ -236,8 +236,8 @@ class RegisterViewArguments {
   }
 }
 
-class TopupViewArguments {
-  const TopupViewArguments({this.key});
+class CashinViewArguments {
+  const CashinViewArguments({this.key});
 
   final _i13.Key? key;
 
@@ -247,7 +247,7 @@ class TopupViewArguments {
   }
 
   @override
-  bool operator ==(covariant TopupViewArguments other) {
+  bool operator ==(covariant CashinViewArguments other) {
     if (identical(this, other)) return true;
     return other.key == key;
   }
@@ -375,22 +375,6 @@ extension NavigatorStateExtension on _i14.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> navigateToTopupView({
-    _i13.Key? key,
-    int? routerId,
-    bool preventDuplicates = true,
-    Map<String, String>? parameters,
-    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
-  }) async {
-    return navigateTo<dynamic>(Routes.topupView,
-        arguments: TopupViewArguments(key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
-  }
-
   Future<dynamic> navigateToAdminView([
     int? routerId,
     bool preventDuplicates = true,
@@ -413,6 +397,22 @@ extension NavigatorStateExtension on _i14.NavigationService {
         transition,
   ]) async {
     return navigateTo<dynamic>(Routes.cashoutView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToCashinView({
+    _i13.Key? key,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo<dynamic>(Routes.cashinView,
+        arguments: CashinViewArguments(key: key),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -535,22 +535,6 @@ extension NavigatorStateExtension on _i14.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> replaceWithTopupView({
-    _i13.Key? key,
-    int? routerId,
-    bool preventDuplicates = true,
-    Map<String, String>? parameters,
-    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
-  }) async {
-    return replaceWith<dynamic>(Routes.topupView,
-        arguments: TopupViewArguments(key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
-  }
-
   Future<dynamic> replaceWithAdminView([
     int? routerId,
     bool preventDuplicates = true,
@@ -573,6 +557,22 @@ extension NavigatorStateExtension on _i14.NavigationService {
         transition,
   ]) async {
     return replaceWith<dynamic>(Routes.cashoutView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithCashinView({
+    _i13.Key? key,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return replaceWith<dynamic>(Routes.cashinView,
+        arguments: CashinViewArguments(key: key),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

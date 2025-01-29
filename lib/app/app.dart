@@ -11,7 +11,6 @@ import 'package:kaze_app/ui/views/bottomnav/bottomnav_view.dart';
 import 'package:kaze_app/ui/views/wallet/wallet_view.dart';
 import 'package:kaze_app/ui/views/settings/settings_view.dart';
 import 'package:kaze_app/ui/views/chat/chat_view.dart';
-import 'package:kaze_app/ui/views/topup/topup_view.dart';
 import 'package:kaze_app/services/logger_service.dart';
 import 'package:kaze_app/ui/views/admin/admin_view.dart';
 import 'package:kaze_app/services/transaction_service.dart';
@@ -19,6 +18,7 @@ import 'package:kaze_app/services/image_service.dart';
 import 'package:kaze_app/services/appuser_service.dart';
 import 'package:kaze_app/services/notification_service.dart';
 import 'package:kaze_app/ui/views/cashout/cashout_view.dart';
+import 'package:kaze_app/ui/views/cashin/cashin_view.dart';
 // @stacked-import
 
 @StackedApp(
@@ -31,9 +31,9 @@ import 'package:kaze_app/ui/views/cashout/cashout_view.dart';
     MaterialRoute(page: WalletView),
     MaterialRoute(page: SettingsView),
     MaterialRoute(page: ChatView),
-    MaterialRoute(page: TopupView),
     MaterialRoute(page: AdminView),
     MaterialRoute(page: CashoutView),
+    MaterialRoute(page: CashinView),
 // @stacked-route
   ],
   dependencies: [

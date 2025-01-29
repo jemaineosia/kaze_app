@@ -6,5 +6,5 @@ import 'package:stacked_services/stacked_services.dart';
 class KazeAppbarModel extends BaseViewModel {
   final _navigationService = locator<NavigationService>();
 
-  void showTopupView() => _navigationService.navigateToTopupView();
+  void showTopupView() => _navigationService.navigateToCashinView();
 }
