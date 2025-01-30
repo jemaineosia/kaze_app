@@ -169,8 +169,11 @@ class StackedRouter extends _i1.RouterBase {
       );
     },
     _i11.CashoutView: (data) {
+      final args = data.getArgs<CashoutViewArguments>(
+        orElse: () => const CashoutViewArguments(),
+      );
       return _i13.MaterialPageRoute<dynamic>(
-        builder: (context) => const _i11.CashoutView(),
+        builder: (context) => _i11.CashoutView(key: args.key),
         settings: data,
       );
     },
@@ -226,6 +229,28 @@ class RegisterViewArguments {
 
   @override
   bool operator ==(covariant RegisterViewArguments other) {
+    if (identical(this, other)) return true;
+    return other.key == key;
+  }
+
+  @override
+  int get hashCode {
+    return key.hashCode;
+  }
+}
+
+class CashoutViewArguments {
+  const CashoutViewArguments({this.key});
+
+  final _i13.Key? key;
+
+  @override
+  String toString() {
+    return '{"key": "$key"}';
+  }
+
+  @override
+  bool operator ==(covariant CashoutViewArguments other) {
     if (identical(this, other)) return true;
     return other.key == key;
   }
@@ -389,14 +414,16 @@ extension NavigatorStateExtension on _i14.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> navigateToCashoutView([
+  Future<dynamic> navigateToCashoutView({
+    _i13.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  ]) async {
+  }) async {
     return navigateTo<dynamic>(Routes.cashoutView,
+        arguments: CashoutViewArguments(key: key),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -549,14 +576,16 @@ extension NavigatorStateExtension on _i14.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> replaceWithCashoutView([
+  Future<dynamic> replaceWithCashoutView({
+    _i13.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  ]) async {
+  }) async {
     return replaceWith<dynamic>(Routes.cashoutView,
+        arguments: CashoutViewArguments(key: key),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

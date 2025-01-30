@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:kaze_app/app/app.locator.dart';
 import 'package:kaze_app/app/app.router.dart';
-import 'package:kaze_app/common/enums/payment_method.dart';
+import 'package:kaze_app/common/enums/cashin_method.dart';
 import 'package:kaze_app/common/enums/transaction_type.dart';
 import 'package:kaze_app/models/transaction.dart';
 import 'package:kaze_app/services/auth_service.dart';
@@ -26,10 +26,10 @@ class CashinViewModel extends FormViewModel {
   File? _receiptImage;
   File? get receiptImage => _receiptImage;
 
-  PaymentMethod _selectedMethod = PaymentMethod.gcash;
-  PaymentMethod get selectedMethod => _selectedMethod;
+  CashInMethod _selectedMethod = CashInMethod.gcash;
+  CashInMethod get selectedMethod => _selectedMethod;
 
-  void setSelectedMethod(PaymentMethod method) {
+  void setSelectedMethod(CashInMethod method) {
     _selectedMethod = method;
     notifyListeners();
     _loggerService.info('Payment method selected: ${method.toString()}');

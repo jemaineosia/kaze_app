@@ -46,14 +46,13 @@ class LoginView extends StackedView<LoginViewModel> with $LoginView {
                     return null;
                   },
                 ),
-                Gap(10.h),
                 KazeTextfield(
                   hintText: "Password",
                   controller: passwordController,
                   obscureText: true,
                   suffixIcon: const Icon(Icons.lock_outline),
                 ),
-                Gap(20.h),
+                Gap(10.h),
                 Row(
                   children: [
                     const Spacer(),

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:kaze_app/common/enums/payment_method.dart';
+import 'package:kaze_app/common/enums/cashin_method.dart';
 import 'package:kaze_app/ui/common/app_colors.dart';
 import 'package:kaze_app/ui/widgets/common/kaze_button/kaze_button.dart';
 import 'package:stacked/stacked.dart';
@@ -106,10 +106,10 @@ class CashinView extends StackedView<CashinViewModel> with $CashinView {
             // GCash radio
             Row(
               children: [
-                Radio<PaymentMethod>(
-                  value: PaymentMethod.gcash,
+                Radio<CashInMethod>(
+                  value: CashInMethod.gcash,
                   groupValue: viewModel.selectedMethod,
-                  onChanged: (PaymentMethod? newValue) {
+                  onChanged: (CashInMethod? newValue) {
                     if (newValue != null) {
                       viewModel.setSelectedMethod(newValue);
                     }
@@ -122,10 +122,10 @@ class CashinView extends StackedView<CashinViewModel> with $CashinView {
             // Bank radio
             Row(
               children: [
-                Radio<PaymentMethod>(
-                  value: PaymentMethod.paymaya,
+                Radio<CashInMethod>(
+                  value: CashInMethod.paymaya,
                   groupValue: viewModel.selectedMethod,
-                  onChanged: (PaymentMethod? newValue) {
+                  onChanged: (CashInMethod? newValue) {
                     if (newValue != null) {
                       viewModel.setSelectedMethod(newValue);
                     }
@@ -139,7 +139,7 @@ class CashinView extends StackedView<CashinViewModel> with $CashinView {
         Gap(20.h),
         Builder(
           builder: (context) {
-            if (viewModel.selectedMethod == PaymentMethod.gcash) {
+            if (viewModel.selectedMethod == CashInMethod.gcash) {
               return _gcashWidget();
             } else {
               return _bankWidget();

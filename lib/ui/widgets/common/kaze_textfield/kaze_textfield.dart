@@ -28,31 +28,36 @@ class KazeTextfield extends StackedView<KazeTextfieldModel> {
     KazeTextfieldModel viewModel,
     Widget? child,
   ) {
-    return TextFormField(
-      validator: validator,
-      onTap: onTap,
-      controller: controller,
-      obscureText: obscureText,
-      decoration: InputDecoration(
-        hintText: hintText,
-        hintStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
-        errorStyle: const TextStyle(color: Colors.redAccent),
-        fillColor: Theme.of(context).colorScheme.secondary,
-        filled: true,
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.h),
-          borderSide: BorderSide(color: Theme.of(context).colorScheme.tertiary),
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 5.h),
+      child: TextFormField(
+        validator: validator,
+        onTap: onTap,
+        controller: controller,
+        obscureText: obscureText,
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
+          errorStyle: const TextStyle(color: Colors.redAccent),
+          fillColor: Theme.of(context).colorScheme.secondary,
+          filled: true,
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.h),
+            borderSide:
+                BorderSide(color: Theme.of(context).colorScheme.tertiary),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.h),
+            borderSide: const BorderSide(color: Colors.redAccent),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.w),
+            borderSide:
+                BorderSide(color: Theme.of(context).colorScheme.primary),
+          ),
+          suffixIcon: suffixIcon,
+          suffixIconColor: Theme.of(context).colorScheme.primary,
         ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.h),
-          borderSide: const BorderSide(color: Colors.redAccent),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.w),
-          borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
-        ),
-        suffixIcon: suffixIcon,
-        suffixIconColor: Theme.of(context).colorScheme.primary,
       ),
     );
   }

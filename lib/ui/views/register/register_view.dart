@@ -61,7 +61,6 @@ class RegisterView extends StackedView<RegisterViewModel> with $RegisterView {
                       ? "Username is required"
                       : null,
                 ),
-                Gap(10.h),
                 KazeTextfield(
                   hintText: "Email",
                   controller: emailController,
@@ -70,7 +69,6 @@ class RegisterView extends StackedView<RegisterViewModel> with $RegisterView {
                       ? null
                       : "Enter a valid email",
                 ),
-                Gap(10.h),
                 KazeTextfield(
                   hintText: "Password",
                   controller: passwordController,
@@ -80,7 +78,7 @@ class RegisterView extends StackedView<RegisterViewModel> with $RegisterView {
                       ? null
                       : "Password is too short",
                 ),
-                Gap(20.h),
+                Gap(10.h),
                 KazeButton(
                   text: "Sign Up",
                   onTap: () {

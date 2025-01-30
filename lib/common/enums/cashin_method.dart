@@ -1,14 +1,14 @@
-enum PaymentMethod {
+enum CashInMethod {
   gcash,
   paymaya;
 
   /// Convert a string to a PaymentMethod enum
-  static PaymentMethod fromString(String method) {
+  static CashInMethod fromString(String method) {
     switch (method.toLowerCase()) {
       case 'gcash':
-        return PaymentMethod.gcash;
+        return CashInMethod.gcash;
       case 'paymaya':
-        return PaymentMethod.paymaya;
+        return CashInMethod.paymaya;
       default:
         throw ArgumentError('Invalid payment method: $method');
     }
@@ -17,10 +17,10 @@ enum PaymentMethod {
   /// Convert a PaymentMethod enum to a string
   String toValue() {
     switch (this) {
-      case PaymentMethod.gcash:
-        return 'gcash';
-      case PaymentMethod.paymaya:
-        return 'paymaya';
+      case CashInMethod.gcash:
+        return 'GCash';
+      case CashInMethod.paymaya:
+        return 'Paymaya';
     }
   }
 }
