@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:kaze_app/common/enums/cashout_method.dart';
 import 'package:kaze_app/ui/common/app_colors.dart';
 import 'package:kaze_app/ui/widgets/common/kaze_button/kaze_button.dart';
 import 'package:kaze_app/ui/widgets/common/kaze_textfield/kaze_textfield.dart';
@@ -41,34 +42,30 @@ class CashoutView extends StackedView<CashoutViewModel> with $CashoutView {
           padding: const EdgeInsets.all(36.0),
           child: Column(
             children: [
-              DropdownButtonFormField<String>(
+              DropdownButtonFormField<CashOutMethod>(
                 value: viewModel.selectedPaymentMode,
                 items: viewModel.paymentModes.map((mode) {
                   return DropdownMenuItem(
                     value: mode,
-                    child: Text(mode),
+                    child: Text(
+                        mode.toValue()), // Use the enum's string representation
                   );
                 }).toList(),
                 onChanged: viewModel.setSelectedPaymentMode,
                 decoration: InputDecoration(
                   labelText: 'Payment Mode',
                   border: OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius.circular(15.0), // Rounded corners
-                    borderSide:
-                        const BorderSide(color: Colors.grey), // Border color
+                    borderRadius: BorderRadius.circular(15.0),
+                    borderSide: const BorderSide(color: Colors.grey),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius.circular(15.0), // Rounded corners
-                    borderSide:
-                        const BorderSide(color: Colors.grey), // Border color
+                    borderRadius: BorderRadius.circular(15.0),
+                    borderSide: const BorderSide(color: Colors.grey),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius.circular(15.0), // Rounded corners
-                    borderSide: const BorderSide(
-                        color: Colors.blue, width: 2.0), // Highlighted border
+                    borderRadius: BorderRadius.circular(15.0),
+                    borderSide:
+                        const BorderSide(color: Colors.blue, width: 2.0),
                   ),
                   contentPadding: const EdgeInsets.symmetric(
                       vertical: 12.0, horizontal: 16.0),
@@ -76,7 +73,7 @@ class CashoutView extends StackedView<CashoutViewModel> with $CashoutView {
                 validator: (value) =>
                     value == null ? 'Please select a payment mode' : null,
               ),
-              if (viewModel.selectedPaymentMode == 'Bank') ...[
+              if (viewModel.selectedPaymentMode == CashOutMethod.bank) ...[
                 Gap(10.h),
                 KazeTextfield(
                   hintText: 'Bank Name',
@@ -131,7 +128,13 @@ class CashoutView extends StackedView<CashoutViewModel> with $CashoutView {
                 text: 'Submit',
                 onTap: () {
                   if (_formKey.currentState?.validate() ?? false) {
-                    //submit
+                    viewModel.submit(
+                      bankNameController.text,
+                      fullNameController.text,
+                      accountNumberController.text,
+                      double.tryParse(amountController.text) ?? 0.0,
+                      viewModel.selectedPaymentMode ?? CashOutMethod.gcash,
+                    );
                   }
                 },
                 isLoading: viewModel.isBusy,

@@ -48,6 +48,13 @@ CREATE TABLE transactions (
   deleted_at timestamp with time zone DEFAULT NULL -- Default to NULL for soft delete
 );
 
+ALTER TABLE transactions 
+ADD COLUMN cash_out_method TEXT NULL,
+ADD COLUMN full_name TEXT NULL,
+ADD COLUMN bank_name TEXT NULL,
+ADD COLUMN account_number TEXT NULL;
+
+
 -- Create the matchParticipants table
 CREATE TABLE match_participants (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
