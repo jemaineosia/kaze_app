@@ -42,6 +42,15 @@ class CashoutView extends StackedView<CashoutViewModel> with $CashoutView {
           padding: const EdgeInsets.all(36.0),
           child: Column(
             children: [
+              Text(
+                "P${viewModel.currentBalance.toStringAsFixed(2)}",
+                style: TextStyle(
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Text("Current Balance"),
+              Gap(30.h),
               DropdownButtonFormField<CashOutMethod>(
                 value: viewModel.selectedPaymentMode,
                 items: viewModel.paymentModes.map((mode) {
