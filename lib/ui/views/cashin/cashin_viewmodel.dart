@@ -104,7 +104,7 @@ class CashinViewModel extends FormViewModel {
         userId: user.id,
         amount: double.parse(amount),
         transactionType: TransactionType.cashInPending, // Use the enum
-        referenceNote: 'Top-up via ${selectedMethod.toValue()}',
+        referenceNote: 'Cash-In via ${selectedMethod.toValue()}',
         receiptImageUrl: receiptUrl, // Attach the uploaded receipt URL
         createdAt: DateTime.now(),
         deletedAt: null, // Not deleted yet

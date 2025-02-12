@@ -26,19 +26,29 @@ class WalletView extends StackedView<WalletViewModel> {
           children: [
             Gap(50.h),
 
-            // Current Balance
+            // **Total Balance**
             Text(
-              "P${viewModel.currentBalance.toStringAsFixed(2)}",
+              "P${viewModel.totalBalance.toStringAsFixed(2)}",
               style: TextStyle(
-                fontSize: 20.sp,
+                fontSize: 22.sp,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const Text("Current Balance"),
+            const Text("Total Balance"),
 
             Gap(10.h),
 
-            // On-Hold Balance
+            // **Available Balance**
+            Text(
+              "Available: P${viewModel.availableBalance.toStringAsFixed(2)}",
+              style: TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.green,
+              ),
+            ),
+
+            // **On-Hold Balance**
             Text(
               "On-Hold: P${viewModel.onHoldBalance.toStringAsFixed(2)}",
               style: TextStyle(
@@ -84,22 +94,31 @@ class WalletView extends StackedView<WalletViewModel> {
                           itemCount: viewModel.transactions.length,
                           itemBuilder: (context, index) {
                             final transaction = viewModel.transactions[index];
+                            final isCashIn = transaction.transactionType ==
+                                TransactionType.cashIn;
+                            final isCashOutPending =
+                                transaction.transactionType ==
+                                    TransactionType.cashOutPending;
+
                             return ListTile(
                               leading: Icon(
-                                transaction.transactionType ==
-                                        TransactionType.cashIn
+                                isCashIn
                                     ? Icons.arrow_downward
                                     : Icons.arrow_upward,
-                                color: transaction.transactionType ==
-                                        TransactionType.cashIn
+                                color: isCashIn
                                     ? Colors.green
-                                    : Colors.red,
+                                    : isCashOutPending
+                                        ? Colors.orange
+                                        : Colors.red,
                               ),
                               title: Text(
                                 transaction.transactionType.toString(),
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14.sp,
+                                  color: isCashOutPending
+                                      ? Colors.orange
+                                      : Colors.black,
                                 ),
                               ),
                               subtitle: Text(transaction.referenceNote ?? ''),
