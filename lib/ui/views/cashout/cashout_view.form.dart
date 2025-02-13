@@ -16,8 +16,7 @@ const String FullNameValueKey = 'fullName';
 const String AccountNumberValueKey = 'accountNumber';
 const String AmountValueKey = 'amount';
 
-final Map<String, TextEditingController> _CashoutViewTextEditingControllers =
-    {};
+final Map<String, TextEditingController> _CashoutViewTextEditingControllers = {};
 
 final Map<String, FocusNode> _CashoutViewFocusNodes = {};
 
@@ -29,32 +28,22 @@ final Map<String, String? Function(String?)?> _CashoutViewTextValidations = {
 };
 
 mixin $CashoutView {
-  TextEditingController get bankNameController =>
-      _getFormTextEditingController(BankNameValueKey);
-  TextEditingController get fullNameController =>
-      _getFormTextEditingController(FullNameValueKey);
-  TextEditingController get accountNumberController =>
-      _getFormTextEditingController(AccountNumberValueKey);
-  TextEditingController get amountController =>
-      _getFormTextEditingController(AmountValueKey);
+  TextEditingController get bankNameController => _getFormTextEditingController(BankNameValueKey);
+  TextEditingController get fullNameController => _getFormTextEditingController(FullNameValueKey);
+  TextEditingController get accountNumberController => _getFormTextEditingController(AccountNumberValueKey);
+  TextEditingController get amountController => _getFormTextEditingController(AmountValueKey);
 
   FocusNode get bankNameFocusNode => _getFormFocusNode(BankNameValueKey);
   FocusNode get fullNameFocusNode => _getFormFocusNode(FullNameValueKey);
-  FocusNode get accountNumberFocusNode =>
-      _getFormFocusNode(AccountNumberValueKey);
+  FocusNode get accountNumberFocusNode => _getFormFocusNode(AccountNumberValueKey);
   FocusNode get amountFocusNode => _getFormFocusNode(AmountValueKey);
 
-  TextEditingController _getFormTextEditingController(
-    String key, {
-    String? initialValue,
-  }) {
+  TextEditingController _getFormTextEditingController(String key, {String? initialValue}) {
     if (_CashoutViewTextEditingControllers.containsKey(key)) {
       return _CashoutViewTextEditingControllers[key]!;
     }
 
-    _CashoutViewTextEditingControllers[key] = TextEditingController(
-      text: initialValue,
-    );
+    _CashoutViewTextEditingControllers[key] = TextEditingController(text: initialValue);
     return _CashoutViewTextEditingControllers[key]!;
   }
 
@@ -130,9 +119,7 @@ mixin $CashoutView {
 }
 
 extension ValueProperties on FormStateHelper {
-  bool get hasAnyValidationMessage => this.fieldsValidationMessages.values.any(
-    (validation) => validation != null,
-  );
+  bool get hasAnyValidationMessage => this.fieldsValidationMessages.values.any((validation) => validation != null);
 
   bool get isFormValid {
     if (!_autoTextFieldValidation) this.validateForm();
@@ -142,8 +129,7 @@ extension ValueProperties on FormStateHelper {
 
   String? get bankNameValue => this.formValueMap[BankNameValueKey] as String?;
   String? get fullNameValue => this.formValueMap[FullNameValueKey] as String?;
-  String? get accountNumberValue =>
-      this.formValueMap[AccountNumberValueKey] as String?;
+  String? get accountNumberValue => this.formValueMap[AccountNumberValueKey] as String?;
   String? get amountValue => this.formValueMap[AmountValueKey] as String?;
 
   set bankNameValue(String? value) {
@@ -166,8 +152,7 @@ extension ValueProperties on FormStateHelper {
     this.setData(this.formValueMap..addAll({AccountNumberValueKey: value}));
 
     if (_CashoutViewTextEditingControllers.containsKey(AccountNumberValueKey)) {
-      _CashoutViewTextEditingControllers[AccountNumberValueKey]?.text =
-          value ?? '';
+      _CashoutViewTextEditingControllers[AccountNumberValueKey]?.text = value ?? '';
     }
   }
 
@@ -179,36 +164,22 @@ extension ValueProperties on FormStateHelper {
     }
   }
 
-  bool get hasBankName =>
-      this.formValueMap.containsKey(BankNameValueKey) &&
-      (bankNameValue?.isNotEmpty ?? false);
-  bool get hasFullName =>
-      this.formValueMap.containsKey(FullNameValueKey) &&
-      (fullNameValue?.isNotEmpty ?? false);
+  bool get hasBankName => this.formValueMap.containsKey(BankNameValueKey) && (bankNameValue?.isNotEmpty ?? false);
+  bool get hasFullName => this.formValueMap.containsKey(FullNameValueKey) && (fullNameValue?.isNotEmpty ?? false);
   bool get hasAccountNumber =>
-      this.formValueMap.containsKey(AccountNumberValueKey) &&
-      (accountNumberValue?.isNotEmpty ?? false);
-  bool get hasAmount =>
-      this.formValueMap.containsKey(AmountValueKey) &&
-      (amountValue?.isNotEmpty ?? false);
+      this.formValueMap.containsKey(AccountNumberValueKey) && (accountNumberValue?.isNotEmpty ?? false);
+  bool get hasAmount => this.formValueMap.containsKey(AmountValueKey) && (amountValue?.isNotEmpty ?? false);
 
-  bool get hasBankNameValidationMessage =>
-      this.fieldsValidationMessages[BankNameValueKey]?.isNotEmpty ?? false;
-  bool get hasFullNameValidationMessage =>
-      this.fieldsValidationMessages[FullNameValueKey]?.isNotEmpty ?? false;
+  bool get hasBankNameValidationMessage => this.fieldsValidationMessages[BankNameValueKey]?.isNotEmpty ?? false;
+  bool get hasFullNameValidationMessage => this.fieldsValidationMessages[FullNameValueKey]?.isNotEmpty ?? false;
   bool get hasAccountNumberValidationMessage =>
       this.fieldsValidationMessages[AccountNumberValueKey]?.isNotEmpty ?? false;
-  bool get hasAmountValidationMessage =>
-      this.fieldsValidationMessages[AmountValueKey]?.isNotEmpty ?? false;
+  bool get hasAmountValidationMessage => this.fieldsValidationMessages[AmountValueKey]?.isNotEmpty ?? false;
 
-  String? get bankNameValidationMessage =>
-      this.fieldsValidationMessages[BankNameValueKey];
-  String? get fullNameValidationMessage =>
-      this.fieldsValidationMessages[FullNameValueKey];
-  String? get accountNumberValidationMessage =>
-      this.fieldsValidationMessages[AccountNumberValueKey];
-  String? get amountValidationMessage =>
-      this.fieldsValidationMessages[AmountValueKey];
+  String? get bankNameValidationMessage => this.fieldsValidationMessages[BankNameValueKey];
+  String? get fullNameValidationMessage => this.fieldsValidationMessages[FullNameValueKey];
+  String? get accountNumberValidationMessage => this.fieldsValidationMessages[AccountNumberValueKey];
+  String? get amountValidationMessage => this.fieldsValidationMessages[AmountValueKey];
 }
 
 extension Methods on FormStateHelper {
@@ -245,18 +216,15 @@ String? getValidationMessage(String key) {
   final validatorForKey = _CashoutViewTextValidations[key];
   if (validatorForKey == null) return null;
 
-  String? validationMessageForKey = validatorForKey(
-    _CashoutViewTextEditingControllers[key]!.text,
-  );
+  String? validationMessageForKey = validatorForKey(_CashoutViewTextEditingControllers[key]!.text);
 
   return validationMessageForKey;
 }
 
 /// Updates the fieldsValidationMessages on the FormViewModel
-void updateValidationData(FormStateHelper model) =>
-    model.setValidationMessages({
-      BankNameValueKey: getValidationMessage(BankNameValueKey),
-      FullNameValueKey: getValidationMessage(FullNameValueKey),
-      AccountNumberValueKey: getValidationMessage(AccountNumberValueKey),
-      AmountValueKey: getValidationMessage(AmountValueKey),
-    });
+void updateValidationData(FormStateHelper model) => model.setValidationMessages({
+  BankNameValueKey: getValidationMessage(BankNameValueKey),
+  FullNameValueKey: getValidationMessage(FullNameValueKey),
+  AccountNumberValueKey: getValidationMessage(AccountNumberValueKey),
+  AmountValueKey: getValidationMessage(AmountValueKey),
+});

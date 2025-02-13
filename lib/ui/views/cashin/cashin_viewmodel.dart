@@ -38,9 +38,7 @@ class CashinViewModel extends FormViewModel {
   // Pick receipt image
   Future<void> pickReceiptImage() async {
     try {
-      final XFile? pickedFile = await _imagePicker.pickImage(
-        source: ImageSource.gallery,
-      );
+      final XFile? pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery);
       if (pickedFile != null) {
         _receiptImage = File(pickedFile.path);
         notifyListeners();
@@ -49,11 +47,7 @@ class CashinViewModel extends FormViewModel {
         _loggerService.warning('User cancelled image selection.');
       }
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error while picking receipt image.',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error while picking receipt image.', error: e, stackTrace: stackTrace);
       await _dialogService.showDialog(
         title: 'Image Selection Error',
         description: 'An error occurred while selecting the receipt image.',
@@ -63,9 +57,7 @@ class CashinViewModel extends FormViewModel {
 
   // Submit the top-up request
   Future<void> submitTopup(String amount) async {
-    if (amount.isEmpty ||
-        double.tryParse(amount) == null ||
-        double.parse(amount) <= 0) {
+    if (amount.isEmpty || double.tryParse(amount) == null || double.parse(amount) <= 0) {
       await _dialogService.showDialog(
         title: 'Invalid Amount',
         description: 'Please enter a valid amount greater than 0.',
@@ -115,24 +107,17 @@ class CashinViewModel extends FormViewModel {
       final success = await _transactionService.createTransaction(transaction);
 
       if (success) {
-        _loggerService.info(
-          'Top-up request submitted successfully for user: ${user.id}',
-        );
+        _loggerService.info('Top-up request submitted successfully for user: ${user.id}');
         await _dialogService.showDialog(
           title: 'Top-Up Submitted',
-          description:
-              'Your top-up request has been submitted successfully. Please wait for admin approval.',
+          description: 'Your top-up request has been submitted successfully. Please wait for admin approval.',
         );
         _navigationService.back();
       } else {
         throw Exception('Failed to create a transaction record in Supabase.');
       }
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error while submitting top-up request.',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error while submitting top-up request.', error: e, stackTrace: stackTrace);
       await _dialogService.showDialog(
         title: 'Submission Failed',
         description: 'An error occurred while submitting your top-up request.',

@@ -6,20 +6,12 @@ class KazeDrawerTile extends StatelessWidget {
   final IconData icon;
   final void Function() onTap;
 
-  const KazeDrawerTile({
-    super.key,
-    required this.title,
-    required this.icon,
-    required this.onTap,
-  });
+  const KazeDrawerTile({super.key, required this.title, required this.icon, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(
-        title,
-        style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary),
-      ),
+      title: Text(title, style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary)),
       leading: Icon(icon, color: Theme.of(context).colorScheme.primary),
       onTap: onTap,
     );

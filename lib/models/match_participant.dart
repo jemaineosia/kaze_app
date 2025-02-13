@@ -23,9 +23,7 @@ class MatchParticipant {
       matchId: json['match_id'], // Updated to snake_case
       userId: json['user_id'], // Updated to snake_case
       team: json['team'],
-      contributionAmount:
-          (json['contribution_amount'] as num)
-              .toDouble(), // Updated to snake_case
+      contributionAmount: (json['contribution_amount'] as num).toDouble(), // Updated to snake_case
       createdAt: DateTime.parse(json['created_at']), // Updated to snake_case
       deletedAt:
           json['deleted_at'] !=

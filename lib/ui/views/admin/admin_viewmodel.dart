@@ -22,26 +22,19 @@ class AdminViewModel extends BaseViewModel {
     setBusy(true);
 
     try {
-      final pendingTransactions =
-          await _transactionService.getPendingTransactions();
+      final pendingTransactions = await _transactionService.getPendingTransactions();
 
       if (pendingTransactions.isEmpty) {
         _loggerService.info('No pending transactions found.');
       } else {
-        _loggerService.info(
-          '${pendingTransactions.length} pending transactions loaded.',
-        );
+        _loggerService.info('${pendingTransactions.length} pending transactions loaded.');
       }
 
       // Update the list and notify listeners
       _pendingTransactions = pendingTransactions;
       notifyListeners();
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Failed to fetch pending transactions.',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Failed to fetch pending transactions.', error: e, stackTrace: stackTrace);
     } finally {
       setBusy(false);
     }
@@ -52,14 +45,10 @@ class AdminViewModel extends BaseViewModel {
 
     try {
       // Step 1: Approve the transaction
-      final transaction = await _transactionService.approveTransaction(
-        transactionId,
-      );
+      final transaction = await _transactionService.approveTransaction(transactionId);
 
       if (transaction != null) {
-        _loggerService.info(
-          'Transaction $transactionId approved successfully.',
-        );
+        _loggerService.info('Transaction $transactionId approved successfully.');
 
         // Step 3: Add a notification for the user
         final notificationSuccess = await _notificationService.addNotification(
@@ -70,13 +59,9 @@ class AdminViewModel extends BaseViewModel {
         );
 
         if (notificationSuccess) {
-          _loggerService.info(
-            'Notification added for user: ${transaction.userId}',
-          );
+          _loggerService.info('Notification added for user: ${transaction.userId}');
         } else {
-          _loggerService.warning(
-            'Failed to add notification for user: ${transaction.userId}',
-          );
+          _loggerService.warning('Failed to add notification for user: ${transaction.userId}');
         }
 
         // Step 4: Show success dialog
@@ -94,16 +79,9 @@ class AdminViewModel extends BaseViewModel {
         );
       }
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error approving transaction with ID: $transactionId',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error approving transaction with ID: $transactionId', error: e, stackTrace: stackTrace);
 
-      await _dialogService.showDialog(
-        title: 'Error',
-        description: 'An unexpected error occurred. Please try again.',
-      );
+      await _dialogService.showDialog(title: 'Error', description: 'An unexpected error occurred. Please try again.');
     } finally {
       setBusy(false);
     }

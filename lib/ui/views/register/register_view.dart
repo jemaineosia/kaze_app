@@ -9,23 +9,13 @@ import 'package:stacked/stacked_annotations.dart';
 import 'register_view.form.dart';
 import 'register_viewmodel.dart';
 
-@FormView(
-  fields: [
-    FormTextField(name: 'username'),
-    FormTextField(name: 'email'),
-    FormTextField(name: 'password'),
-  ],
-)
+@FormView(fields: [FormTextField(name: 'username'), FormTextField(name: 'email'), FormTextField(name: 'password')])
 class RegisterView extends StackedView<RegisterViewModel> with $RegisterView {
   RegisterView({super.key});
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
-  Widget builder(
-    BuildContext context,
-    RegisterViewModel viewModel,
-    Widget? child,
-  ) {
+  Widget builder(BuildContext context, RegisterViewModel viewModel, Widget? child) {
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -38,17 +28,8 @@ class RegisterView extends StackedView<RegisterViewModel> with $RegisterView {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      "KAZE ",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30.sp,
-                      ),
-                    ),
-                    Text(
-                      "APP",
-                      style: TextStyle(color: Colors.black45, fontSize: 30.sp),
-                    ),
+                    Text("KAZE ", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30.sp)),
+                    Text("APP", style: TextStyle(color: Colors.black45, fontSize: 30.sp)),
                   ],
                 ),
                 Gap(20.h),
@@ -56,32 +37,20 @@ class RegisterView extends StackedView<RegisterViewModel> with $RegisterView {
                   hintText: "Username",
                   controller: usernameController,
                   suffixIcon: const Icon(Icons.person_outline),
-                  validator:
-                      (value) =>
-                          value == null || value.isEmpty
-                              ? "Username is required"
-                              : null,
+                  validator: (value) => value == null || value.isEmpty ? "Username is required" : null,
                 ),
                 KazeTextfield(
                   hintText: "Email",
                   controller: emailController,
                   suffixIcon: const Icon(Icons.email_outlined),
-                  validator:
-                      (value) =>
-                          value != null && value.contains('@')
-                              ? null
-                              : "Enter a valid email",
+                  validator: (value) => value != null && value.contains('@') ? null : "Enter a valid email",
                 ),
                 KazeTextfield(
                   hintText: "Password",
                   controller: passwordController,
                   suffixIcon: const Icon(Icons.lock_outline),
                   obscureText: true,
-                  validator:
-                      (value) =>
-                          value != null && value.length >= 6
-                              ? null
-                              : "Password is too short",
+                  validator: (value) => value != null && value.length >= 6 ? null : "Password is too short",
                 ),
                 Gap(10.h),
                 KazeButton(
@@ -101,12 +70,7 @@ class RegisterView extends StackedView<RegisterViewModel> with $RegisterView {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      "Already a member? ",
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
+                    Text("Already a member? ", style: TextStyle(color: Theme.of(context).colorScheme.primary)),
                     GestureDetector(
                       onTap: () => viewModel.navigateToLogin(),
                       child: Text(
@@ -140,6 +104,5 @@ class RegisterView extends StackedView<RegisterViewModel> with $RegisterView {
   }
 
   @override
-  RegisterViewModel viewModelBuilder(BuildContext context) =>
-      RegisterViewModel();
+  RegisterViewModel viewModelBuilder(BuildContext context) => RegisterViewModel();
 }

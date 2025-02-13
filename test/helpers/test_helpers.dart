@@ -48,9 +48,7 @@ MockNavigationService getAndRegisterNavigationService() {
   return service;
 }
 
-MockBottomSheetService getAndRegisterBottomSheetService<T>({
-  SheetResponse<T>? showCustomSheetResponse,
-}) {
+MockBottomSheetService getAndRegisterBottomSheetService<T>({SheetResponse<T>? showCustomSheetResponse}) {
   _removeRegistrationIfExists<BottomSheetService>();
   final service = MockBottomSheetService();
 
@@ -79,10 +77,7 @@ MockBottomSheetService getAndRegisterBottomSheetService<T>({
       data: anyNamed('data'),
       description: anyNamed('description'),
     ),
-  ).thenAnswer(
-    (realInvocation) =>
-        Future.value(showCustomSheetResponse ?? SheetResponse<T>()),
-  );
+  ).thenAnswer((realInvocation) => Future.value(showCustomSheetResponse ?? SheetResponse<T>()));
 
   locator.registerSingleton<BottomSheetService>(service);
   return service;

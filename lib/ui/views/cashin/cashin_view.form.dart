@@ -17,27 +17,19 @@ final Map<String, TextEditingController> _CashinViewTextEditingControllers = {};
 
 final Map<String, FocusNode> _CashinViewFocusNodes = {};
 
-final Map<String, String? Function(String?)?> _CashinViewTextValidations = {
-  AmountValueKey: null,
-};
+final Map<String, String? Function(String?)?> _CashinViewTextValidations = {AmountValueKey: null};
 
 mixin $CashinView {
-  TextEditingController get amountController =>
-      _getFormTextEditingController(AmountValueKey);
+  TextEditingController get amountController => _getFormTextEditingController(AmountValueKey);
 
   FocusNode get amountFocusNode => _getFormFocusNode(AmountValueKey);
 
-  TextEditingController _getFormTextEditingController(
-    String key, {
-    String? initialValue,
-  }) {
+  TextEditingController _getFormTextEditingController(String key, {String? initialValue}) {
     if (_CashinViewTextEditingControllers.containsKey(key)) {
       return _CashinViewTextEditingControllers[key]!;
     }
 
-    _CashinViewTextEditingControllers[key] = TextEditingController(
-      text: initialValue,
-    );
+    _CashinViewTextEditingControllers[key] = TextEditingController(text: initialValue);
     return _CashinViewTextEditingControllers[key]!;
   }
 
@@ -71,9 +63,7 @@ mixin $CashinView {
 
   /// Updates the formData on the FormViewModel
   void _updateFormData(FormStateHelper model, {bool forceValidate = false}) {
-    model.setData(
-      model.formValueMap..addAll({AmountValueKey: amountController.text}),
-    );
+    model.setData(model.formValueMap..addAll({AmountValueKey: amountController.text}));
 
     if (_autoTextFieldValidation || forceValidate) {
       updateValidationData(model);
@@ -102,9 +92,7 @@ mixin $CashinView {
 }
 
 extension ValueProperties on FormStateHelper {
-  bool get hasAnyValidationMessage => this.fieldsValidationMessages.values.any(
-    (validation) => validation != null,
-  );
+  bool get hasAnyValidationMessage => this.fieldsValidationMessages.values.any((validation) => validation != null);
 
   bool get isFormValid {
     if (!_autoTextFieldValidation) this.validateForm();
@@ -122,15 +110,11 @@ extension ValueProperties on FormStateHelper {
     }
   }
 
-  bool get hasAmount =>
-      this.formValueMap.containsKey(AmountValueKey) &&
-      (amountValue?.isNotEmpty ?? false);
+  bool get hasAmount => this.formValueMap.containsKey(AmountValueKey) && (amountValue?.isNotEmpty ?? false);
 
-  bool get hasAmountValidationMessage =>
-      this.fieldsValidationMessages[AmountValueKey]?.isNotEmpty ?? false;
+  bool get hasAmountValidationMessage => this.fieldsValidationMessages[AmountValueKey]?.isNotEmpty ?? false;
 
-  String? get amountValidationMessage =>
-      this.fieldsValidationMessages[AmountValueKey];
+  String? get amountValidationMessage => this.fieldsValidationMessages[AmountValueKey];
 }
 
 extension Methods on FormStateHelper {
@@ -144,9 +128,7 @@ extension Methods on FormStateHelper {
 
   /// Validates text input fields on the Form
   void validateForm() {
-    this.setValidationMessages({
-      AmountValueKey: getValidationMessage(AmountValueKey),
-    });
+    this.setValidationMessages({AmountValueKey: getValidationMessage(AmountValueKey)});
   }
 }
 
@@ -155,14 +137,11 @@ String? getValidationMessage(String key) {
   final validatorForKey = _CashinViewTextValidations[key];
   if (validatorForKey == null) return null;
 
-  String? validationMessageForKey = validatorForKey(
-    _CashinViewTextEditingControllers[key]!.text,
-  );
+  String? validationMessageForKey = validatorForKey(_CashinViewTextEditingControllers[key]!.text);
 
   return validationMessageForKey;
 }
 
 /// Updates the fieldsValidationMessages on the FormViewModel
-void updateValidationData(FormStateHelper model) => model.setValidationMessages(
-  {AmountValueKey: getValidationMessage(AmountValueKey)},
-);
+void updateValidationData(FormStateHelper model) =>
+    model.setValidationMessages({AmountValueKey: getValidationMessage(AmountValueKey)});

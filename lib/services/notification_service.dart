@@ -16,24 +16,16 @@ class NotificationService {
           .eq('is_read', false)
           .order('created_at', ascending: false);
 
-      return (response as List)
-          .map((json) => Notification.fromJson(json as Map<String, dynamic>))
-          .toList();
+      return (response as List).map((json) => Notification.fromJson(json as Map<String, dynamic>)).toList();
     } catch (e, stackTrace) {
-      locator<LoggerService>().error(
-        'Error fetching notifications for user $userId',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      locator<LoggerService>().error('Error fetching notifications for user $userId', error: e, stackTrace: stackTrace);
       return [];
     }
   }
 
   void subscribeToNotifications(String userId) {
     final subscription = _notificationTable
-        .stream(
-          primaryKey: ['id'],
-        ) // Specify the primary key for real-time streaming
+        .stream(primaryKey: ['id']) // Specify the primary key for real-time streaming
         .eq('user_id', userId)
         .listen((List<Map<String, dynamic>> event) {
           try {
@@ -42,11 +34,7 @@ class NotificationService {
               logger.info('New Notification: ${notification['title']}');
             }
           } catch (e, stackTrace) {
-            logger.error(
-              'Error processing real-time notifications.',
-              error: e,
-              stackTrace: stackTrace,
-            );
+            logger.error('Error processing real-time notifications.', error: e, stackTrace: stackTrace);
           }
         });
 
@@ -77,11 +65,7 @@ class NotificationService {
 
       return true;
     } catch (e, stackTrace) {
-      locator<LoggerService>().error(
-        'Error adding notification for user $userId',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      locator<LoggerService>().error('Error adding notification for user $userId', error: e, stackTrace: stackTrace);
       return false;
     }
   }
@@ -98,9 +82,7 @@ class NotificationService {
         throw Exception('Failed to update notification status.');
       }
 
-      locator<LoggerService>().info(
-        'Notification $notificationId marked as read.',
-      );
+      locator<LoggerService>().info('Notification $notificationId marked as read.');
       return true;
     } catch (e, stackTrace) {
       locator<LoggerService>().error(

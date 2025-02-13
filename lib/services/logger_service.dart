@@ -18,8 +18,7 @@ class LoggerService {
 
   void debug(String message) => _logger.d(_addTimestamp(_addUserInfo(message)));
   void info(String message) => _logger.i(_addTimestamp(_addUserInfo(message)));
-  void warning(String message) =>
-      _logger.w(_addTimestamp(_addUserInfo(message)));
+  void warning(String message) => _logger.w(_addTimestamp(_addUserInfo(message)));
 
   void error(String message, {dynamic error, StackTrace? stackTrace}) {
     final logMessage = _addTimestamp(_addUserInfo(message));
@@ -28,11 +27,7 @@ class LoggerService {
     _logger.e(logMessage, error: error, stackTrace: stackTrace);
 
     // Save the error log to Supabase
-    _saveErrorLogToSupabase(
-      logMessage,
-      error: error?.toString(),
-      stackTrace: stackTrace?.toString(),
-    );
+    _saveErrorLogToSupabase(logMessage, error: error?.toString(), stackTrace: stackTrace?.toString());
   }
 
   // Helper function to add timestamps
@@ -48,11 +43,7 @@ class LoggerService {
     return "User: $username - $message";
   }
 
-  Future<void> _saveErrorLogToSupabase(
-    String message, {
-    String? error,
-    String? stackTrace,
-  }) async {
+  Future<void> _saveErrorLogToSupabase(String message, {String? error, String? stackTrace}) async {
     try {
       await _supabase.from('logs').insert({
         'log_level': 'error',
@@ -63,11 +54,7 @@ class LoggerService {
       });
     } catch (e, stack) {
       // If saving to Supabase fails, log the error locally
-      _logger.e(
-        'Failed to save error log to Supabase',
-        error: e,
-        stackTrace: stack,
-      );
+      _logger.e('Failed to save error log to Supabase', error: e, stackTrace: stack);
     }
   }
 }

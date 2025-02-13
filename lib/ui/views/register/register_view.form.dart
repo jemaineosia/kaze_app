@@ -15,8 +15,7 @@ const String UsernameValueKey = 'username';
 const String EmailValueKey = 'email';
 const String PasswordValueKey = 'password';
 
-final Map<String, TextEditingController> _RegisterViewTextEditingControllers =
-    {};
+final Map<String, TextEditingController> _RegisterViewTextEditingControllers = {};
 
 final Map<String, FocusNode> _RegisterViewFocusNodes = {};
 
@@ -27,28 +26,20 @@ final Map<String, String? Function(String?)?> _RegisterViewTextValidations = {
 };
 
 mixin $RegisterView {
-  TextEditingController get usernameController =>
-      _getFormTextEditingController(UsernameValueKey);
-  TextEditingController get emailController =>
-      _getFormTextEditingController(EmailValueKey);
-  TextEditingController get passwordController =>
-      _getFormTextEditingController(PasswordValueKey);
+  TextEditingController get usernameController => _getFormTextEditingController(UsernameValueKey);
+  TextEditingController get emailController => _getFormTextEditingController(EmailValueKey);
+  TextEditingController get passwordController => _getFormTextEditingController(PasswordValueKey);
 
   FocusNode get usernameFocusNode => _getFormFocusNode(UsernameValueKey);
   FocusNode get emailFocusNode => _getFormFocusNode(EmailValueKey);
   FocusNode get passwordFocusNode => _getFormFocusNode(PasswordValueKey);
 
-  TextEditingController _getFormTextEditingController(
-    String key, {
-    String? initialValue,
-  }) {
+  TextEditingController _getFormTextEditingController(String key, {String? initialValue}) {
     if (_RegisterViewTextEditingControllers.containsKey(key)) {
       return _RegisterViewTextEditingControllers[key]!;
     }
 
-    _RegisterViewTextEditingControllers[key] = TextEditingController(
-      text: initialValue,
-    );
+    _RegisterViewTextEditingControllers[key] = TextEditingController(text: initialValue);
     return _RegisterViewTextEditingControllers[key]!;
   }
 
@@ -121,9 +112,7 @@ mixin $RegisterView {
 }
 
 extension ValueProperties on FormStateHelper {
-  bool get hasAnyValidationMessage => this.fieldsValidationMessages.values.any(
-    (validation) => validation != null,
-  );
+  bool get hasAnyValidationMessage => this.fieldsValidationMessages.values.any((validation) => validation != null);
 
   bool get isFormValid {
     if (!_autoTextFieldValidation) this.validateForm();
@@ -159,29 +148,17 @@ extension ValueProperties on FormStateHelper {
     }
   }
 
-  bool get hasUsername =>
-      this.formValueMap.containsKey(UsernameValueKey) &&
-      (usernameValue?.isNotEmpty ?? false);
-  bool get hasEmail =>
-      this.formValueMap.containsKey(EmailValueKey) &&
-      (emailValue?.isNotEmpty ?? false);
-  bool get hasPassword =>
-      this.formValueMap.containsKey(PasswordValueKey) &&
-      (passwordValue?.isNotEmpty ?? false);
+  bool get hasUsername => this.formValueMap.containsKey(UsernameValueKey) && (usernameValue?.isNotEmpty ?? false);
+  bool get hasEmail => this.formValueMap.containsKey(EmailValueKey) && (emailValue?.isNotEmpty ?? false);
+  bool get hasPassword => this.formValueMap.containsKey(PasswordValueKey) && (passwordValue?.isNotEmpty ?? false);
 
-  bool get hasUsernameValidationMessage =>
-      this.fieldsValidationMessages[UsernameValueKey]?.isNotEmpty ?? false;
-  bool get hasEmailValidationMessage =>
-      this.fieldsValidationMessages[EmailValueKey]?.isNotEmpty ?? false;
-  bool get hasPasswordValidationMessage =>
-      this.fieldsValidationMessages[PasswordValueKey]?.isNotEmpty ?? false;
+  bool get hasUsernameValidationMessage => this.fieldsValidationMessages[UsernameValueKey]?.isNotEmpty ?? false;
+  bool get hasEmailValidationMessage => this.fieldsValidationMessages[EmailValueKey]?.isNotEmpty ?? false;
+  bool get hasPasswordValidationMessage => this.fieldsValidationMessages[PasswordValueKey]?.isNotEmpty ?? false;
 
-  String? get usernameValidationMessage =>
-      this.fieldsValidationMessages[UsernameValueKey];
-  String? get emailValidationMessage =>
-      this.fieldsValidationMessages[EmailValueKey];
-  String? get passwordValidationMessage =>
-      this.fieldsValidationMessages[PasswordValueKey];
+  String? get usernameValidationMessage => this.fieldsValidationMessages[UsernameValueKey];
+  String? get emailValidationMessage => this.fieldsValidationMessages[EmailValueKey];
+  String? get passwordValidationMessage => this.fieldsValidationMessages[PasswordValueKey];
 }
 
 extension Methods on FormStateHelper {
@@ -214,17 +191,14 @@ String? getValidationMessage(String key) {
   final validatorForKey = _RegisterViewTextValidations[key];
   if (validatorForKey == null) return null;
 
-  String? validationMessageForKey = validatorForKey(
-    _RegisterViewTextEditingControllers[key]!.text,
-  );
+  String? validationMessageForKey = validatorForKey(_RegisterViewTextEditingControllers[key]!.text);
 
   return validationMessageForKey;
 }
 
 /// Updates the fieldsValidationMessages on the FormViewModel
-void updateValidationData(FormStateHelper model) =>
-    model.setValidationMessages({
-      UsernameValueKey: getValidationMessage(UsernameValueKey),
-      EmailValueKey: getValidationMessage(EmailValueKey),
-      PasswordValueKey: getValidationMessage(PasswordValueKey),
-    });
+void updateValidationData(FormStateHelper model) => model.setValidationMessages({
+  UsernameValueKey: getValidationMessage(UsernameValueKey),
+  EmailValueKey: getValidationMessage(EmailValueKey),
+  PasswordValueKey: getValidationMessage(PasswordValueKey),
+});

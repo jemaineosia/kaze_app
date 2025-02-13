@@ -19,11 +19,7 @@ class CashinView extends StackedView<CashinViewModel> with $CashinView {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
-  Widget builder(
-    BuildContext context,
-    CashinViewModel viewModel,
-    Widget? child,
-  ) {
+  Widget builder(BuildContext context, CashinViewModel viewModel, Widget? child) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("KAZE", style: TextStyle(color: kcWhite)),
@@ -44,14 +40,10 @@ class CashinView extends StackedView<CashinViewModel> with $CashinView {
                 TextField(
                   controller: amountController,
                   textAlign: TextAlign.center,
-                  keyboardType: const TextInputType.numberWithOptions(
-                    decimal: false,
-                    signed: false,
-                  ),
+                  keyboardType: const TextInputType.numberWithOptions(decimal: false, signed: false),
                   style: const TextStyle(
                     fontSize: 30, // Increase font size here
-                    fontWeight:
-                        FontWeight.bold, // Optional: make it bold, if desired
+                    fontWeight: FontWeight.bold, // Optional: make it bold, if desired
                   ),
                 ),
                 const Gap(20),
@@ -66,10 +58,7 @@ class CashinView extends StackedView<CashinViewModel> with $CashinView {
                   SizedBox(
                     width: 150,
                     height: 150,
-                    child: Image.file(
-                      File(viewModel.receiptImage!.path),
-                      fit: BoxFit.cover,
-                    ),
+                    child: Image.file(File(viewModel.receiptImage!.path), fit: BoxFit.cover),
                   ),
                 ],
                 const Gap(30),
@@ -143,22 +132,12 @@ class CashinView extends StackedView<CashinViewModel> with $CashinView {
   }
 
   Widget _gcashWidget() {
-    return const Column(
-      children: [
-        Text("Send Payment To"),
-        Text("Juan Bakokang"),
-        Text("09485094930"),
-      ],
-    );
+    return const Column(children: [Text("Send Payment To"), Text("Juan Bakokang"), Text("09485094930")]);
   }
 
   Widget _bankWidget() {
     return const Column(
-      children: [
-        Text("Send Payment To"),
-        Text("Don Facundo"),
-        Text("BDO Bank Account: A0344593404"),
-      ],
+      children: [Text("Send Payment To"), Text("Don Facundo"), Text("BDO Bank Account: A0344593404")],
     );
   }
 

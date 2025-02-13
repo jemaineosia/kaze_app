@@ -32,9 +32,7 @@ class AppUser {
       role: json['role'] ?? 'user',
       status: AppUserStatus.fromString(json['status'] ?? 'active'),
       balance: (json['balance'] as num?)?.toDouble() ?? 0.0, // Parse balance
-      onHoldBalance:
-          (json['on_hold_balance'] as num?)?.toDouble() ??
-          0.0, // Parse on-hold balance
+      onHoldBalance: (json['on_hold_balance'] as num?)?.toDouble() ?? 0.0, // Parse on-hold balance
       createdAt:
           json['created_at'] !=
                   null // Updated to snake_case

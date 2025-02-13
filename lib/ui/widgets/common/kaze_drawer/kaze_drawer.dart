@@ -9,11 +9,7 @@ class KazeDrawer extends StackedView<KazeDrawerModel> {
   const KazeDrawer({super.key});
 
   @override
-  Widget builder(
-    BuildContext context,
-    KazeDrawerModel viewModel,
-    Widget? child,
-  ) {
+  Widget builder(BuildContext context, KazeDrawerModel viewModel, Widget? child) {
     return Drawer(
       backgroundColor: Theme.of(context).colorScheme.surface,
       child: SafeArea(
@@ -23,11 +19,7 @@ class KazeDrawer extends StackedView<KazeDrawerModel> {
             children: [
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 50.h),
-                child: Icon(
-                  Icons.person,
-                  size: 80.sp,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
+                child: Icon(Icons.person, size: 80.sp, color: Theme.of(context).colorScheme.primary),
               ),
               Divider(color: Theme.of(context).colorScheme.secondary),
               KazeDrawerTile(
@@ -44,11 +36,7 @@ class KazeDrawer extends StackedView<KazeDrawerModel> {
                 onTap: () => viewModel.navigateToSettings(),
               ),
               const Spacer(),
-              KazeDrawerTile(
-                title: 'L O G O U T',
-                icon: Icons.logout,
-                onTap: () => viewModel.logout(),
-              ),
+              KazeDrawerTile(title: 'L O G O U T', icon: Icons.logout, onTap: () => viewModel.logout()),
               SizedBox(height: 50.h),
             ],
           ),

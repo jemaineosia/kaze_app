@@ -7,11 +7,7 @@ class AdminView extends StackedView<AdminViewModel> {
   const AdminView({Key? key}) : super(key: key);
 
   @override
-  Widget builder(
-    BuildContext context,
-    AdminViewModel viewModel,
-    Widget? child,
-  ) {
+  Widget builder(BuildContext context, AdminViewModel viewModel, Widget? child) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
@@ -19,8 +15,7 @@ class AdminView extends StackedView<AdminViewModel> {
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
-            onPressed:
-                viewModel.fetchPendingTransactions, // Reload transactions
+            onPressed: viewModel.fetchPendingTransactions, // Reload transactions
           ),
         ],
       ),
@@ -29,22 +24,18 @@ class AdminView extends StackedView<AdminViewModel> {
         child:
             viewModel.isBusy
                 ? const Center(child: CircularProgressIndicator())
-                : viewModel.getPendingTransactions == null ||
-                    viewModel.getPendingTransactions!.isEmpty
+                : viewModel.getPendingTransactions == null || viewModel.getPendingTransactions!.isEmpty
                 ? const Center(child: Text('No pending transactions found.'))
                 : ListView.builder(
                   itemCount: viewModel.getPendingTransactions!.length,
                   itemBuilder: (context, index) {
-                    final transaction =
-                        viewModel.getPendingTransactions![index];
+                    final transaction = viewModel.getPendingTransactions![index];
                     return Card(
                       child: ListTile(
                         title: Text('Username: ${transaction.username}'),
                         subtitle: Text('Amount: ${transaction.amount}'),
                         trailing: TextButton(
-                          onPressed:
-                              () =>
-                                  viewModel.approveTransaction(transaction.id),
+                          onPressed: () => viewModel.approveTransaction(transaction.id),
                           child: const Text('Approve'),
                         ),
                       ),

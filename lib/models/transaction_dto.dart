@@ -35,10 +35,7 @@ class TransactionDTO {
       referenceNote: json['reference_note'],
       receiptImageUrl: json['receipt_image_url'],
       createdAt: DateTime.parse(json['created_at']),
-      deletedAt:
-          json['deleted_at'] != null
-              ? DateTime.parse(json['deleted_at'])
-              : null,
+      deletedAt: json['deleted_at'] != null ? DateTime.parse(json['deleted_at']) : null,
       username: json['appusers']?['username'], // Extract nested username
     );
   }

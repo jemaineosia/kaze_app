@@ -6,40 +6,24 @@ import 'package:stacked/stacked.dart';
 
 import 'kaze_appbar_model.dart';
 
-class KazeAppBar extends StackedView<KazeAppbarModel>
-    implements PreferredSizeWidget {
+class KazeAppBar extends StackedView<KazeAppbarModel> implements PreferredSizeWidget {
   final String title;
   final bool centerTitle;
   final List<Widget>? actions;
   final Widget? leading;
 
-  const KazeAppBar({
-    Key? key,
-    this.title = "KAZE",
-    this.centerTitle = false,
-    this.actions,
-    this.leading,
-  }) : super(key: key);
+  const KazeAppBar({Key? key, this.title = "KAZE", this.centerTitle = false, this.actions, this.leading})
+    : super(key: key);
 
   @override
-  Widget builder(
-    BuildContext context,
-    KazeAppbarModel viewModel,
-    Widget? child,
-  ) {
+  Widget builder(BuildContext context, KazeAppbarModel viewModel, Widget? child) {
     return AppBar(
       title: Text(title),
       titleTextStyle: TextStyle(color: kcWhite, fontSize: 20.sp),
       backgroundColor: kcDarkGreyColor,
       centerTitle: centerTitle,
       leading: leading,
-      actions: [
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.notifications, color: kcWhite),
-        ),
-        const Gap(10),
-      ],
+      actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.notifications, color: kcWhite)), const Gap(10)],
     );
   }
 
@@ -73,10 +57,7 @@ class KazeAppBar extends StackedView<KazeAppbarModel>
           ),
         ),
         const SizedBox(width: 8),
-        const Text(
-          'Coins: 0',
-          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-        ),
+        const Text('Coins: 0', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
       ],
     ),
   );

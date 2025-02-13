@@ -24,25 +24,18 @@ final Map<String, String? Function(String?)?> _LoginViewTextValidations = {
 };
 
 mixin $LoginView {
-  TextEditingController get usernameController =>
-      _getFormTextEditingController(UsernameValueKey);
-  TextEditingController get passwordController =>
-      _getFormTextEditingController(PasswordValueKey);
+  TextEditingController get usernameController => _getFormTextEditingController(UsernameValueKey);
+  TextEditingController get passwordController => _getFormTextEditingController(PasswordValueKey);
 
   FocusNode get usernameFocusNode => _getFormFocusNode(UsernameValueKey);
   FocusNode get passwordFocusNode => _getFormFocusNode(PasswordValueKey);
 
-  TextEditingController _getFormTextEditingController(
-    String key, {
-    String? initialValue,
-  }) {
+  TextEditingController _getFormTextEditingController(String key, {String? initialValue}) {
     if (_LoginViewTextEditingControllers.containsKey(key)) {
       return _LoginViewTextEditingControllers[key]!;
     }
 
-    _LoginViewTextEditingControllers[key] = TextEditingController(
-      text: initialValue,
-    );
+    _LoginViewTextEditingControllers[key] = TextEditingController(text: initialValue);
     return _LoginViewTextEditingControllers[key]!;
   }
 
@@ -79,10 +72,8 @@ mixin $LoginView {
   /// Updates the formData on the FormViewModel
   void _updateFormData(FormStateHelper model, {bool forceValidate = false}) {
     model.setData(
-      model.formValueMap..addAll({
-        UsernameValueKey: usernameController.text,
-        PasswordValueKey: passwordController.text,
-      }),
+      model.formValueMap
+        ..addAll({UsernameValueKey: usernameController.text, PasswordValueKey: passwordController.text}),
     );
 
     if (_autoTextFieldValidation || forceValidate) {
@@ -112,9 +103,7 @@ mixin $LoginView {
 }
 
 extension ValueProperties on FormStateHelper {
-  bool get hasAnyValidationMessage => this.fieldsValidationMessages.values.any(
-    (validation) => validation != null,
-  );
+  bool get hasAnyValidationMessage => this.fieldsValidationMessages.values.any((validation) => validation != null);
 
   bool get isFormValid {
     if (!_autoTextFieldValidation) this.validateForm();
@@ -141,22 +130,14 @@ extension ValueProperties on FormStateHelper {
     }
   }
 
-  bool get hasUsername =>
-      this.formValueMap.containsKey(UsernameValueKey) &&
-      (usernameValue?.isNotEmpty ?? false);
-  bool get hasPassword =>
-      this.formValueMap.containsKey(PasswordValueKey) &&
-      (passwordValue?.isNotEmpty ?? false);
+  bool get hasUsername => this.formValueMap.containsKey(UsernameValueKey) && (usernameValue?.isNotEmpty ?? false);
+  bool get hasPassword => this.formValueMap.containsKey(PasswordValueKey) && (passwordValue?.isNotEmpty ?? false);
 
-  bool get hasUsernameValidationMessage =>
-      this.fieldsValidationMessages[UsernameValueKey]?.isNotEmpty ?? false;
-  bool get hasPasswordValidationMessage =>
-      this.fieldsValidationMessages[PasswordValueKey]?.isNotEmpty ?? false;
+  bool get hasUsernameValidationMessage => this.fieldsValidationMessages[UsernameValueKey]?.isNotEmpty ?? false;
+  bool get hasPasswordValidationMessage => this.fieldsValidationMessages[PasswordValueKey]?.isNotEmpty ?? false;
 
-  String? get usernameValidationMessage =>
-      this.fieldsValidationMessages[UsernameValueKey];
-  String? get passwordValidationMessage =>
-      this.fieldsValidationMessages[PasswordValueKey];
+  String? get usernameValidationMessage => this.fieldsValidationMessages[UsernameValueKey];
+  String? get passwordValidationMessage => this.fieldsValidationMessages[PasswordValueKey];
 }
 
 extension Methods on FormStateHelper {
@@ -185,16 +166,13 @@ String? getValidationMessage(String key) {
   final validatorForKey = _LoginViewTextValidations[key];
   if (validatorForKey == null) return null;
 
-  String? validationMessageForKey = validatorForKey(
-    _LoginViewTextEditingControllers[key]!.text,
-  );
+  String? validationMessageForKey = validatorForKey(_LoginViewTextEditingControllers[key]!.text);
 
   return validationMessageForKey;
 }
 
 /// Updates the fieldsValidationMessages on the FormViewModel
-void updateValidationData(FormStateHelper model) =>
-    model.setValidationMessages({
-      UsernameValueKey: getValidationMessage(UsernameValueKey),
-      PasswordValueKey: getValidationMessage(PasswordValueKey),
-    });
+void updateValidationData(FormStateHelper model) => model.setValidationMessages({
+  UsernameValueKey: getValidationMessage(UsernameValueKey),
+  PasswordValueKey: getValidationMessage(PasswordValueKey),
+});
