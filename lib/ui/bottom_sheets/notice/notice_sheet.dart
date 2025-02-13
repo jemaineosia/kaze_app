@@ -9,11 +9,8 @@ import 'notice_sheet_model.dart';
 class NoticeSheet extends StackedView<NoticeSheetModel> {
   final Function(SheetResponse)? completer;
   final SheetRequest request;
-  const NoticeSheet({
-    Key? key,
-    required this.completer,
-    required this.request,
-  }) : super(key: key);
+  const NoticeSheet({Key? key, required this.completer, required this.request})
+    : super(key: key);
 
   @override
   Widget builder(

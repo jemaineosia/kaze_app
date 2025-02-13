@@ -29,9 +29,9 @@ enum TransactionType {
   /// Convert a TransactionType enum to a database-friendly string
   String toValue() {
     return name.toLowerCase().replaceAllMapped(
-          RegExp(r'([a-z])([A-Z])'),
-          (match) => '${match.group(1)}_${match.group(2)?.toLowerCase()}',
-        );
+      RegExp(r'([a-z])([A-Z])'),
+      (match) => '${match.group(1)}_${match.group(2)?.toLowerCase()}',
+    );
   }
 
   /// Override default toString() for better readability

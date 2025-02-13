@@ -8,14 +8,8 @@ class HomeView extends StackedView<HomeViewModel> {
   const HomeView({Key? key}) : super(key: key);
 
   @override
-  Widget builder(
-    BuildContext context,
-    HomeViewModel viewModel,
-    Widget? child,
-  ) {
-    return const Scaffold(
-      appBar: KazeAppBar(),
-    );
+  Widget builder(BuildContext context, HomeViewModel viewModel, Widget? child) {
+    return const Scaffold(appBar: KazeAppBar());
   }
 
   @override
@@ -25,8 +19,5 @@ class HomeView extends StackedView<HomeViewModel> {
   }
 
   @override
-  HomeViewModel viewModelBuilder(
-    BuildContext context,
-  ) =>
-      HomeViewModel();
+  HomeViewModel viewModelBuilder(BuildContext context) => HomeViewModel();
 }

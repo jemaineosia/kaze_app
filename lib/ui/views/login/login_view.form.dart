@@ -40,8 +40,9 @@ mixin $LoginView {
       return _LoginViewTextEditingControllers[key]!;
     }
 
-    _LoginViewTextEditingControllers[key] =
-        TextEditingController(text: initialValue);
+    _LoginViewTextEditingControllers[key] = TextEditingController(
+      text: initialValue,
+    );
     return _LoginViewTextEditingControllers[key]!;
   }
 
@@ -78,11 +79,10 @@ mixin $LoginView {
   /// Updates the formData on the FormViewModel
   void _updateFormData(FormStateHelper model, {bool forceValidate = false}) {
     model.setData(
-      model.formValueMap
-        ..addAll({
-          UsernameValueKey: usernameController.text,
-          PasswordValueKey: passwordController.text,
-        }),
+      model.formValueMap..addAll({
+        UsernameValueKey: usernameController.text,
+        PasswordValueKey: passwordController.text,
+      }),
     );
 
     if (_autoTextFieldValidation || forceValidate) {
@@ -112,10 +112,9 @@ mixin $LoginView {
 }
 
 extension ValueProperties on FormStateHelper {
-  bool get hasAnyValidationMessage => this
-      .fieldsValidationMessages
-      .values
-      .any((validation) => validation != null);
+  bool get hasAnyValidationMessage => this.fieldsValidationMessages.values.any(
+    (validation) => validation != null,
+  );
 
   bool get isFormValid {
     if (!_autoTextFieldValidation) this.validateForm();
@@ -127,9 +126,7 @@ extension ValueProperties on FormStateHelper {
   String? get passwordValue => this.formValueMap[PasswordValueKey] as String?;
 
   set usernameValue(String? value) {
-    this.setData(
-      this.formValueMap..addAll({UsernameValueKey: value}),
-    );
+    this.setData(this.formValueMap..addAll({UsernameValueKey: value}));
 
     if (_LoginViewTextEditingControllers.containsKey(UsernameValueKey)) {
       _LoginViewTextEditingControllers[UsernameValueKey]?.text = value ?? '';
@@ -137,9 +134,7 @@ extension ValueProperties on FormStateHelper {
   }
 
   set passwordValue(String? value) {
-    this.setData(
-      this.formValueMap..addAll({PasswordValueKey: value}),
-    );
+    this.setData(this.formValueMap..addAll({PasswordValueKey: value}));
 
     if (_LoginViewTextEditingControllers.containsKey(PasswordValueKey)) {
       _LoginViewTextEditingControllers[PasswordValueKey]?.text = value ?? '';

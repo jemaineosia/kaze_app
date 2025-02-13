@@ -14,8 +14,11 @@ class RegisterViewModel extends FormViewModel {
     required String password,
   }) async {
     setBusy(true);
-    var response =
-        await _authService.signUpWithEmailPassword(username, email, password);
+    var response = await _authService.signUpWithEmailPassword(
+      username,
+      email,
+      password,
+    );
     setBusy(false);
 
     if (response == null) {

@@ -29,20 +29,14 @@ class KazeAppBar extends StackedView<KazeAppbarModel>
   ) {
     return AppBar(
       title: Text(title),
-      titleTextStyle: TextStyle(
-        color: kcWhite,
-        fontSize: 20.sp,
-      ),
+      titleTextStyle: TextStyle(color: kcWhite, fontSize: 20.sp),
       backgroundColor: kcDarkGreyColor,
       centerTitle: centerTitle,
       leading: leading,
       actions: [
         IconButton(
           onPressed: () {},
-          icon: const Icon(
-            Icons.notifications,
-            color: kcWhite,
-          ),
+          icon: const Icon(Icons.notifications, color: kcWhite),
         ),
         const Gap(10),
       ],
@@ -50,57 +44,46 @@ class KazeAppBar extends StackedView<KazeAppbarModel>
   }
 
   Widget walletDisplay(KazeAppbarModel viewModel) => ElevatedButton(
-        onPressed: () {
-          // Handle button press
-          print('Rounded Button Pressed');
-        },
-        style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.black,
-          backgroundColor: Colors.amber,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0),
-          ),
-          padding: EdgeInsets.symmetric(
-            horizontal: 10.w,
-            vertical: 3.h,
+    onPressed: () {
+      // Handle button press
+      print('Rounded Button Pressed');
+    },
+    style: ElevatedButton.styleFrom(
+      foregroundColor: Colors.black,
+      backgroundColor: Colors.amber,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 3.h),
+    ),
+    child: Row(
+      children: [
+        // Black circular background for the icon
+        InkWell(
+          onTap: () => viewModel.showTopupView(),
+          child: Container(
+            width: 36,
+            height: 36,
+            decoration: const BoxDecoration(
+              color: Colors.black, // Background color
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.add,
+              color: Colors.white, // Icon color for contrast
+            ),
           ),
         ),
-        child: Row(
-          children: [
-            // Black circular background for the icon
-            InkWell(
-              onTap: () => viewModel.showTopupView(),
-              child: Container(
-                width: 36,
-                height: 36,
-                decoration: const BoxDecoration(
-                  color: Colors.black, // Background color
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.add,
-                  color: Colors.white, // Icon color for contrast
-                ),
-              ),
-            ),
-            const SizedBox(width: 8),
-            const Text(
-              'Coins: 0',
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
+        const SizedBox(width: 8),
+        const Text(
+          'Coins: 0',
+          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
         ),
-      );
+      ],
+    ),
+  );
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
   @override
-  KazeAppbarModel viewModelBuilder(
-    BuildContext context,
-  ) =>
-      KazeAppbarModel();
+  KazeAppbarModel viewModelBuilder(BuildContext context) => KazeAppbarModel();
 }

@@ -12,9 +12,7 @@ import 'package:stacked/stacked_annotations.dart';
 import 'cashin_view.form.dart';
 import 'cashin_viewmodel.dart';
 
-@FormView(fields: [
-  FormTextField(name: 'amount'),
-])
+@FormView(fields: [FormTextField(name: 'amount')])
 class CashinView extends StackedView<CashinViewModel> with $CashinView {
   CashinView({Key? key}) : super(key: key);
 
@@ -28,10 +26,7 @@ class CashinView extends StackedView<CashinViewModel> with $CashinView {
   ) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "KAZE",
-          style: TextStyle(color: kcWhite),
-        ),
+        title: const Text("KAZE", style: TextStyle(color: kcWhite)),
         backgroundColor: kcBlack,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
@@ -96,10 +91,7 @@ class CashinView extends StackedView<CashinViewModel> with $CashinView {
   Widget _paymentMode(CashinViewModel viewModel) {
     return Column(
       children: [
-        Text(
-          "Payment Mode",
-          style: TextStyle(fontSize: 20.sp),
-        ),
+        Text("Payment Mode", style: TextStyle(fontSize: 20.sp)),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -171,8 +163,5 @@ class CashinView extends StackedView<CashinViewModel> with $CashinView {
   }
 
   @override
-  CashinViewModel viewModelBuilder(
-    BuildContext context,
-  ) =>
-      CashinViewModel();
+  CashinViewModel viewModelBuilder(BuildContext context) => CashinViewModel();
 }

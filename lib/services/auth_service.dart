@@ -9,7 +9,9 @@ class AuthService {
   final LoggerService _loggerService = locator<LoggerService>();
 
   Future<dynamic> signInWithEmailPassword(
-      String username, String password) async {
+    String username,
+    String password,
+  ) async {
     try {
       _loggerService.info("Attempting to log in with username: $username");
 
@@ -38,8 +40,11 @@ class AuthService {
       _loggerService.error("AuthException during sign-in", error: e);
       return e.message; // Return Supabase error message
     } catch (e, stackTrace) {
-      _loggerService.error("Unexpected error during sign-in",
-          error: e, stackTrace: stackTrace);
+      _loggerService.error(
+        "Unexpected error during sign-in",
+        error: e,
+        stackTrace: stackTrace,
+      );
       return "An unexpected error occurred. Please try again later.";
     }
   }
@@ -53,23 +58,25 @@ class AuthService {
       _loggerService.info("Attempting to sign up with email: $email");
 
       // Create the user in authentication
-      final response =
-          await _supabase.auth.signUp(email: email, password: password);
+      final response = await _supabase.auth.signUp(
+        email: email,
+        password: password,
+      );
 
       if (response.user == null) {
-        _loggerService
-            .warning("Unknown error occurred during signup for email: $email");
+        _loggerService.warning(
+          "Unknown error occurred during signup for email: $email",
+        );
         return 'Unknown error occurred during signup.';
       }
 
       final userId = response.user!.id;
 
       // Call the Postgres RPC function to handle user creation in appUsers
-      final rpcResponse = await _supabase.rpc('handle_user_signup', params: {
-        'auth_user_id': userId,
-        'username': username,
-        'email': email,
-      });
+      final rpcResponse = await _supabase.rpc(
+        'handle_user_signup',
+        params: {'auth_user_id': userId, 'username': username, 'email': email},
+      );
 
       if (rpcResponse.error != null) {
         _loggerService.error("RPC Error: ${rpcResponse.error!.message}");
@@ -87,8 +94,11 @@ class AuthService {
       }
       return 'Authentication error: ${e.message}';
     } catch (e, stackTrace) {
-      _loggerService.error("Unexpected error during sign-up",
-          error: e, stackTrace: stackTrace);
+      _loggerService.error(
+        "Unexpected error during sign-up",
+        error: e,
+        stackTrace: stackTrace,
+      );
       return 'An unexpected error occurred. Please try again later.';
     }
   }
@@ -99,8 +109,11 @@ class AuthService {
       await _supabase.auth.signOut();
       _loggerService.info("User successfully signed out.");
     } catch (e, stackTrace) {
-      _loggerService.error("Error during sign-out",
-          error: e, stackTrace: stackTrace);
+      _loggerService.error(
+        "Error during sign-out",
+        error: e,
+        stackTrace: stackTrace,
+      );
     }
   }
 

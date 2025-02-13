@@ -46,8 +46,9 @@ mixin $RegisterView {
       return _RegisterViewTextEditingControllers[key]!;
     }
 
-    _RegisterViewTextEditingControllers[key] =
-        TextEditingController(text: initialValue);
+    _RegisterViewTextEditingControllers[key] = TextEditingController(
+      text: initialValue,
+    );
     return _RegisterViewTextEditingControllers[key]!;
   }
 
@@ -86,12 +87,11 @@ mixin $RegisterView {
   /// Updates the formData on the FormViewModel
   void _updateFormData(FormStateHelper model, {bool forceValidate = false}) {
     model.setData(
-      model.formValueMap
-        ..addAll({
-          UsernameValueKey: usernameController.text,
-          EmailValueKey: emailController.text,
-          PasswordValueKey: passwordController.text,
-        }),
+      model.formValueMap..addAll({
+        UsernameValueKey: usernameController.text,
+        EmailValueKey: emailController.text,
+        PasswordValueKey: passwordController.text,
+      }),
     );
 
     if (_autoTextFieldValidation || forceValidate) {
@@ -121,10 +121,9 @@ mixin $RegisterView {
 }
 
 extension ValueProperties on FormStateHelper {
-  bool get hasAnyValidationMessage => this
-      .fieldsValidationMessages
-      .values
-      .any((validation) => validation != null);
+  bool get hasAnyValidationMessage => this.fieldsValidationMessages.values.any(
+    (validation) => validation != null,
+  );
 
   bool get isFormValid {
     if (!_autoTextFieldValidation) this.validateForm();
@@ -137,9 +136,7 @@ extension ValueProperties on FormStateHelper {
   String? get passwordValue => this.formValueMap[PasswordValueKey] as String?;
 
   set usernameValue(String? value) {
-    this.setData(
-      this.formValueMap..addAll({UsernameValueKey: value}),
-    );
+    this.setData(this.formValueMap..addAll({UsernameValueKey: value}));
 
     if (_RegisterViewTextEditingControllers.containsKey(UsernameValueKey)) {
       _RegisterViewTextEditingControllers[UsernameValueKey]?.text = value ?? '';
@@ -147,9 +144,7 @@ extension ValueProperties on FormStateHelper {
   }
 
   set emailValue(String? value) {
-    this.setData(
-      this.formValueMap..addAll({EmailValueKey: value}),
-    );
+    this.setData(this.formValueMap..addAll({EmailValueKey: value}));
 
     if (_RegisterViewTextEditingControllers.containsKey(EmailValueKey)) {
       _RegisterViewTextEditingControllers[EmailValueKey]?.text = value ?? '';
@@ -157,9 +152,7 @@ extension ValueProperties on FormStateHelper {
   }
 
   set passwordValue(String? value) {
-    this.setData(
-      this.formValueMap..addAll({PasswordValueKey: value}),
-    );
+    this.setData(this.formValueMap..addAll({PasswordValueKey: value}));
 
     if (_RegisterViewTextEditingControllers.containsKey(PasswordValueKey)) {
       _RegisterViewTextEditingControllers[PasswordValueKey]?.text = value ?? '';

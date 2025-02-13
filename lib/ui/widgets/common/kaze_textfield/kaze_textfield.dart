@@ -43,8 +43,9 @@ class KazeTextfield extends StackedView<KazeTextfieldModel> {
           filled: true,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.h),
-            borderSide:
-                BorderSide(color: Theme.of(context).colorScheme.tertiary),
+            borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.tertiary,
+            ),
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.h),
@@ -52,8 +53,9 @@ class KazeTextfield extends StackedView<KazeTextfieldModel> {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.w),
-            borderSide:
-                BorderSide(color: Theme.of(context).colorScheme.primary),
+            borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.primary,
+            ),
           ),
           suffixIcon: suffixIcon,
           suffixIconColor: Theme.of(context).colorScheme.primary,
@@ -63,8 +65,6 @@ class KazeTextfield extends StackedView<KazeTextfieldModel> {
   }
 
   @override
-  KazeTextfieldModel viewModelBuilder(
-    BuildContext context,
-  ) =>
+  KazeTextfieldModel viewModelBuilder(BuildContext context) =>
       KazeTextfieldModel();
 }

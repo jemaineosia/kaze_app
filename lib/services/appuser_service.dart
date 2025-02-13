@@ -13,16 +13,19 @@ class AppuserService {
     try {
       _loggerService.info('Checking if username is taken: $username');
 
-      final response = await _appUserTable
-          .select('username')
-          .eq('username', username)
-          .limit(1)
-          .maybeSingle();
+      final response =
+          await _appUserTable
+              .select('username')
+              .eq('username', username)
+              .limit(1)
+              .maybeSingle();
 
       final isTaken = response != null;
-      _loggerService.debug(isTaken
-          ? 'Username is taken: $username'
-          : 'Username is available: $username');
+      _loggerService.debug(
+        isTaken
+            ? 'Username is taken: $username'
+            : 'Username is available: $username',
+      );
       return isTaken;
     } catch (e, stackTrace) {
       _loggerService.error(
@@ -91,19 +94,21 @@ class AppuserService {
   }
 
   Future<double> getUserOnHoldBalance(String userId) async {
-    final response = await _appUserTable
-        .select('on_hold_balance')
-        .eq('id', userId)
-        .maybeSingle();
+    final response =
+        await _appUserTable
+            .select('on_hold_balance')
+            .eq('id', userId)
+            .maybeSingle();
 
     return response?['on_hold_balance']?.toDouble() ?? 0.0;
   }
 
   Future<Map<String, double>> getUserBalances(String userId) async {
-    final response = await _appUserTable
-        .select('balance, on_hold_balance')
-        .eq('id', userId)
-        .maybeSingle();
+    final response =
+        await _appUserTable
+            .select('balance, on_hold_balance')
+            .eq('id', userId)
+            .maybeSingle();
 
     if (response == null) {
       return {'balance': 0.0, 'on_hold_balance': 0.0};
@@ -116,7 +121,7 @@ class AppuserService {
     return {
       'balance': totalBalance,
       'on_hold_balance': onHoldBalance,
-      'available_balance': availableBalance
+      'available_balance': availableBalance,
     };
   }
 }

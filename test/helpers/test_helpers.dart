@@ -13,18 +13,21 @@ import 'package:stacked_services/stacked_services.dart';
 
 import 'test_helpers.mocks.dart';
 
-@GenerateMocks([], customMocks: [
-  MockSpec<NavigationService>(onMissingStub: OnMissingStub.returnDefault),
-  MockSpec<BottomSheetService>(onMissingStub: OnMissingStub.returnDefault),
-  MockSpec<DialogService>(onMissingStub: OnMissingStub.returnDefault),
-  MockSpec<AuthService>(onMissingStub: OnMissingStub.returnDefault),
-  MockSpec<LoggerService>(onMissingStub: OnMissingStub.returnDefault),
-  MockSpec<TransactionService>(onMissingStub: OnMissingStub.returnDefault),
-  MockSpec<ImageService>(onMissingStub: OnMissingStub.returnDefault),
-  MockSpec<AppuserService>(onMissingStub: OnMissingStub.returnDefault),
-  MockSpec<NotificationService>(onMissingStub: OnMissingStub.returnDefault),
-// @stacked-mock-spec
-])
+@GenerateMocks(
+  [],
+  customMocks: [
+    MockSpec<NavigationService>(onMissingStub: OnMissingStub.returnDefault),
+    MockSpec<BottomSheetService>(onMissingStub: OnMissingStub.returnDefault),
+    MockSpec<DialogService>(onMissingStub: OnMissingStub.returnDefault),
+    MockSpec<AuthService>(onMissingStub: OnMissingStub.returnDefault),
+    MockSpec<LoggerService>(onMissingStub: OnMissingStub.returnDefault),
+    MockSpec<TransactionService>(onMissingStub: OnMissingStub.returnDefault),
+    MockSpec<ImageService>(onMissingStub: OnMissingStub.returnDefault),
+    MockSpec<AppuserService>(onMissingStub: OnMissingStub.returnDefault),
+    MockSpec<NotificationService>(onMissingStub: OnMissingStub.returnDefault),
+    // @stacked-mock-spec
+  ],
+)
 void registerServices() {
   getAndRegisterNavigationService();
   getAndRegisterBottomSheetService();
@@ -35,7 +38,7 @@ void registerServices() {
   getAndRegisterImageService();
   getAndRegisterAppuserService();
   getAndRegisterNotificationService();
-// @stacked-mock-register
+  // @stacked-mock-register
 }
 
 MockNavigationService getAndRegisterNavigationService() {
@@ -51,31 +54,35 @@ MockBottomSheetService getAndRegisterBottomSheetService<T>({
   _removeRegistrationIfExists<BottomSheetService>();
   final service = MockBottomSheetService();
 
-  when(service.showCustomSheet<T, T>(
-    enableDrag: anyNamed('enableDrag'),
-    enterBottomSheetDuration: anyNamed('enterBottomSheetDuration'),
-    exitBottomSheetDuration: anyNamed('exitBottomSheetDuration'),
-    ignoreSafeArea: anyNamed('ignoreSafeArea'),
-    isScrollControlled: anyNamed('isScrollControlled'),
-    barrierDismissible: anyNamed('barrierDismissible'),
-    additionalButtonTitle: anyNamed('additionalButtonTitle'),
-    variant: anyNamed('variant'),
-    title: anyNamed('title'),
-    hasImage: anyNamed('hasImage'),
-    imageUrl: anyNamed('imageUrl'),
-    showIconInMainButton: anyNamed('showIconInMainButton'),
-    mainButtonTitle: anyNamed('mainButtonTitle'),
-    showIconInSecondaryButton: anyNamed('showIconInSecondaryButton'),
-    secondaryButtonTitle: anyNamed('secondaryButtonTitle'),
-    showIconInAdditionalButton: anyNamed('showIconInAdditionalButton'),
-    takesInput: anyNamed('takesInput'),
-    barrierColor: anyNamed('barrierColor'),
-    barrierLabel: anyNamed('barrierLabel'),
-    customData: anyNamed('customData'),
-    data: anyNamed('data'),
-    description: anyNamed('description'),
-  )).thenAnswer((realInvocation) =>
-      Future.value(showCustomSheetResponse ?? SheetResponse<T>()));
+  when(
+    service.showCustomSheet<T, T>(
+      enableDrag: anyNamed('enableDrag'),
+      enterBottomSheetDuration: anyNamed('enterBottomSheetDuration'),
+      exitBottomSheetDuration: anyNamed('exitBottomSheetDuration'),
+      ignoreSafeArea: anyNamed('ignoreSafeArea'),
+      isScrollControlled: anyNamed('isScrollControlled'),
+      barrierDismissible: anyNamed('barrierDismissible'),
+      additionalButtonTitle: anyNamed('additionalButtonTitle'),
+      variant: anyNamed('variant'),
+      title: anyNamed('title'),
+      hasImage: anyNamed('hasImage'),
+      imageUrl: anyNamed('imageUrl'),
+      showIconInMainButton: anyNamed('showIconInMainButton'),
+      mainButtonTitle: anyNamed('mainButtonTitle'),
+      showIconInSecondaryButton: anyNamed('showIconInSecondaryButton'),
+      secondaryButtonTitle: anyNamed('secondaryButtonTitle'),
+      showIconInAdditionalButton: anyNamed('showIconInAdditionalButton'),
+      takesInput: anyNamed('takesInput'),
+      barrierColor: anyNamed('barrierColor'),
+      barrierLabel: anyNamed('barrierLabel'),
+      customData: anyNamed('customData'),
+      data: anyNamed('data'),
+      description: anyNamed('description'),
+    ),
+  ).thenAnswer(
+    (realInvocation) =>
+        Future.value(showCustomSheetResponse ?? SheetResponse<T>()),
+  );
 
   locator.registerSingleton<BottomSheetService>(service);
   return service;

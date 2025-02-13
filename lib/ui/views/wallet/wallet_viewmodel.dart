@@ -17,9 +17,9 @@ class WalletViewModel extends BaseViewModel {
   final _loggerService = locator<LoggerService>();
 
   double currentBalance = 0.0;
+  double pendingCashout = 0.0;
   double onHoldBalance = 0.0;
   double totalBalance = 0.0;
-  double availableBalance = 0.0;
   List<Transaction> transactions = [];
 
   /// Fetch wallet data (balance & transactions)
@@ -35,15 +35,15 @@ class WalletViewModel extends BaseViewModel {
       _loggerService.info("Fetching wallet data for user: \${user.id}");
 
       // Fetch balances
-      currentBalance = await _appUserService.getUserBalance(user.id);
+      totalBalance = await _appUserService.getUserBalance(user.id);
       onHoldBalance = await _appUserService.getUserOnHoldBalance(user.id);
-      totalBalance = currentBalance + onHoldBalance;
 
       // Fetch transactions (cash-in & cash-out only)
       transactions = await _transactionService.getUserTransactions(user.id);
 
       _loggerService.debug(
-          "Fetched Transactions: ${transactions.map((t) => t.toJson()).toList()}");
+        "Fetched Transactions: ${transactions.map((t) => t.toJson()).toList()}",
+      );
 
       // Filter cash_out_pending transactions
       double pendingCashOut = transactions
@@ -51,17 +51,21 @@ class WalletViewModel extends BaseViewModel {
           .fold(0.0, (sum, t) => sum + t.amount);
 
       // Available balance should exclude pending cashout
-      availableBalance = currentBalance - pendingCashOut;
+      currentBalance = totalBalance - (pendingCashOut + onHoldBalance);
 
-      _loggerService.info("Wallet data fetched successfully. "
-          "Total Balance: $totalBalance, Current Balance: $currentBalance, "
-          "Available Balance: $availableBalance, On-Hold: $onHoldBalance, "
-          "Pending Cashout: $pendingCashOut");
+      _loggerService.debug("Wallet Data:");
+      _loggerService.debug("Total Balance: $totalBalance");
+      _loggerService.debug("Pending Cashout: $pendingCashout");
+      _loggerService.debug("Cash On Hold: $onHoldBalance");
+      _loggerService.debug("Current Balance: $currentBalance");
 
       notifyListeners();
     } catch (e, stackTrace) {
-      _loggerService.error("Error fetching wallet data.",
-          error: e, stackTrace: stackTrace);
+      _loggerService.error(
+        "Error fetching wallet data.",
+        error: e,
+        stackTrace: stackTrace,
+      );
     } finally {
       setBusy(false);
     }

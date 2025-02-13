@@ -6,15 +6,15 @@ class LoggerService {
   final _supabase = Supabase.instance.client;
 
   LoggerService()
-      : _logger = Logger(
-          printer: PrettyPrinter(
-            methodCount: 2, // Number of stack trace lines for non-error logs
-            errorMethodCount: 8, // Number of stack trace lines for error logs
-            lineLength: 100, // Max width of output
-            colors: true, // Use colors for log messages
-            printEmojis: true, // Add emojis to log messages
-          ),
-        );
+    : _logger = Logger(
+        printer: PrettyPrinter(
+          methodCount: 2, // Number of stack trace lines for non-error logs
+          errorMethodCount: 8, // Number of stack trace lines for error logs
+          lineLength: 100, // Max width of output
+          colors: true, // Use colors for log messages
+          printEmojis: true, // Add emojis to log messages
+        ),
+      );
 
   void debug(String message) => _logger.d(_addTimestamp(_addUserInfo(message)));
   void info(String message) => _logger.i(_addTimestamp(_addUserInfo(message)));

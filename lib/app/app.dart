@@ -34,7 +34,7 @@ import 'package:kaze_app/ui/views/cashin/cashin_view.dart';
     MaterialRoute(page: AdminView),
     MaterialRoute(page: CashoutView),
     MaterialRoute(page: CashinView),
-// @stacked-route
+    // @stacked-route
   ],
   dependencies: [
     LazySingleton(classType: BottomSheetService),
@@ -46,11 +46,11 @@ import 'package:kaze_app/ui/views/cashin/cashin_view.dart';
     LazySingleton(classType: ImageService),
     LazySingleton(classType: AppuserService),
     LazySingleton(classType: NotificationService),
-// @stacked-service
+    // @stacked-service
   ],
   bottomsheets: [
     StackedBottomsheet(classType: NoticeSheet),
-// @stacked-bottom-sheet
+    // @stacked-bottom-sheet
   ],
   dialogs: [
     StackedDialog(classType: InfoAlertDialog),

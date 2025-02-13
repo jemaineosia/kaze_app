@@ -26,31 +26,30 @@ class WalletView extends StackedView<WalletViewModel> {
           children: [
             Gap(50.h),
 
-            // **Total Balance**
+            // **Current Balance**
             Text(
-              "P${viewModel.totalBalance.toStringAsFixed(2)}",
-              style: TextStyle(
-                fontSize: 22.sp,
-                fontWeight: FontWeight.bold,
-              ),
+              "P${viewModel.currentBalance.toStringAsFixed(2)}",
+              style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
             ),
-            const Text("Total Balance"),
+            const Text("Current Balance"),
 
             Gap(10.h),
 
-            // **Available Balance**
+            // **Pending Cashout**
             Text(
-              "Available: P${viewModel.availableBalance.toStringAsFixed(2)}",
+              "Pending Cashout: P${viewModel.pendingCashout.toStringAsFixed(2)}",
               style: TextStyle(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.bold,
-                color: Colors.green,
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w500,
+                color: Colors.red,
               ),
             ),
 
-            // **On-Hold Balance**
+            Gap(10.h),
+
+            // **Cash On Hold**
             Text(
-              "On-Hold: P${viewModel.onHoldBalance.toStringAsFixed(2)}",
+              "Cash On Hold: P${viewModel.onHoldBalance.toStringAsFixed(2)}",
               style: TextStyle(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w500,
@@ -86,52 +85,56 @@ class WalletView extends StackedView<WalletViewModel> {
 
             // Transactions List
             Expanded(
-              child: viewModel.isBusy
-                  ? const Center(child: CircularProgressIndicator())
-                  : viewModel.transactions.isEmpty
+              child:
+                  viewModel.isBusy
+                      ? const Center(child: CircularProgressIndicator())
+                      : viewModel.transactions.isEmpty
                       ? const Center(child: Text("No transactions yet."))
                       : ListView.builder(
-                          itemCount: viewModel.transactions.length,
-                          itemBuilder: (context, index) {
-                            final transaction = viewModel.transactions[index];
-                            final isCashIn = transaction.transactionType ==
-                                TransactionType.cashIn;
-                            final isCashOutPending =
-                                transaction.transactionType ==
-                                    TransactionType.cashOutPending;
+                        itemCount: viewModel.transactions.length,
+                        itemBuilder: (context, index) {
+                          final transaction = viewModel.transactions[index];
+                          final isCashIn =
+                              transaction.transactionType ==
+                              TransactionType.cashIn;
+                          final isCashOutPending =
+                              transaction.transactionType ==
+                              TransactionType.cashOutPending;
 
-                            return ListTile(
-                              leading: Icon(
-                                isCashIn
-                                    ? Icons.arrow_downward
-                                    : Icons.arrow_upward,
-                                color: isCashIn
-                                    ? Colors.green
-                                    : isCashOutPending
-                                        ? Colors.orange
-                                        : Colors.red,
-                              ),
-                              title: Text(
-                                transaction.transactionType.toString(),
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14.sp,
-                                  color: isCashOutPending
+                          return ListTile(
+                            leading: Icon(
+                              isCashIn
+                                  ? Icons.arrow_downward
+                                  : Icons.arrow_upward,
+                              color:
+                                  isCashIn
+                                      ? Colors.green
+                                      : isCashOutPending
                                       ? Colors.orange
-                                      : Colors.black,
-                                ),
+                                      : Colors.red,
+                            ),
+                            title: Text(
+                              transaction.transactionType.toString(),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14.sp,
+                                color:
+                                    isCashOutPending
+                                        ? Colors.orange
+                                        : Colors.black,
                               ),
-                              subtitle: Text(transaction.referenceNote ?? ''),
-                              trailing: Text(
-                                "P${transaction.amount.toStringAsFixed(2)}",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14.sp,
-                                ),
+                            ),
+                            subtitle: Text(transaction.referenceNote ?? ''),
+                            trailing: Text(
+                              "P${transaction.amount.toStringAsFixed(2)}",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14.sp,
                               ),
-                            );
-                          },
-                        ),
+                            ),
+                          );
+                        },
+                      ),
             ),
           ],
         ),

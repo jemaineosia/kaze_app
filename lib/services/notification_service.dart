@@ -31,9 +31,9 @@ class NotificationService {
 
   void subscribeToNotifications(String userId) {
     final subscription = _notificationTable
-        .stream(primaryKey: [
-          'id'
-        ]) // Specify the primary key for real-time streaming
+        .stream(
+          primaryKey: ['id'],
+        ) // Specify the primary key for real-time streaming
         .eq('user_id', userId)
         .listen((List<Map<String, dynamic>> event) {
           try {
@@ -88,17 +88,19 @@ class NotificationService {
 
   Future<bool> markNotificationAsRead(String notificationId) async {
     try {
-      final response = await _notificationTable
-          .update({'is_read': true}) // Update `is_read` to true
-          .eq('id', notificationId)
-          .select();
+      final response =
+          await _notificationTable
+              .update({'is_read': true}) // Update `is_read` to true
+              .eq('id', notificationId)
+              .select();
 
       if (response.isEmpty) {
         throw Exception('Failed to update notification status.');
       }
 
-      locator<LoggerService>()
-          .info('Notification $notificationId marked as read.');
+      locator<LoggerService>().info(
+        'Notification $notificationId marked as read.',
+      );
       return true;
     } catch (e, stackTrace) {
       locator<LoggerService>().error(

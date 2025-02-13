@@ -25,15 +25,14 @@ class ImageService {
           .uploadBinary(
             filePath,
             bytes,
-            fileOptions: FileOptions(
-              contentType: 'image/$fileExt',
-            ),
+            fileOptions: FileOptions(contentType: 'image/$fileExt'),
           );
 
       if (response.startsWith('receipts/')) {
         // Generate public URL (assuming bucket is public)
-        final publicUrl =
-            _supabase.storage.from('receipts').getPublicUrl(filePath);
+        final publicUrl = _supabase.storage
+            .from('receipts')
+            .getPublicUrl(filePath);
 
         _loggerService.info('Image uploaded successfully: $publicUrl');
         return publicUrl;

@@ -11,12 +11,14 @@ import 'package:stacked/stacked_annotations.dart';
 import 'cashout_view.form.dart';
 import 'cashout_viewmodel.dart';
 
-@FormView(fields: [
-  FormTextField(name: 'bankName'),
-  FormTextField(name: 'fullName'),
-  FormTextField(name: 'accountNumber'),
-  FormTextField(name: 'amount'),
-])
+@FormView(
+  fields: [
+    FormTextField(name: 'bankName'),
+    FormTextField(name: 'fullName'),
+    FormTextField(name: 'accountNumber'),
+    FormTextField(name: 'amount'),
+  ],
+)
 class CashoutView extends StackedView<CashoutViewModel> with $CashoutView {
   CashoutView({Key? key}) : super(key: key);
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -29,10 +31,7 @@ class CashoutView extends StackedView<CashoutViewModel> with $CashoutView {
   ) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "KAZE",
-          style: TextStyle(color: kcWhite),
-        ),
+        title: const Text("KAZE", style: TextStyle(color: kcWhite)),
         backgroundColor: kcBlack,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
@@ -44,22 +43,21 @@ class CashoutView extends StackedView<CashoutViewModel> with $CashoutView {
             children: [
               Text(
                 "P${viewModel.currentBalance.toStringAsFixed(2)}",
-                style: TextStyle(
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
               ),
               const Text("Current Balance"),
               Gap(30.h),
               DropdownButtonFormField<CashOutMethod>(
                 value: viewModel.selectedPaymentMode,
-                items: viewModel.paymentModes.map((mode) {
-                  return DropdownMenuItem(
-                    value: mode,
-                    child: Text(
-                        mode.toValue()), // Use the enum's string representation
-                  );
-                }).toList(),
+                items:
+                    viewModel.paymentModes.map((mode) {
+                      return DropdownMenuItem(
+                        value: mode,
+                        child: Text(
+                          mode.toValue(),
+                        ), // Use the enum's string representation
+                      );
+                    }).toList(),
                 onChanged: viewModel.setSelectedPaymentMode,
                 decoration: InputDecoration(
                   labelText: 'Payment Mode',
@@ -73,14 +71,19 @@ class CashoutView extends StackedView<CashoutViewModel> with $CashoutView {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15.0),
-                    borderSide:
-                        const BorderSide(color: Colors.blue, width: 2.0),
+                    borderSide: const BorderSide(
+                      color: Colors.blue,
+                      width: 2.0,
+                    ),
                   ),
                   contentPadding: const EdgeInsets.symmetric(
-                      vertical: 12.0, horizontal: 16.0),
+                    vertical: 12.0,
+                    horizontal: 16.0,
+                  ),
                 ),
-                validator: (value) =>
-                    value == null ? 'Please select a payment mode' : null,
+                validator:
+                    (value) =>
+                        value == null ? 'Please select a payment mode' : null,
               ),
               if (viewModel.selectedPaymentMode == CashOutMethod.bank) ...[
                 Gap(10.h),
@@ -161,8 +164,5 @@ class CashoutView extends StackedView<CashoutViewModel> with $CashoutView {
   }
 
   @override
-  CashoutViewModel viewModelBuilder(
-    BuildContext context,
-  ) =>
-      CashoutViewModel();
+  CashoutViewModel viewModelBuilder(BuildContext context) => CashoutViewModel();
 }

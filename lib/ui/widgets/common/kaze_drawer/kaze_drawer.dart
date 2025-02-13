@@ -29,9 +29,7 @@ class KazeDrawer extends StackedView<KazeDrawerModel> {
                   color: Theme.of(context).colorScheme.primary,
                 ),
               ),
-              Divider(
-                color: Theme.of(context).colorScheme.secondary,
-              ),
+              Divider(color: Theme.of(context).colorScheme.secondary),
               KazeDrawerTile(
                 title: 'H O M E',
                 icon: Icons.home,
@@ -60,8 +58,5 @@ class KazeDrawer extends StackedView<KazeDrawerModel> {
   }
 
   @override
-  KazeDrawerModel viewModelBuilder(
-    BuildContext context,
-  ) =>
-      KazeDrawerModel();
+  KazeDrawerModel viewModelBuilder(BuildContext context) => KazeDrawerModel();
 }

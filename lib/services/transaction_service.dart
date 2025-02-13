@@ -14,13 +14,15 @@ class TransactionService {
   Future<bool> createTransaction(Transaction transaction) async {
     try {
       _loggerService.info(
-          const JsonEncoder.withIndent('  ').convert(transaction.toJson()));
+        const JsonEncoder.withIndent('  ').convert(transaction.toJson()),
+      );
 
       final response = await _transactionTable.insert(transaction.toJson());
 
       if (response == null) {
-        _loggerService
-            .info('Transaction created successfully: ${transaction.id}');
+        _loggerService.info(
+          'Transaction created successfully: ${transaction.id}',
+        );
         return true;
       }
 
@@ -29,8 +31,9 @@ class TransactionService {
       }
 
       if (response.error == null) {
-        _loggerService
-            .info('Transaction created successfully: ${transaction.id}');
+        _loggerService.info(
+          'Transaction created successfully: ${transaction.id}',
+        );
         return true;
       } else {
         _loggerService.error(
@@ -70,17 +73,20 @@ class TransactionService {
   }
 
   Future<Transaction?> approveTransaction(String transactionId) async {
-    locator<LoggerService>()
-        .info('Approving transaction with ID: $transactionId');
+    locator<LoggerService>().info(
+      'Approving transaction with ID: $transactionId',
+    );
     try {
-      final response = await _transactionTable
-          .update({
-            'transaction_type': TransactionType.cashIn
-                .toValue(), // Update the status to 'cash_in'
-          })
-          .eq('id', transactionId)
-          .select()
-          .maybeSingle();
+      final response =
+          await _transactionTable
+              .update({
+                'transaction_type':
+                    TransactionType.cashIn
+                        .toValue(), // Update the status to 'cash_in'
+              })
+              .eq('id', transactionId)
+              .select()
+              .maybeSingle();
 
       if (response == null) {
         locator<LoggerService>().error(
@@ -91,7 +97,8 @@ class TransactionService {
 
       final transaction = Transaction.fromJson(response);
       locator<LoggerService>().info(
-          'Transaction approved successfully: ${transaction.id}, amount: ${transaction.amount}');
+        'Transaction approved successfully: ${transaction.id}, amount: ${transaction.amount}',
+      );
 
       return transaction; // Return the updated transaction object
     } catch (e, stackTrace) {
@@ -106,11 +113,12 @@ class TransactionService {
 
   Future<Transaction?> getTransactionById(String transactionId) async {
     try {
-      final response = await Supabase.instance.client
-          .from('transactions')
-          .select()
-          .eq('id', transactionId)
-          .maybeSingle();
+      final response =
+          await Supabase.instance.client
+              .from('transactions')
+              .select()
+              .eq('id', transactionId)
+              .maybeSingle();
 
       if (response == null) return null;
 
@@ -129,7 +137,9 @@ class TransactionService {
     final response = await _transactionTable
         .select()
         .eq('user_id', userId)
-        .or("transaction_type.eq.cash_in, transaction_type.eq.cash_out, transaction_type.eq.cash_out_pending")
+        .or(
+          "transaction_type.eq.cash_in, transaction_type.eq.cash_out, transaction_type.eq.cash_out_pending",
+        )
         .order('created_at', ascending: false);
 
     return (response as List)

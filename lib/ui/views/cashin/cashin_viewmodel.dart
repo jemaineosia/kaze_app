@@ -38,8 +38,9 @@ class CashinViewModel extends FormViewModel {
   // Pick receipt image
   Future<void> pickReceiptImage() async {
     try {
-      final XFile? pickedFile =
-          await _imagePicker.pickImage(source: ImageSource.gallery);
+      final XFile? pickedFile = await _imagePicker.pickImage(
+        source: ImageSource.gallery,
+      );
       if (pickedFile != null) {
         _receiptImage = File(pickedFile.path);
         notifyListeners();
@@ -114,8 +115,9 @@ class CashinViewModel extends FormViewModel {
       final success = await _transactionService.createTransaction(transaction);
 
       if (success) {
-        _loggerService
-            .info('Top-up request submitted successfully for user: ${user.id}');
+        _loggerService.info(
+          'Top-up request submitted successfully for user: ${user.id}',
+        );
         await _dialogService.showDialog(
           title: 'Top-Up Submitted',
           description:

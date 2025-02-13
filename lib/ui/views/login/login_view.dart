@@ -9,10 +9,9 @@ import 'package:stacked/stacked_annotations.dart';
 import 'login_view.form.dart';
 import 'login_viewmodel.dart';
 
-@FormView(fields: [
-  FormTextField(name: 'username'),
-  FormTextField(name: 'password'),
-])
+@FormView(
+  fields: [FormTextField(name: 'username'), FormTextField(name: 'password')],
+)
 class LoginView extends StackedView<LoginViewModel> with $LoginView {
   LoginView({super.key});
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -118,18 +117,9 @@ class LoginView extends StackedView<LoginViewModel> with $LoginView {
       children: [
         Text(
           "KAZE ",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 30.sp,
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30.sp),
         ),
-        Text(
-          "APP",
-          style: TextStyle(
-            color: Colors.black45,
-            fontSize: 30.sp,
-          ),
-        ),
+        Text("APP", style: TextStyle(color: Colors.black45, fontSize: 30.sp)),
       ],
     );
   }
@@ -146,8 +136,5 @@ class LoginView extends StackedView<LoginViewModel> with $LoginView {
   }
 
   @override
-  LoginViewModel viewModelBuilder(
-    BuildContext context,
-  ) =>
-      LoginViewModel();
+  LoginViewModel viewModelBuilder(BuildContext context) => LoginViewModel();
 }

@@ -28,28 +28,32 @@ class SettingsView extends StackedView<SettingsViewModel> {
             Gap(20.sp),
             const Text('NOTIFICATIONS'),
             Expanded(
-              child: viewModel.isBusy
-                  ? const Center(child: CircularProgressIndicator())
-                  : ListView.builder(
-                      itemCount: viewModel.notifications.length,
-                      itemBuilder: (context, index) {
-                        final notification = viewModel.notifications[index];
-                        return ListTile(
-                          title: Text(notification.title),
-                          subtitle: Text(notification.message),
-                          trailing: Icon(
-                            notification.isRead
-                                ? Icons.check_circle
-                                : Icons.circle,
-                            color: notification.isRead
-                                ? Colors.green
-                                : Colors.grey,
-                          ),
-                          onTap: () =>
-                              viewModel.handleNotificationTap(notification.id),
-                        );
-                      },
-                    ),
+              child:
+                  viewModel.isBusy
+                      ? const Center(child: CircularProgressIndicator())
+                      : ListView.builder(
+                        itemCount: viewModel.notifications.length,
+                        itemBuilder: (context, index) {
+                          final notification = viewModel.notifications[index];
+                          return ListTile(
+                            title: Text(notification.title),
+                            subtitle: Text(notification.message),
+                            trailing: Icon(
+                              notification.isRead
+                                  ? Icons.check_circle
+                                  : Icons.circle,
+                              color:
+                                  notification.isRead
+                                      ? Colors.green
+                                      : Colors.grey,
+                            ),
+                            onTap:
+                                () => viewModel.handleNotificationTap(
+                                  notification.id,
+                                ),
+                          );
+                        },
+                      ),
             ),
             const Spacer(),
             KazeButton(
@@ -79,16 +83,10 @@ class SettingsView extends StackedView<SettingsViewModel> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'WELCOME BACK,',
-                style: TextStyle(fontSize: 15.sp),
-              ),
+              Text('WELCOME BACK,', style: TextStyle(fontSize: 15.sp)),
               Text(
                 'Skilla',
-                style: TextStyle(
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold),
               ),
               Gap(10.sp),
               const Row(
@@ -98,21 +96,14 @@ class SettingsView extends StackedView<SettingsViewModel> {
                     children: [
                       Text(
                         'P10,000',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       Text('EARNED'),
                     ],
                   ),
                   Column(
                     children: [
-                      Text(
-                        '0',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      Text('0', style: TextStyle(fontWeight: FontWeight.bold)),
                       Text('FOLLOWERS'),
                     ],
                   ),
@@ -120,18 +111,16 @@ class SettingsView extends StackedView<SettingsViewModel> {
                     children: [
                       Text(
                         '305',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       Text('WINS'),
                     ],
-                  )
+                  ),
                 ],
-              )
+              ),
             ],
           ),
-        )
+        ),
       ],
     );
   }
@@ -142,10 +131,7 @@ class SettingsView extends StackedView<SettingsViewModel> {
         CircleAvatar(
           backgroundColor: kcBlack,
           maxRadius: 30.sp,
-          child: Icon(
-            Icons.person,
-            size: 40.sp,
-          ),
+          child: Icon(Icons.person, size: 40.sp),
         ),
         Positioned(
           bottom: 0, // Align to the bottom
@@ -153,11 +139,7 @@ class SettingsView extends StackedView<SettingsViewModel> {
           child: CircleAvatar(
             maxRadius: 10.sp,
             backgroundColor: Colors.green,
-            child: Icon(
-              size: 15.sp,
-              Icons.check,
-              color: Colors.black,
-            ),
+            child: Icon(size: 15.sp, Icons.check, color: Colors.black),
           ),
         ),
       ],
@@ -171,8 +153,6 @@ class SettingsView extends StackedView<SettingsViewModel> {
   }
 
   @override
-  SettingsViewModel viewModelBuilder(
-    BuildContext context,
-  ) =>
+  SettingsViewModel viewModelBuilder(BuildContext context) =>
       SettingsViewModel();
 }

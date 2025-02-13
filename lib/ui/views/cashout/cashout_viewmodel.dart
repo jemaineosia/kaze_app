@@ -39,8 +39,11 @@ class CashoutViewModel extends FormViewModel {
         return;
       }
     } catch (e, stackTrace) {
-      _loggerService.error("Error initializing CashoutViewModel",
-          error: e, stackTrace: stackTrace);
+      _loggerService.error(
+        "Error initializing CashoutViewModel",
+        error: e,
+        stackTrace: stackTrace,
+      );
     } finally {
       setBusy(false);
     }
@@ -92,14 +95,19 @@ class CashoutViewModel extends FormViewModel {
       );
 
       await _transactionService.createTransaction(newTransaction);
-      _loggerService
-          .info("Cashout request submitted for $selectedPaymentMode.");
+      _loggerService.info(
+        "Cashout request submitted for $selectedPaymentMode.",
+      );
       _navigationService.back();
     } catch (e, stackTrace) {
-      _loggerService.error("Error submitting cashout request",
-          error: e, stackTrace: stackTrace);
+      _loggerService.error(
+        "Error submitting cashout request",
+        error: e,
+        stackTrace: stackTrace,
+      );
       setValidationMessage(
-          'Failed to submit cashout request. Please try again.');
+        'Failed to submit cashout request. Please try again.',
+      );
       notifyListeners();
     } finally {
       setBusy(false);

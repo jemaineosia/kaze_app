@@ -41,9 +41,10 @@ class Transaction {
       transactionType: TransactionType.fromString(json['transaction_type']),
       referenceNote:
           json.containsKey('reference_note') ? json['reference_note'] : null,
-      receiptImageUrl: json.containsKey('receipt_image_url')
-          ? json['receipt_image_url']
-          : null,
+      receiptImageUrl:
+          json.containsKey('receipt_image_url')
+              ? json['receipt_image_url']
+              : null,
       cashOutMethod:
           json.containsKey('cash_out_method') && json['cash_out_method'] != null
               ? CashOutMethod.fromString(json['cash_out_method'])
@@ -52,12 +53,14 @@ class Transaction {
       bankName: json.containsKey('bank_name') ? json['bank_name'] : null,
       accountNumber:
           json.containsKey('account_number') ? json['account_number'] : null,
-      createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
-          : DateTime.now(),
-      deletedAt: json['deleted_at'] != null
-          ? DateTime.parse(json['deleted_at'])
-          : null,
+      createdAt:
+          json['created_at'] != null
+              ? DateTime.parse(json['created_at'])
+              : DateTime.now(),
+      deletedAt:
+          json['deleted_at'] != null
+              ? DateTime.parse(json['deleted_at'])
+              : null,
     );
   }
 

@@ -52,8 +52,9 @@ mixin $CashoutView {
       return _CashoutViewTextEditingControllers[key]!;
     }
 
-    _CashoutViewTextEditingControllers[key] =
-        TextEditingController(text: initialValue);
+    _CashoutViewTextEditingControllers[key] = TextEditingController(
+      text: initialValue,
+    );
     return _CashoutViewTextEditingControllers[key]!;
   }
 
@@ -94,13 +95,12 @@ mixin $CashoutView {
   /// Updates the formData on the FormViewModel
   void _updateFormData(FormStateHelper model, {bool forceValidate = false}) {
     model.setData(
-      model.formValueMap
-        ..addAll({
-          BankNameValueKey: bankNameController.text,
-          FullNameValueKey: fullNameController.text,
-          AccountNumberValueKey: accountNumberController.text,
-          AmountValueKey: amountController.text,
-        }),
+      model.formValueMap..addAll({
+        BankNameValueKey: bankNameController.text,
+        FullNameValueKey: fullNameController.text,
+        AccountNumberValueKey: accountNumberController.text,
+        AmountValueKey: amountController.text,
+      }),
     );
 
     if (_autoTextFieldValidation || forceValidate) {
@@ -130,10 +130,9 @@ mixin $CashoutView {
 }
 
 extension ValueProperties on FormStateHelper {
-  bool get hasAnyValidationMessage => this
-      .fieldsValidationMessages
-      .values
-      .any((validation) => validation != null);
+  bool get hasAnyValidationMessage => this.fieldsValidationMessages.values.any(
+    (validation) => validation != null,
+  );
 
   bool get isFormValid {
     if (!_autoTextFieldValidation) this.validateForm();
@@ -148,9 +147,7 @@ extension ValueProperties on FormStateHelper {
   String? get amountValue => this.formValueMap[AmountValueKey] as String?;
 
   set bankNameValue(String? value) {
-    this.setData(
-      this.formValueMap..addAll({BankNameValueKey: value}),
-    );
+    this.setData(this.formValueMap..addAll({BankNameValueKey: value}));
 
     if (_CashoutViewTextEditingControllers.containsKey(BankNameValueKey)) {
       _CashoutViewTextEditingControllers[BankNameValueKey]?.text = value ?? '';
@@ -158,9 +155,7 @@ extension ValueProperties on FormStateHelper {
   }
 
   set fullNameValue(String? value) {
-    this.setData(
-      this.formValueMap..addAll({FullNameValueKey: value}),
-    );
+    this.setData(this.formValueMap..addAll({FullNameValueKey: value}));
 
     if (_CashoutViewTextEditingControllers.containsKey(FullNameValueKey)) {
       _CashoutViewTextEditingControllers[FullNameValueKey]?.text = value ?? '';
@@ -168,9 +163,7 @@ extension ValueProperties on FormStateHelper {
   }
 
   set accountNumberValue(String? value) {
-    this.setData(
-      this.formValueMap..addAll({AccountNumberValueKey: value}),
-    );
+    this.setData(this.formValueMap..addAll({AccountNumberValueKey: value}));
 
     if (_CashoutViewTextEditingControllers.containsKey(AccountNumberValueKey)) {
       _CashoutViewTextEditingControllers[AccountNumberValueKey]?.text =
@@ -179,9 +172,7 @@ extension ValueProperties on FormStateHelper {
   }
 
   set amountValue(String? value) {
-    this.setData(
-      this.formValueMap..addAll({AmountValueKey: value}),
-    );
+    this.setData(this.formValueMap..addAll({AmountValueKey: value}));
 
     if (_CashoutViewTextEditingControllers.containsKey(AmountValueKey)) {
       _CashoutViewTextEditingControllers[AmountValueKey]?.text = value ?? '';

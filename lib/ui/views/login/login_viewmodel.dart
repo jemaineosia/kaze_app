@@ -17,8 +17,10 @@ class LoginViewModel extends FormViewModel {
 
     _loggerService.info("Attempting login for username: $username");
 
-    final result =
-        await _authService.signInWithEmailPassword(username, password);
+    final result = await _authService.signInWithEmailPassword(
+      username,
+      password,
+    );
 
     setBusy(false);
 

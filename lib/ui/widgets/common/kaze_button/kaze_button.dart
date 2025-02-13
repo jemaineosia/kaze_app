@@ -36,24 +36,22 @@ class KazeButton extends StackedView<KazeButtonModel> {
           borderRadius: BorderRadius.circular(12.w),
         ),
         child: Center(
-          child: isLoading
-              ? const CircularProgressIndicator()
-              : Text(
-                  text,
-                  style: TextStyle(
-                    color: textColor,
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.bold,
+          child:
+              isLoading
+                  ? const CircularProgressIndicator()
+                  : Text(
+                    text,
+                    style: TextStyle(
+                      color: textColor,
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
         ),
       ),
     );
   }
 
   @override
-  KazeButtonModel viewModelBuilder(
-    BuildContext context,
-  ) =>
-      KazeButtonModel();
+  KazeButtonModel viewModelBuilder(BuildContext context) => KazeButtonModel();
 }

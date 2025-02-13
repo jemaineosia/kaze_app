@@ -46,10 +46,7 @@ class BottomnavView extends StackedView<BottomnavViewModel> {
             children: [
               Icon(item.icon, size: 24, color: color),
               const SizedBox(height: 4),
-              Text(
-                item.label,
-                style: TextStyle(color: color, fontSize: 12),
-              ),
+              Text(item.label, style: TextStyle(color: color, fontSize: 12)),
             ],
           );
         },
@@ -65,8 +62,6 @@ class BottomnavView extends StackedView<BottomnavViewModel> {
   }
 
   @override
-  BottomnavViewModel viewModelBuilder(
-    BuildContext context,
-  ) =>
+  BottomnavViewModel viewModelBuilder(BuildContext context) =>
       BottomnavViewModel();
 }

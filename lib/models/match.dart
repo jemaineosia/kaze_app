@@ -58,21 +58,31 @@ class Match {
       totalOpponentBetAmount:
           (json['total_opponent_bet_amount'] as num).toDouble(), // Updated
       status: MatchStatus.fromString(json['status'] ?? 'pending'),
-      creatorUpdatedAt: json['creator_updated_at'] != null // Updated
-          ? DateTime.parse(json['creator_updated_at'])
-          : null,
-      opponentUpdatedAt: json['opponent_updated_at'] != null // Updated
-          ? DateTime.parse(json['opponent_updated_at'])
-          : null,
-      adminUpdatedAt: json['admin_updated_at'] != null // Updated
-          ? DateTime.parse(json['admin_updated_at'])
-          : null,
-      createdAt: json['created_at'] != null // Updated
-          ? DateTime.parse(json['created_at'])
-          : DateTime.now(),
-      deletedAt: json['deleted_at'] != null // Updated
-          ? DateTime.parse(json['deleted_at'])
-          : null,
+      creatorUpdatedAt:
+          json['creator_updated_at'] !=
+                  null // Updated
+              ? DateTime.parse(json['creator_updated_at'])
+              : null,
+      opponentUpdatedAt:
+          json['opponent_updated_at'] !=
+                  null // Updated
+              ? DateTime.parse(json['opponent_updated_at'])
+              : null,
+      adminUpdatedAt:
+          json['admin_updated_at'] !=
+                  null // Updated
+              ? DateTime.parse(json['admin_updated_at'])
+              : null,
+      createdAt:
+          json['created_at'] !=
+                  null // Updated
+              ? DateTime.parse(json['created_at'])
+              : DateTime.now(),
+      deletedAt:
+          json['deleted_at'] !=
+                  null // Updated
+              ? DateTime.parse(json['deleted_at'])
+              : null,
     );
   }
 

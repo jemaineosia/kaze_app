@@ -26,40 +26,37 @@ class AdminView extends StackedView<AdminViewModel> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25.0),
-        child: viewModel.isBusy
-            ? const Center(child: CircularProgressIndicator())
-            : viewModel.getPendingTransactions == null ||
+        child:
+            viewModel.isBusy
+                ? const Center(child: CircularProgressIndicator())
+                : viewModel.getPendingTransactions == null ||
                     viewModel.getPendingTransactions!.isEmpty
-                ? const Center(
-                    child: Text('No pending transactions found.'),
-                  )
+                ? const Center(child: Text('No pending transactions found.'))
                 : ListView.builder(
-                    itemCount: viewModel.getPendingTransactions!.length,
-                    itemBuilder: (context, index) {
-                      final transaction =
-                          viewModel.getPendingTransactions![index];
-                      return Card(
-                        child: ListTile(
-                          title: Text('Username: ${transaction.username}'),
-                          subtitle: Text('Amount: ${transaction.amount}'),
-                          trailing: TextButton(
-                            onPressed: () =>
-                                viewModel.approveTransaction(transaction.id),
-                            child: const Text('Approve'),
-                          ),
+                  itemCount: viewModel.getPendingTransactions!.length,
+                  itemBuilder: (context, index) {
+                    final transaction =
+                        viewModel.getPendingTransactions![index];
+                    return Card(
+                      child: ListTile(
+                        title: Text('Username: ${transaction.username}'),
+                        subtitle: Text('Amount: ${transaction.amount}'),
+                        trailing: TextButton(
+                          onPressed:
+                              () =>
+                                  viewModel.approveTransaction(transaction.id),
+                          child: const Text('Approve'),
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  },
+                ),
       ),
     );
   }
 
   @override
-  AdminViewModel viewModelBuilder(
-    BuildContext context,
-  ) =>
-      AdminViewModel();
+  AdminViewModel viewModelBuilder(BuildContext context) => AdminViewModel();
 
   @override
   void onViewModelReady(AdminViewModel viewModel) {
