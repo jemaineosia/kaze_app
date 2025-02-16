@@ -44,12 +44,12 @@ class WalletViewModel extends BaseViewModel {
       _loggerService.debug("Fetched Transactions: ${transactions.map((t) => t.toJson()).toList()}");
 
       // Filter cash_out_pending transactions
-      double pendingCashOut = transactions
+      pendingCashout = transactions
           .where((t) => t.transactionType == TransactionType.cashOutPending)
           .fold(0.0, (sum, t) => sum + t.amount);
 
       // Available balance should exclude pending cashout
-      currentBalance = totalBalance - (pendingCashOut + onHoldBalance);
+      currentBalance = totalBalance - (pendingCashout + onHoldBalance);
 
       _loggerService.debug("Wallet Data:");
       _loggerService.debug("Total Balance: $totalBalance");

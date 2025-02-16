@@ -5,6 +5,7 @@ import 'package:kaze_app/common/enums/transaction_type.dart';
 import 'package:kaze_app/ui/widgets/common/kaze_appbar/kaze_appbar.dart';
 import 'package:kaze_app/ui/widgets/common/kaze_button/kaze_button.dart';
 import 'package:stacked/stacked.dart';
+import 'package:timeago/timeago.dart' as timeago show format;
 
 import 'wallet_viewmodel.dart';
 
@@ -96,14 +97,19 @@ class WalletView extends StackedView<WalletViewModel> {
                                       : Colors.red,
                             ),
                             title: Text(
-                              transaction.transactionType.toString(),
+                              transaction.referenceNote.toString(),
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14.sp,
                                 color: isCashOutPending ? Colors.orange : Colors.black,
                               ),
                             ),
-                            subtitle: Text(transaction.referenceNote ?? ''),
+                            subtitle: Text(
+                              transaction.transactionType == TransactionType.cashOut && transaction.processedAt != null
+                                  ? timeago.format(transaction.processedAt!)
+                                  : timeago.format(transaction.createdAt),
+                            ),
+
                             trailing: Text(
                               "P${transaction.amount.toStringAsFixed(2)}",
                               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp),

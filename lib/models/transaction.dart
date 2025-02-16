@@ -13,6 +13,8 @@ class Transaction {
   final String? fullName;
   final String? bankName;
   final String? accountNumber;
+  final DateTime? processedAt;
+  final String? processedByAdminId;
   final DateTime createdAt;
   final DateTime? deletedAt;
 
@@ -28,6 +30,8 @@ class Transaction {
     this.fullName,
     this.bankName,
     this.accountNumber,
+    this.processedAt,
+    this.processedByAdminId,
     DateTime? createdAt,
     this.deletedAt,
   }) : createdAt = createdAt ?? DateTime.now();
@@ -48,6 +52,8 @@ class Transaction {
       fullName: json.containsKey('full_name') ? json['full_name'] : null,
       bankName: json.containsKey('bank_name') ? json['bank_name'] : null,
       accountNumber: json.containsKey('account_number') ? json['account_number'] : null,
+      processedAt: json['processed_at'] != null ? DateTime.parse(json['processed_at']) : null,
+      processedByAdminId: json['processed_by_admin_id'],
       createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : DateTime.now(),
       deletedAt: json['deleted_at'] != null ? DateTime.parse(json['deleted_at']) : null,
     );
@@ -66,6 +72,8 @@ class Transaction {
       'full_name': fullName,
       'bank_name': bankName,
       'account_number': accountNumber,
+      'processed_at': processedAt?.toIso8601String(),
+      'processed_by_admin_id': processedByAdminId,
       'created_at': createdAt.toIso8601String(),
       'deleted_at': deletedAt?.toIso8601String(),
     }..removeWhere((key, value) => value == null);

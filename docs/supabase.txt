@@ -334,3 +334,6 @@ FOR EACH ROW
 EXECUTE FUNCTION update_balance_on_transaction();
 
 
+ALTER TABLE transactions
+ADD COLUMN processed_at TIMESTAMP WITH TIME ZONE NULL,
+ADD COLUMN processed_by_admin_id UUID NULL REFERENCES appUsers(id);

@@ -87,7 +87,7 @@ class CashoutViewModel extends FormViewModel {
         bankName: bankName,
         accountNumber: accountNumber,
         cashOutMethod: cashOutMethod,
-        referenceNote: "Cash-out via $cashOutMethod",
+        referenceNote: "Cash-out via ${cashOutMethod.toValue()}",
       );
 
       await _transactionService.createTransaction(newTransaction);

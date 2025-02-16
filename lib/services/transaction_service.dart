@@ -60,6 +60,36 @@ class TransactionService {
     }
   }
 
+  Future<bool> updateTransaction({
+    required String transactionId,
+    required TransactionType transactionType,
+    DateTime? processedAt,
+    String? processedByAdminId,
+  }) async {
+    try {
+      final response =
+          await _transactionTable
+              .update({
+                'transaction_type': transactionType.toValue(),
+                'processed_at': processedAt?.toIso8601String(),
+                'processed_by_admin_id': processedByAdminId,
+              })
+              .eq('id', transactionId)
+              .select();
+
+      if (response.isEmpty) {
+        _loggerService.error('Transaction update failed. ID: $transactionId');
+        return false;
+      }
+
+      _loggerService.info('Transaction $transactionId updated successfully.');
+      return true;
+    } catch (e, stackTrace) {
+      _loggerService.error('Error updating transaction $transactionId', error: e, stackTrace: stackTrace);
+      return false;
+    }
+  }
+
   Future<Transaction?> approveTransaction(String transactionId) async {
     locator<LoggerService>().info('Approving transaction with ID: $transactionId');
     try {
