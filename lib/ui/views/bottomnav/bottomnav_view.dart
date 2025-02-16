@@ -26,7 +26,7 @@ class BottomnavView extends StackedView<BottomnavViewModel> {
         ),
         child: FloatingActionButton(
           onPressed: () {
-            print("Floating Button Pressed");
+            viewModel.showCreateMatch(context); // Pass the context!
           },
           backgroundColor: Colors.transparent,
           elevation: 0,

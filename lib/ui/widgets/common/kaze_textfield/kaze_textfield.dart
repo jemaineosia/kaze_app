@@ -11,6 +11,7 @@ class KazeTextfield extends StackedView<KazeTextfieldModel> {
   final Icon suffixIcon;
   final Function()? onTap;
   final String? Function(String?)? validator;
+  final TextInputType keyboardType;
 
   const KazeTextfield({
     super.key,
@@ -20,6 +21,7 @@ class KazeTextfield extends StackedView<KazeTextfieldModel> {
     this.suffixIcon = const Icon(null),
     this.onTap,
     this.validator,
+    this.keyboardType = TextInputType.text,
   });
 
   @override
@@ -35,6 +37,7 @@ class KazeTextfield extends StackedView<KazeTextfieldModel> {
         onTap: onTap,
         controller: controller,
         obscureText: obscureText,
+        keyboardType: keyboardType,
         decoration: InputDecoration(
           hintText: hintText,
           hintStyle: TextStyle(color: Theme.of(context).colorScheme.primary),

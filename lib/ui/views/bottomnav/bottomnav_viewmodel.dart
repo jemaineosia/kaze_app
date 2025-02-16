@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kaze_app/models/bottom_nav_bar_item.dart';
 import 'package:kaze_app/ui/views/chat/chat_view.dart';
 import 'package:kaze_app/ui/views/home/home_view.dart';
+import 'package:kaze_app/ui/views/match/match_view.dart';
 import 'package:kaze_app/ui/views/settings/settings_view.dart';
 import 'package:kaze_app/ui/views/wallet/wallet_view.dart';
 import 'package:stacked/stacked.dart';
@@ -31,4 +32,13 @@ class BottomnavViewModel extends IndexTrackingViewModel {
     BottomNavBarItem(icon: Icons.wallet, label: "Wallet"),
     BottomNavBarItem(icon: Icons.settings, label: "Settings"),
   ];
+
+  void showCreateMatch(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // Full-screen height for modal
+      backgroundColor: Colors.white,
+      builder: (context) => MatchView(),
+    );
+  }
 }

@@ -356,3 +356,7 @@ AFTER UPDATE ON transactions
 FOR EACH ROW
 WHEN (OLD.transaction_type = 'cash_out_pending' AND NEW.transaction_type = 'cash_out_failed')
 EXECUTE FUNCTION handle_failed_cashout();
+
+
+ALTER TABLE matches
+ALTER COLUMN opponent_id DROP NOT NULL;
