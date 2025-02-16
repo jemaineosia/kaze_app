@@ -47,11 +47,16 @@ class Match {
       winnerId: json['winner_id'], // Updated to snake_case
       matchTitle: json['match_title'], // Updated to snake_case
       matchDescription: json['match_description'], // Updated to snake_case
-      schedule: json['schedule'] != null ? DateTime.parse(json['schedule']) : null,
-      creatorBetAmount: (json['creator_bet_amount'] as num).toDouble(), // Updated
-      totalCreatorBetAmount: (json['total_creator_bet_amount'] as num).toDouble(), // Updated
-      opponentBetAmount: (json['opponent_bet_amount'] as num).toDouble(), // Updated
-      totalOpponentBetAmount: (json['total_opponent_bet_amount'] as num).toDouble(), // Updated
+      schedule:
+          json['schedule'] != null ? DateTime.parse(json['schedule']) : null,
+      creatorBetAmount:
+          (json['creator_bet_amount'] as num).toDouble(), // Updated
+      totalCreatorBetAmount:
+          (json['total_creator_bet_amount'] as num).toDouble(), // Updated
+      opponentBetAmount:
+          (json['opponent_bet_amount'] as num).toDouble(), // Updated
+      totalOpponentBetAmount:
+          (json['total_opponent_bet_amount'] as num).toDouble(), // Updated
       status: MatchStatus.fromString(json['status'] ?? 'pending'),
       creatorUpdatedAt:
           json['creator_updated_at'] !=
@@ -91,9 +96,11 @@ class Match {
       'match_description': matchDescription, // Updated to snake_case
       'schedule': schedule?.toIso8601String(),
       'creator_bet_amount': creatorBetAmount, // Updated to snake_case
-      'total_creator_bet_amount': totalCreatorBetAmount, // Updated to snake_case
+      'total_creator_bet_amount':
+          totalCreatorBetAmount, // Updated to snake_case
       'opponent_bet_amount': opponentBetAmount, // Updated to snake_case
-      'total_opponent_bet_amount': totalOpponentBetAmount, // Updated to snake_case
+      'total_opponent_bet_amount':
+          totalOpponentBetAmount, // Updated to snake_case
       'status': status.toValue(),
       'creator_updated_at': creatorUpdatedAt?.toIso8601String(), // Updated
       'opponent_updated_at': opponentUpdatedAt?.toIso8601String(), // Updated

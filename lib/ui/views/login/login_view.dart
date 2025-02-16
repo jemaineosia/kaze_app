@@ -9,13 +9,19 @@ import 'package:stacked/stacked_annotations.dart';
 import 'login_view.form.dart';
 import 'login_viewmodel.dart';
 
-@FormView(fields: [FormTextField(name: 'username'), FormTextField(name: 'password')])
+@FormView(
+  fields: [FormTextField(name: 'username'), FormTextField(name: 'password')],
+)
 class LoginView extends StackedView<LoginViewModel> with $LoginView {
   LoginView({super.key});
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
-  Widget builder(BuildContext context, LoginViewModel viewModel, Widget? child) {
+  Widget builder(
+    BuildContext context,
+    LoginViewModel viewModel,
+    Widget? child,
+  ) {
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -66,7 +72,10 @@ class LoginView extends StackedView<LoginViewModel> with $LoginView {
                   text: "Login",
                   onTap: () {
                     if (_formKey.currentState!.validate()) {
-                      viewModel.login(usernameController.text, passwordController.text);
+                      viewModel.login(
+                        usernameController.text,
+                        passwordController.text,
+                      );
                     }
                   },
                   isLoading: viewModel.isBusy,
@@ -75,7 +84,12 @@ class LoginView extends StackedView<LoginViewModel> with $LoginView {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("New Member? ", style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+                    Text(
+                      "New Member? ",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
                     GestureDetector(
                       onTap: () => viewModel.navigateToRegister(),
                       child: Text(
@@ -101,7 +115,10 @@ class LoginView extends StackedView<LoginViewModel> with $LoginView {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text("KAZE ", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30.sp)),
+        Text(
+          "KAZE ",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30.sp),
+        ),
         Text("APP", style: TextStyle(color: Colors.black45, fontSize: 30.sp)),
       ],
     );

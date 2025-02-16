@@ -17,13 +17,19 @@ class LoginViewModel extends FormViewModel {
 
     _loggerService.info("Attempting login for username: $username");
 
-    final result = await _authService.signInWithEmailPassword(username, password);
+    final result = await _authService.signInWithEmailPassword(
+      username,
+      password,
+    );
 
     setBusy(false);
 
     if (result is String) {
       _loggerService.warning("Login failed: $result");
-      await _dialogService.showDialog(title: 'Login Failure', description: result);
+      await _dialogService.showDialog(
+        title: 'Login Failure',
+        description: result,
+      );
       return;
     }
 

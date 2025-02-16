@@ -41,7 +41,9 @@ class WalletViewModel extends BaseViewModel {
       // Fetch transactions (cash-in & cash-out only)
       transactions = await _transactionService.getUserTransactions(user.id);
 
-      _loggerService.debug("Fetched Transactions: ${transactions.map((t) => t.toJson()).toList()}");
+      _loggerService.debug(
+        "Fetched Transactions: ${transactions.map((t) => t.toJson()).toList()}",
+      );
 
       // Filter cash_out_pending transactions
       pendingCashout = transactions
@@ -59,7 +61,11 @@ class WalletViewModel extends BaseViewModel {
 
       notifyListeners();
     } catch (e, stackTrace) {
-      _loggerService.error("Error fetching wallet data.", error: e, stackTrace: stackTrace);
+      _loggerService.error(
+        "Error fetching wallet data.",
+        error: e,
+        stackTrace: stackTrace,
+      );
     } finally {
       setBusy(false);
     }

@@ -9,6 +9,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:stacked_services/stacked_services.dart';
 
+import 'package:kaze_app/services/match_service.dart';
 // @stacked-import
 
 import 'test_helpers.mocks.dart';
@@ -25,6 +26,7 @@ import 'test_helpers.mocks.dart';
     MockSpec<ImageService>(onMissingStub: OnMissingStub.returnDefault),
     MockSpec<AppuserService>(onMissingStub: OnMissingStub.returnDefault),
     MockSpec<NotificationService>(onMissingStub: OnMissingStub.returnDefault),
+    MockSpec<MatchService>(onMissingStub: OnMissingStub.returnDefault),
     // @stacked-mock-spec
   ],
 )
@@ -38,6 +40,7 @@ void registerServices() {
   getAndRegisterImageService();
   getAndRegisterAppuserService();
   getAndRegisterNotificationService();
+  getAndRegisterMatchService();
   // @stacked-mock-register
 }
 
@@ -48,7 +51,9 @@ MockNavigationService getAndRegisterNavigationService() {
   return service;
 }
 
-MockBottomSheetService getAndRegisterBottomSheetService<T>({SheetResponse<T>? showCustomSheetResponse}) {
+MockBottomSheetService getAndRegisterBottomSheetService<T>({
+  SheetResponse<T>? showCustomSheetResponse,
+}) {
   _removeRegistrationIfExists<BottomSheetService>();
   final service = MockBottomSheetService();
 
@@ -77,7 +82,10 @@ MockBottomSheetService getAndRegisterBottomSheetService<T>({SheetResponse<T>? sh
       data: anyNamed('data'),
       description: anyNamed('description'),
     ),
-  ).thenAnswer((realInvocation) => Future.value(showCustomSheetResponse ?? SheetResponse<T>()));
+  ).thenAnswer(
+    (realInvocation) =>
+        Future.value(showCustomSheetResponse ?? SheetResponse<T>()),
+  );
 
   locator.registerSingleton<BottomSheetService>(service);
   return service;
@@ -129,6 +137,13 @@ MockNotificationService getAndRegisterNotificationService() {
   _removeRegistrationIfExists<NotificationService>();
   final service = MockNotificationService();
   locator.registerSingleton<NotificationService>(service);
+  return service;
+}
+
+MockMatchService getAndRegisterMatchService() {
+  _removeRegistrationIfExists<MatchService>();
+  final service = MockMatchService();
+  locator.registerSingleton<MatchService>(service);
   return service;
 }
 // @stacked-mock-create

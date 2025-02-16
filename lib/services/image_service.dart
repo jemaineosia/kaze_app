@@ -22,11 +22,17 @@ class ImageService {
       // Upload image to Supabase storage
       final response = await _supabase.storage
           .from('receipts') // Bucket name
-          .uploadBinary(filePath, bytes, fileOptions: FileOptions(contentType: 'image/$fileExt'));
+          .uploadBinary(
+            filePath,
+            bytes,
+            fileOptions: FileOptions(contentType: 'image/$fileExt'),
+          );
 
       if (response.startsWith('receipts/')) {
         // Generate public URL (assuming bucket is public)
-        final publicUrl = _supabase.storage.from('receipts').getPublicUrl(filePath);
+        final publicUrl = _supabase.storage
+            .from('receipts')
+            .getPublicUrl(filePath);
 
         _loggerService.info('Image uploaded successfully: $publicUrl');
         return publicUrl;
@@ -34,7 +40,11 @@ class ImageService {
         throw Exception('Unexpected response: $response');
       }
     } catch (e, stackTrace) {
-      _loggerService.error('Error uploading image: $filePath', error: e, stackTrace: stackTrace);
+      _loggerService.error(
+        'Error uploading image: $filePath',
+        error: e,
+        stackTrace: stackTrace,
+      );
       rethrow; // Re-throw the exception to be handled by the caller
     }
   }

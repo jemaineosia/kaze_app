@@ -21,7 +21,11 @@ class KazeButton extends StackedView<KazeButtonModel> {
   });
 
   @override
-  Widget builder(BuildContext context, KazeButtonModel viewModel, Widget? child) {
+  Widget builder(
+    BuildContext context,
+    KazeButtonModel viewModel,
+    Widget? child,
+  ) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -35,7 +39,14 @@ class KazeButton extends StackedView<KazeButtonModel> {
           child:
               isLoading
                   ? const CircularProgressIndicator()
-                  : Text(text, style: TextStyle(color: textColor, fontSize: 12.sp, fontWeight: FontWeight.bold)),
+                  : Text(
+                    text,
+                    style: TextStyle(
+                      color: textColor,
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
         ),
       ),
     );

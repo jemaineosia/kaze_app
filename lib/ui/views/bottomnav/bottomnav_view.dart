@@ -9,14 +9,21 @@ class BottomnavView extends StackedView<BottomnavViewModel> {
   const BottomnavView({Key? key}) : super(key: key);
 
   @override
-  Widget builder(BuildContext context, BottomnavViewModel viewModel, Widget? child) {
+  Widget builder(
+    BuildContext context,
+    BottomnavViewModel viewModel,
+    Widget? child,
+  ) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: viewModel.screensList[viewModel.currentIndex],
       floatingActionButton: Container(
         width: 60,
         height: 60,
-        decoration: const BoxDecoration(shape: BoxShape.circle, color: kcDarkGreyColor),
+        decoration: const BoxDecoration(
+          shape: BoxShape.circle,
+          color: kcDarkGreyColor,
+        ),
         child: FloatingActionButton(
           onPressed: () {
             print("Floating Button Pressed");
@@ -55,5 +62,6 @@ class BottomnavView extends StackedView<BottomnavViewModel> {
   }
 
   @override
-  BottomnavViewModel viewModelBuilder(BuildContext context) => BottomnavViewModel();
+  BottomnavViewModel viewModelBuilder(BuildContext context) =>
+      BottomnavViewModel();
 }

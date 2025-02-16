@@ -24,7 +24,11 @@ class CashoutView extends StackedView<CashoutViewModel> with $CashoutView {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
-  Widget builder(BuildContext context, CashoutViewModel viewModel, Widget? child) {
+  Widget builder(
+    BuildContext context,
+    CashoutViewModel viewModel,
+    Widget? child,
+  ) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("KAZE", style: TextStyle(color: kcWhite)),
@@ -49,7 +53,9 @@ class CashoutView extends StackedView<CashoutViewModel> with $CashoutView {
                     viewModel.paymentModes.map((mode) {
                       return DropdownMenuItem(
                         value: mode,
-                        child: Text(mode.toValue()), // Use the enum's string representation
+                        child: Text(
+                          mode.toValue(),
+                        ), // Use the enum's string representation
                       );
                     }).toList(),
                 onChanged: viewModel.setSelectedPaymentMode,
@@ -65,11 +71,19 @@ class CashoutView extends StackedView<CashoutViewModel> with $CashoutView {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15.0),
-                    borderSide: const BorderSide(color: Colors.blue, width: 2.0),
+                    borderSide: const BorderSide(
+                      color: Colors.blue,
+                      width: 2.0,
+                    ),
                   ),
-                  contentPadding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 12.0,
+                    horizontal: 16.0,
+                  ),
                 ),
-                validator: (value) => value == null ? 'Please select a payment mode' : null,
+                validator:
+                    (value) =>
+                        value == null ? 'Please select a payment mode' : null,
               ),
               if (viewModel.selectedPaymentMode == CashOutMethod.bank) ...[
                 Gap(10.h),

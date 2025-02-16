@@ -19,6 +19,8 @@ import 'package:kaze_app/services/appuser_service.dart';
 import 'package:kaze_app/services/notification_service.dart';
 import 'package:kaze_app/ui/views/cashout/cashout_view.dart';
 import 'package:kaze_app/ui/views/cashin/cashin_view.dart';
+import 'package:kaze_app/services/match_service.dart';
+import 'package:kaze_app/ui/views/match/match_view.dart';
 // @stacked-import
 
 @StackedApp(
@@ -34,6 +36,7 @@ import 'package:kaze_app/ui/views/cashin/cashin_view.dart';
     MaterialRoute(page: AdminView),
     MaterialRoute(page: CashoutView),
     MaterialRoute(page: CashinView),
+    MaterialRoute(page: MatchView),
     // @stacked-route
   ],
   dependencies: [
@@ -46,6 +49,7 @@ import 'package:kaze_app/ui/views/cashin/cashin_view.dart';
     LazySingleton(classType: ImageService),
     LazySingleton(classType: AppuserService),
     LazySingleton(classType: NotificationService),
+    LazySingleton(classType: MatchService),
     // @stacked-service
   ],
   bottomsheets: [

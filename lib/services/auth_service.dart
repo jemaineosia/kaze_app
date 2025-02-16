@@ -8,7 +8,10 @@ class AuthService {
   final _appUserService = locator<AppuserService>();
   final LoggerService _loggerService = locator<LoggerService>();
 
-  Future<dynamic> signInWithEmailPassword(String username, String password) async {
+  Future<dynamic> signInWithEmailPassword(
+    String username,
+    String password,
+  ) async {
     try {
       _loggerService.info("Attempting to log in with username: $username");
 
@@ -21,7 +24,10 @@ class AuthService {
       }
 
       // Authenticate the user with Supabase
-      final authResponse = await _supabase.auth.signInWithPassword(password: password, email: currentUser.email);
+      final authResponse = await _supabase.auth.signInWithPassword(
+        password: password,
+        email: currentUser.email,
+      );
 
       if (authResponse.user == null) {
         _loggerService.warning("Authentication failed for username: $username");
@@ -34,20 +40,33 @@ class AuthService {
       _loggerService.error("AuthException during sign-in", error: e);
       return e.message; // Return Supabase error message
     } catch (e, stackTrace) {
-      _loggerService.error("Unexpected error during sign-in", error: e, stackTrace: stackTrace);
+      _loggerService.error(
+        "Unexpected error during sign-in",
+        error: e,
+        stackTrace: stackTrace,
+      );
       return "An unexpected error occurred. Please try again later.";
     }
   }
 
-  Future<String?> signUpWithEmailPassword(String username, String email, String password) async {
+  Future<String?> signUpWithEmailPassword(
+    String username,
+    String email,
+    String password,
+  ) async {
     try {
       _loggerService.info("Attempting to sign up with email: $email");
 
       // Create the user in authentication
-      final response = await _supabase.auth.signUp(email: email, password: password);
+      final response = await _supabase.auth.signUp(
+        email: email,
+        password: password,
+      );
 
       if (response.user == null) {
-        _loggerService.warning("Unknown error occurred during signup for email: $email");
+        _loggerService.warning(
+          "Unknown error occurred during signup for email: $email",
+        );
         return 'Unknown error occurred during signup.';
       }
 
@@ -75,7 +94,11 @@ class AuthService {
       }
       return 'Authentication error: ${e.message}';
     } catch (e, stackTrace) {
-      _loggerService.error("Unexpected error during sign-up", error: e, stackTrace: stackTrace);
+      _loggerService.error(
+        "Unexpected error during sign-up",
+        error: e,
+        stackTrace: stackTrace,
+      );
       return 'An unexpected error occurred. Please try again later.';
     }
   }
@@ -86,7 +109,11 @@ class AuthService {
       await _supabase.auth.signOut();
       _loggerService.info("User successfully signed out.");
     } catch (e, stackTrace) {
-      _loggerService.error("Error during sign-out", error: e, stackTrace: stackTrace);
+      _loggerService.error(
+        "Error during sign-out",
+        error: e,
+        stackTrace: stackTrace,
+      );
     }
   }
 

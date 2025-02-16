@@ -43,19 +43,33 @@ class Transaction {
       matchId: json['match_id'],
       amount: (json['amount'] as num).toDouble(),
       transactionType: TransactionType.fromString(json['transaction_type']),
-      referenceNote: json.containsKey('reference_note') ? json['reference_note'] : null,
-      receiptImageUrl: json.containsKey('receipt_image_url') ? json['receipt_image_url'] : null,
+      referenceNote:
+          json.containsKey('reference_note') ? json['reference_note'] : null,
+      receiptImageUrl:
+          json.containsKey('receipt_image_url')
+              ? json['receipt_image_url']
+              : null,
       cashOutMethod:
           json.containsKey('cash_out_method') && json['cash_out_method'] != null
               ? CashOutMethod.fromString(json['cash_out_method'])
               : null,
       fullName: json.containsKey('full_name') ? json['full_name'] : null,
       bankName: json.containsKey('bank_name') ? json['bank_name'] : null,
-      accountNumber: json.containsKey('account_number') ? json['account_number'] : null,
-      processedAt: json['processed_at'] != null ? DateTime.parse(json['processed_at']) : null,
+      accountNumber:
+          json.containsKey('account_number') ? json['account_number'] : null,
+      processedAt:
+          json['processed_at'] != null
+              ? DateTime.parse(json['processed_at'])
+              : null,
       processedByAdminId: json['processed_by_admin_id'],
-      createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : DateTime.now(),
-      deletedAt: json['deleted_at'] != null ? DateTime.parse(json['deleted_at']) : null,
+      createdAt:
+          json['created_at'] != null
+              ? DateTime.parse(json['created_at'])
+              : DateTime.now(),
+      deletedAt:
+          json['deleted_at'] != null
+              ? DateTime.parse(json['deleted_at'])
+              : null,
     );
   }
 

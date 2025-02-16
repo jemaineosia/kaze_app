@@ -8,13 +8,24 @@ class RegisterViewModel extends FormViewModel {
   final DialogService _dialogService = DialogService();
   final NavigationService _navigationService = NavigationService();
 
-  Future<void> register({required String username, required String email, required String password}) async {
+  Future<void> register({
+    required String username,
+    required String email,
+    required String password,
+  }) async {
     setBusy(true);
-    var response = await _authService.signUpWithEmailPassword(username, email, password);
+    var response = await _authService.signUpWithEmailPassword(
+      username,
+      email,
+      password,
+    );
     setBusy(false);
 
     if (response == null) {
-      await _dialogService.showDialog(title: "Signup Error", description: "Failed to sign up. Please try again.");
+      await _dialogService.showDialog(
+        title: "Signup Error",
+        description: "Failed to sign up. Please try again.",
+      );
       return;
     }
 
