@@ -3,6 +3,7 @@ enum TransactionType {
   cashInPending,
   cashOut,
   cashOutPending,
+  cashOutFailed,
   betHold,
   betRelease;
 
@@ -17,6 +18,8 @@ enum TransactionType {
         return TransactionType.cashOut;
       case 'cash_out_pending':
         return TransactionType.cashOutPending;
+      case 'cash_out_failed':
+        return TransactionType.cashOutFailed;
       case 'bet_hold':
         return TransactionType.betHold;
       case 'bet_release':
@@ -46,6 +49,8 @@ enum TransactionType {
         return 'Cash Out';
       case TransactionType.cashOutPending:
         return 'Cash Out Pending';
+      case TransactionType.cashOutFailed:
+        return 'Cash Out Failed';
       case TransactionType.betHold:
         return 'Bet On Hold';
       case TransactionType.betRelease:

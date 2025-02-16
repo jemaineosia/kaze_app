@@ -337,3 +337,22 @@ EXECUTE FUNCTION update_balance_on_transaction();
 ALTER TABLE transactions
 ADD COLUMN processed_at TIMESTAMP WITH TIME ZONE NULL,
 ADD COLUMN processed_by_admin_id UUID NULL REFERENCES appUsers(id);
+
+
+CREATE OR REPLACE FUNCTION handle_failed_cashout()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.transaction_type = 'cash_out_failed' AND OLD.transaction_type = 'cash_out_pending' THEN
+    UPDATE appUsers
+    SET balance = balance + OLD.amount
+    WHERE id = OLD.user_id;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_cashout_failed_refund
+AFTER UPDATE ON transactions
+FOR EACH ROW
+WHEN (OLD.transaction_type = 'cash_out_pending' AND NEW.transaction_type = 'cash_out_failed')
+EXECUTE FUNCTION handle_failed_cashout();
