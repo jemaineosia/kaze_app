@@ -1,0 +1,366 @@
+-- Create the appUsers table
+CREATE TABLE appusers (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  username text NOT NULL UNIQUE,
+  email text NOT NULL UNIQUE,
+  fullname text NULL,
+  role text DEFAULT 'user',                     -- e.g., 'user', 'admin'
+  status text DEFAULT 'active',                 -- e.g., 'active', 'suspended'
+  created_at timestamp with time zone DEFAULT now()
+);
+
+ALTER TABLE appUsers 
+ADD COLUMN balance NUMERIC(14,2) DEFAULT 0,
+ADD COLUMN on_hold_balance NUMERIC(14,2) DEFAULT 0;
+
+
+-- Create the matches table
+CREATE TABLE matches (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  creator_id uuid NOT NULL REFERENCES appusers(id),
+  opponent_id uuid NOT NULL REFERENCES appusers(id),
+  winner_id uuid REFERENCES appusers(id),        -- Nullable until match is resolved
+  match_title text NOT NULL,
+  match_description text NOT NULL,
+  schedule timestamp with time zone,
+  creator_bet_amount numeric(14,2) NOT NULL CHECK (creator_bet_amount > 0),
+  total_creator_bet_amount numeric(14,2) DEFAULT 0,  -- Total contributions from creator team
+  opponent_bet_amount numeric(14,2) NOT NULL CHECK (opponent_bet_amount > 0), -- Fixed reference
+  total_opponent_bet_amount numeric(14,2) DEFAULT 0, -- Total contributions from opponent team
+  status text NOT NULL,                             -- e.g., 'pending', 'ongoing', 'completed', 'canceled'
+  creator_updated_at timestamp with time zone,
+  opponent_updated_at timestamp with time zone,
+  admin_updated_at timestamp with time zone,
+  created_at timestamp with time zone DEFAULT now(),
+  deleted_at timestamp with time zone DEFAULT NULL -- Default to NULL for soft delete
+);
+
+-- Create the transactions table
+CREATE TABLE transactions (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id uuid NOT NULL REFERENCES appusers(id),
+  match_id uuid REFERENCES matches(id),          -- null if not a match-related transaction
+  amount numeric(14,2) NOT NULL CHECK (amount <> 0), -- Positive or negative as needed
+  transaction_type text NOT NULL,               -- e.g., 'cash_in', 'cash_out', 'bet_hold', 'bet_release'
+  reference_note text,                          -- Optional note or receipt
+  receipt_image_url varchar NULL,               -- URL for receipt image
+  created_at timestamp with time zone DEFAULT now(),
+  deleted_at timestamp with time zone DEFAULT NULL -- Default to NULL for soft delete
+);
+
+ALTER TABLE transactions 
+ADD COLUMN cash_out_method TEXT NULL,
+ADD COLUMN full_name TEXT NULL,
+ADD COLUMN bank_name TEXT NULL,
+ADD COLUMN account_number TEXT NULL;
+
+
+-- Create the matchParticipants table
+CREATE TABLE match_participants (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  match_id uuid NOT NULL REFERENCES matches(id),    -- No cascade behavior; rely on soft delete
+  user_id uuid NOT NULL REFERENCES appusers(id),
+  team text NOT NULL CHECK (team IN ('creator', 'opponent')), -- To distinguish teams
+  contribution_amount numeric(14,2) NOT NULL CHECK (contribution_amount > 0), -- Individual contribution
+  created_at timestamp with time zone DEFAULT now(),
+  deleted_at timestamp with time zone DEFAULT NULL, -- For soft delete
+  UNIQUE (match_id, user_id)                        -- Prevent duplicate entries for the same user in the same match
+);
+
+CREATE UNIQUE INDEX idx_appusers_email ON appusers (email);
+
+-- Add index on username in appusers
+CREATE UNIQUE INDEX idx_appusers_username ON appusers (username);
+
+-- Add index on user_id in transactions
+CREATE INDEX idx_transactions_user_id ON transactions (user_id);
+
+-- Add index on match_id in transactions
+CREATE INDEX idx_transactions_match_id ON transactions (match_id);
+
+-- Add index on status in matches for filtering
+CREATE INDEX idx_matches_status ON matches (status);
+
+-- Function to auto-update the total bet amounts
+CREATE OR REPLACE FUNCTION update_total_bet_amounts()
+RETURNS TRIGGER AS $$
+BEGIN
+  -- Update total_creator_bet_amount
+  UPDATE matches
+  SET total_creator_bet_amount = (
+    SELECT COALESCE(SUM(contribution_amount), 0)
+    FROM match_participants
+    WHERE match_id = COALESCE(NEW.match_id, OLD.match_id) AND team = 'creator' AND deleted_at IS NULL
+  )
+  WHERE id = COALESCE(NEW.match_id, OLD.match_id);
+
+  -- Update total_opponent_bet_amount
+  UPDATE matches
+  SET total_opponent_bet_amount = (
+    SELECT COALESCE(SUM(contribution_amount), 0)
+    FROM match_participants
+    WHERE match_id = COALESCE(NEW.match_id, OLD.match_id) AND team = 'opponent' AND deleted_at IS NULL
+  )
+  WHERE id = COALESCE(NEW.match_id, OLD.match_id);
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger to update the table every time there are changes in match participants
+CREATE TRIGGER trigger_update_bet_amounts
+AFTER INSERT OR UPDATE OR DELETE
+ON match_participants
+FOR EACH ROW
+EXECUTE FUNCTION update_total_bet_amounts();
+
+-- handle user signup
+CREATE OR REPLACE FUNCTION handle_user_signup(
+  auth_user_id uuid,
+  username text,
+  email text
+)
+RETURNS void AS $$
+BEGIN
+  -- Insert into appusers table
+  BEGIN
+    INSERT INTO appusers (id, username, email)
+    VALUES (auth_user_id, username, email);
+  EXCEPTION WHEN unique_violation THEN
+    -- Rollback: Delete the user from auth.users if insertion fails
+    DELETE FROM auth.users WHERE id = auth_user_id;
+    RAISE;
+  END;
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- save to appUsers after registration
+CREATE OR REPLACE FUNCTION handle_user_signup(
+  auth_user_id uuid,
+  username text,
+  email text
+)
+RETURNS void AS $$
+BEGIN
+  -- Insert into appUsers table
+  BEGIN
+    INSERT INTO appusers (id, username, email)
+    VALUES (auth_user_id, username, email);
+  EXCEPTION WHEN unique_violation THEN
+    -- Rollback: Delete the user from auth.users if insertion fails
+    DELETE FROM auth.users WHERE id = auth_user_id;
+    RAISE;
+  END;
+END;
+$$ LANGUAGE plpgsql;
+
+-- log table
+CREATE TABLE logs (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  log_level text NOT NULL, -- 'info', 'debug', 'error'
+  message text NOT NULL,
+  error_details text,
+  stack_trace text,
+  created_at timestamp with time zone DEFAULT NOW()
+);
+CREATE INDEX idx_logs_created_at ON logs (created_at);
+CREATE INDEX idx_logs_log_level ON logs (log_level);
+-- cron logs
+SELECT cron.schedule(
+  'delete_old_logs',       -- Unique name for the job
+  '0 0 * * *',             -- Cron schedule (daily at midnight)
+  $$DELETE FROM logs WHERE created_at < NOW() - INTERVAL '30 days';$$
+);
+
+CREATE POLICY "allow insert for authenticated users"
+ON storage.objects
+FOR INSERT
+WITH CHECK (
+  auth.role() = 'authenticated'
+);
+
+--Ensure RLS is enabled for the storage.objects table:
+ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
+
+--To allow users to access files they've uploaded, add a SELECT policy:
+CREATE POLICY "allow read for authenticated users"
+ON storage.objects
+FOR SELECT
+USING (
+  auth.role() = 'authenticated'
+);
+
+--Check the current policies on the storage.objects table:
+SELECT policyname, permissive, roles, cmd, qual, with_check 
+FROM pg_policies 
+WHERE tablename = 'objects';
+
+
+ALTER TABLE transactions
+ADD CONSTRAINT fk_transactions_user_id
+FOREIGN KEY (user_id)
+REFERENCES appUsers(id)
+ON DELETE CASCADE;
+
+-- table for notif
+CREATE TABLE notifications (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id uuid REFERENCES appUsers(id) ON DELETE CASCADE, -- Notification belongs to a user
+  title text NOT NULL, -- Notification title
+  message text NOT NULL, -- Detailed notification message
+  type text NOT NULL, -- Type of notification
+  is_read boolean DEFAULT false, -- Whether the notification has been read
+  created_at timestamp with time zone DEFAULT now(), -- Timestamp of when the notification was created
+  read_at timestamp with time zone DEFAULT NULL -- Timestamp of when the notification was read
+);
+
+CREATE INDEX idx_notifications_user_id ON notifications(user_id);
+CREATE INDEX idx_notifications_is_read ON notifications(is_read);
+
+--*** TODO: MAKE SURE THE TABLE Notifications is realtime enabled
+ALTER TABLE notifications ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow user to read their notifications"
+ON notifications
+FOR SELECT
+USING (
+  auth.uid() = user_id
+);
+
+CREATE POLICY "allow insert for authenticated users"
+ON notifications
+FOR INSERT
+WITH CHECK (
+  auth.role() = 'authenticated' AND user_id = auth.uid()
+);
+
+CREATE POLICY "allow select for authenticated users"
+ON notifications
+FOR SELECT
+USING (
+  auth.role() = 'authenticated' AND user_id = auth.uid()
+);
+
+CREATE POLICY "allow insert for service role"
+ON notifications
+FOR INSERT
+WITH CHECK (
+  auth.role() = 'service_role'
+);
+
+CREATE POLICY "allow update is_read for authenticated users"
+ON notifications
+FOR UPDATE
+USING (
+  auth.role() = 'authenticated' AND user_id = auth.uid()
+)
+WITH CHECK (
+  user_id = auth.uid()
+);
+
+
+CREATE POLICY "Allow admin to read all notifications"
+ON notifications
+FOR SELECT
+USING (
+  auth.role() = 'service_role'
+);
+
+--Trigger: Move Bet to On-Hold Balance (bet_hold)
+CREATE OR REPLACE FUNCTION hold_bet_amount()
+RETURNS TRIGGER AS $$
+BEGIN
+  -- Move amount from balance to on_hold_balance
+  UPDATE appUsers
+  SET balance = balance - NEW.amount,
+      on_hold_balance = on_hold_balance + NEW.amount
+  WHERE id = NEW.user_id;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+--Trigger: Release Bet (bet_release)
+CREATE TRIGGER trigger_hold_bet
+AFTER INSERT ON transactions
+FOR EACH ROW
+WHEN (NEW.transaction_type = 'bet_hold')
+EXECUTE FUNCTION hold_bet_amount();
+
+CREATE OR REPLACE FUNCTION release_bet_amount()
+RETURNS TRIGGER AS $$
+BEGIN
+  -- Remove amount from on_hold_balance
+  UPDATE appUsers
+  SET on_hold_balance = on_hold_balance - NEW.amount
+  WHERE id = NEW.user_id;
+
+  -- If user won, add to balance
+  IF NEW.winner = TRUE THEN
+    UPDATE appUsers
+    SET balance = balance + (NEW.amount * 2) -- Assume winnings are double the bet
+    WHERE id = NEW.user_id;
+  END IF;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER trigger_release_bet
+AFTER INSERT ON transactions
+FOR EACH ROW
+WHEN (NEW.transaction_type = 'bet_release')
+EXECUTE FUNCTION release_bet_amount();
+
+
+-- Update balance only when transaction status is changed to 'cash_in'
+CREATE OR REPLACE FUNCTION update_balance_on_transaction()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.transaction_type = 'cash_in' AND OLD.transaction_type = 'cash_in_pending' THEN
+    UPDATE appUsers SET balance = balance + NEW.amount WHERE id = NEW.user_id;
+  ELSIF NEW.transaction_type = 'cash_out' THEN
+    UPDATE appUsers SET balance = balance - NEW.amount WHERE id = NEW.user_id;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Modify the trigger to trigger on UPDATE instead of INSERT
+CREATE TRIGGER trigger_update_balance
+AFTER UPDATE OF transaction_type ON transactions
+FOR EACH ROW
+EXECUTE FUNCTION update_balance_on_transaction();
+
+
+ALTER TABLE transactions
+ADD COLUMN processed_at TIMESTAMP WITH TIME ZONE NULL,
+ADD COLUMN processed_by_admin_id UUID NULL REFERENCES appUsers(id);
+
+
+CREATE OR REPLACE FUNCTION handle_failed_cashout()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.transaction_type = 'cash_out_failed' AND OLD.transaction_type = 'cash_out_pending' THEN
+    UPDATE appUsers
+    SET balance = balance + OLD.amount
+    WHERE id = OLD.user_id;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_cashout_failed_refund
+AFTER UPDATE ON transactions
+FOR EACH ROW
+WHEN (OLD.transaction_type = 'cash_out_pending' AND NEW.transaction_type = 'cash_out_failed')
+EXECUTE FUNCTION handle_failed_cashout();
+
+
+ALTER TABLE matches
+ALTER COLUMN opponent_id DROP NOT NULL;
+
+ALTER TABLE matches ALTER COLUMN opponent_id DROP NOT NULL;
+ALTER TABLE matches ADD COLUMN invite_status text DEFAULT 'open';
+ALTER TABLE matches ADD COLUMN invite_link text;
