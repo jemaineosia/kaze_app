@@ -1,7 +1,7 @@
 import 'package:kaze_app/common/enums/match_status.dart';
 
 class Match {
-  final String id;
+  final String? id;
   final String creatorId;
   final String? opponentId;
   final String? winnerId;
@@ -13,6 +13,8 @@ class Match {
   final double opponentBetAmount;
   final double totalOpponentBetAmount;
   final MatchStatus status;
+  final String inviteStatus;
+  final String? inviteLink;
   final DateTime? creatorUpdatedAt;
   final DateTime? opponentUpdatedAt;
   final DateTime? adminUpdatedAt;
@@ -20,7 +22,7 @@ class Match {
   final DateTime? deletedAt;
 
   Match({
-    required this.id,
+    this.id,
     required this.creatorId,
     this.opponentId,
     this.winnerId,
@@ -32,6 +34,8 @@ class Match {
     required this.opponentBetAmount,
     required this.totalOpponentBetAmount,
     this.status = MatchStatus.pending,
+    this.inviteStatus = 'open',
+    this.inviteLink,
     this.creatorUpdatedAt,
     this.opponentUpdatedAt,
     this.adminUpdatedAt,
@@ -47,35 +51,19 @@ class Match {
       winnerId: json['winner_id'],
       matchTitle: json['match_title'],
       matchDescription: json['match_description'],
-      schedule:
-          json['schedule'] != null ? DateTime.parse(json['schedule']) : null,
+      schedule: json['schedule'] != null ? DateTime.parse(json['schedule']) : null,
       creatorBetAmount: (json['creator_bet_amount'] as num).toDouble(),
-      totalCreatorBetAmount:
-          (json['total_creator_bet_amount'] as num).toDouble(),
+      totalCreatorBetAmount: (json['total_creator_bet_amount'] as num).toDouble(),
       opponentBetAmount: (json['opponent_bet_amount'] as num).toDouble(),
-      totalOpponentBetAmount:
-          (json['total_opponent_bet_amount'] as num).toDouble(),
+      totalOpponentBetAmount: (json['total_opponent_bet_amount'] as num).toDouble(),
       status: MatchStatus.fromString(json['status'] ?? 'pending'),
-      creatorUpdatedAt:
-          json['creator_updated_at'] != null
-              ? DateTime.parse(json['creator_updated_at'])
-              : null,
-      opponentUpdatedAt:
-          json['opponent_updated_at'] != null
-              ? DateTime.parse(json['opponent_updated_at'])
-              : null,
-      adminUpdatedAt:
-          json['admin_updated_at'] != null
-              ? DateTime.parse(json['admin_updated_at'])
-              : null,
-      createdAt:
-          json['created_at'] != null
-              ? DateTime.parse(json['created_at'])
-              : DateTime.now(),
-      deletedAt:
-          json['deleted_at'] != null
-              ? DateTime.parse(json['deleted_at'])
-              : null,
+      inviteStatus: json['invite_status'] ?? 'open',
+      inviteLink: json['invite_link'],
+      creatorUpdatedAt: json['creator_updated_at'] != null ? DateTime.parse(json['creator_updated_at']) : null,
+      opponentUpdatedAt: json['opponent_updated_at'] != null ? DateTime.parse(json['opponent_updated_at']) : null,
+      adminUpdatedAt: json['admin_updated_at'] != null ? DateTime.parse(json['admin_updated_at']) : null,
+      createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : DateTime.now(),
+      deletedAt: json['deleted_at'] != null ? DateTime.parse(json['deleted_at']) : null,
     );
   }
 
@@ -93,6 +81,8 @@ class Match {
       'opponent_bet_amount': opponentBetAmount,
       'total_opponent_bet_amount': totalOpponentBetAmount,
       'status': status.toValue(),
+      'invite_status': inviteStatus,
+      'invite_link': inviteLink,
       'creator_updated_at': creatorUpdatedAt?.toIso8601String(),
       'opponent_updated_at': opponentUpdatedAt?.toIso8601String(),
       'admin_updated_at': adminUpdatedAt?.toIso8601String(),

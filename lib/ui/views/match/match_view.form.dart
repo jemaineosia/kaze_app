@@ -15,6 +15,7 @@ const String MatchTitleValueKey = 'matchTitle';
 const String MatchDescriptionValueKey = 'matchDescription';
 const String CreatorBetAmountValueKey = 'creatorBetAmount';
 const String OpponentBetAmountValueKey = 'opponentBetAmount';
+const String OpponentUsernameValueKey = 'opponentUsername';
 
 final Map<String, TextEditingController> _MatchViewTextEditingControllers = {};
 
@@ -25,6 +26,7 @@ final Map<String, String? Function(String?)?> _MatchViewTextValidations = {
   MatchDescriptionValueKey: null,
   CreatorBetAmountValueKey: null,
   OpponentBetAmountValueKey: null,
+  OpponentUsernameValueKey: null,
 };
 
 mixin $MatchView {
@@ -36,6 +38,8 @@ mixin $MatchView {
       _getFormTextEditingController(CreatorBetAmountValueKey);
   TextEditingController get opponentBetAmountController =>
       _getFormTextEditingController(OpponentBetAmountValueKey);
+  TextEditingController get opponentUsernameController =>
+      _getFormTextEditingController(OpponentUsernameValueKey);
 
   FocusNode get matchTitleFocusNode => _getFormFocusNode(MatchTitleValueKey);
   FocusNode get matchDescriptionFocusNode =>
@@ -44,6 +48,8 @@ mixin $MatchView {
       _getFormFocusNode(CreatorBetAmountValueKey);
   FocusNode get opponentBetAmountFocusNode =>
       _getFormFocusNode(OpponentBetAmountValueKey);
+  FocusNode get opponentUsernameFocusNode =>
+      _getFormFocusNode(OpponentUsernameValueKey);
 
   TextEditingController _getFormTextEditingController(
     String key, {
@@ -74,6 +80,7 @@ mixin $MatchView {
     matchDescriptionController.addListener(() => _updateFormData(model));
     creatorBetAmountController.addListener(() => _updateFormData(model));
     opponentBetAmountController.addListener(() => _updateFormData(model));
+    opponentUsernameController.addListener(() => _updateFormData(model));
 
     _updateFormData(model, forceValidate: _autoTextFieldValidation);
   }
@@ -89,6 +96,7 @@ mixin $MatchView {
     matchDescriptionController.addListener(() => _updateFormData(model));
     creatorBetAmountController.addListener(() => _updateFormData(model));
     opponentBetAmountController.addListener(() => _updateFormData(model));
+    opponentUsernameController.addListener(() => _updateFormData(model));
 
     _updateFormData(model, forceValidate: _autoTextFieldValidation);
   }
@@ -101,6 +109,7 @@ mixin $MatchView {
         MatchDescriptionValueKey: matchDescriptionController.text,
         CreatorBetAmountValueKey: creatorBetAmountController.text,
         OpponentBetAmountValueKey: opponentBetAmountController.text,
+        OpponentUsernameValueKey: opponentUsernameController.text,
       }),
     );
 
@@ -149,6 +158,8 @@ extension ValueProperties on FormStateHelper {
       this.formValueMap[CreatorBetAmountValueKey] as String?;
   String? get opponentBetAmountValue =>
       this.formValueMap[OpponentBetAmountValueKey] as String?;
+  String? get opponentUsernameValue =>
+      this.formValueMap[OpponentUsernameValueKey] as String?;
 
   set matchTitleValue(String? value) {
     this.setData(this.formValueMap..addAll({MatchTitleValueKey: value}));
@@ -191,6 +202,17 @@ extension ValueProperties on FormStateHelper {
     }
   }
 
+  set opponentUsernameValue(String? value) {
+    this.setData(this.formValueMap..addAll({OpponentUsernameValueKey: value}));
+
+    if (_MatchViewTextEditingControllers.containsKey(
+      OpponentUsernameValueKey,
+    )) {
+      _MatchViewTextEditingControllers[OpponentUsernameValueKey]?.text =
+          value ?? '';
+    }
+  }
+
   bool get hasMatchTitle =>
       this.formValueMap.containsKey(MatchTitleValueKey) &&
       (matchTitleValue?.isNotEmpty ?? false);
@@ -203,6 +225,9 @@ extension ValueProperties on FormStateHelper {
   bool get hasOpponentBetAmount =>
       this.formValueMap.containsKey(OpponentBetAmountValueKey) &&
       (opponentBetAmountValue?.isNotEmpty ?? false);
+  bool get hasOpponentUsername =>
+      this.formValueMap.containsKey(OpponentUsernameValueKey) &&
+      (opponentUsernameValue?.isNotEmpty ?? false);
 
   bool get hasMatchTitleValidationMessage =>
       this.fieldsValidationMessages[MatchTitleValueKey]?.isNotEmpty ?? false;
@@ -215,6 +240,9 @@ extension ValueProperties on FormStateHelper {
   bool get hasOpponentBetAmountValidationMessage =>
       this.fieldsValidationMessages[OpponentBetAmountValueKey]?.isNotEmpty ??
       false;
+  bool get hasOpponentUsernameValidationMessage =>
+      this.fieldsValidationMessages[OpponentUsernameValueKey]?.isNotEmpty ??
+      false;
 
   String? get matchTitleValidationMessage =>
       this.fieldsValidationMessages[MatchTitleValueKey];
@@ -224,6 +252,8 @@ extension ValueProperties on FormStateHelper {
       this.fieldsValidationMessages[CreatorBetAmountValueKey];
   String? get opponentBetAmountValidationMessage =>
       this.fieldsValidationMessages[OpponentBetAmountValueKey];
+  String? get opponentUsernameValidationMessage =>
+      this.fieldsValidationMessages[OpponentUsernameValueKey];
 }
 
 extension Methods on FormStateHelper {
@@ -238,6 +268,9 @@ extension Methods on FormStateHelper {
   setOpponentBetAmountValidationMessage(String? validationMessage) =>
       this.fieldsValidationMessages[OpponentBetAmountValueKey] =
           validationMessage;
+  setOpponentUsernameValidationMessage(String? validationMessage) =>
+      this.fieldsValidationMessages[OpponentUsernameValueKey] =
+          validationMessage;
 
   /// Clears text input fields on the Form
   void clearForm() {
@@ -245,6 +278,7 @@ extension Methods on FormStateHelper {
     matchDescriptionValue = '';
     creatorBetAmountValue = '';
     opponentBetAmountValue = '';
+    opponentUsernameValue = '';
   }
 
   /// Validates text input fields on the Form
@@ -256,6 +290,7 @@ extension Methods on FormStateHelper {
       OpponentBetAmountValueKey: getValidationMessage(
         OpponentBetAmountValueKey,
       ),
+      OpponentUsernameValueKey: getValidationMessage(OpponentUsernameValueKey),
     });
   }
 }
@@ -281,4 +316,5 @@ void updateValidationData(FormStateHelper model) =>
       OpponentBetAmountValueKey: getValidationMessage(
         OpponentBetAmountValueKey,
       ),
+      OpponentUsernameValueKey: getValidationMessage(OpponentUsernameValueKey),
     });

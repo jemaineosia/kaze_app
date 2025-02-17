@@ -13,17 +13,11 @@ class MatchService {
 
       final matches = response.map((json) => Match.fromJson(json)).toList();
 
-      _loggerService.debug(
-        "Fetched Matches: ${matches.map((m) => m.toJson())}",
-      );
+      _loggerService.debug("Fetched Matches: ${matches.map((m) => m.toJson())}");
 
       return matches;
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error fetching matches',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error fetching matches', error: e, stackTrace: stackTrace);
       return [];
     }
   }
@@ -35,27 +29,24 @@ class MatchService {
       _loggerService.info('Match created successfully: ${match.toJson()}');
       return true;
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error creating match',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error creating match', error: e, stackTrace: stackTrace);
       return false;
     }
   }
 
   Future<bool> updateMatch(Match match) async {
+    if (match.id == null) {
+      _loggerService.error('Cannot update match: id is null.');
+      return false;
+    }
+
     try {
-      await _matchesTable.update(match.toJson()).eq('id', match.id);
+      await _matchesTable.update(match.toJson()).eq('id', match.id!);
 
       _loggerService.info('Match updated successfully: ${match.toJson()}');
       return true;
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error updating match',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error updating match', error: e, stackTrace: stackTrace);
       return false;
     }
   }
@@ -67,11 +58,7 @@ class MatchService {
       _loggerService.info('Match deleted successfully: $matchId');
       return true;
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error deleting match',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error deleting match', error: e, stackTrace: stackTrace);
       return false;
     }
   }

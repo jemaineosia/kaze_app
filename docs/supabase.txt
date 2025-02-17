@@ -360,3 +360,7 @@ EXECUTE FUNCTION handle_failed_cashout();
 
 ALTER TABLE matches
 ALTER COLUMN opponent_id DROP NOT NULL;
+
+ALTER TABLE matches ALTER COLUMN opponent_id DROP NOT NULL;
+ALTER TABLE matches ADD COLUMN invite_status text DEFAULT 'open';
+ALTER TABLE matches ADD COLUMN invite_link text;

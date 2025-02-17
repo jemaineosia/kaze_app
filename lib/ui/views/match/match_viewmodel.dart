@@ -1,32 +1,37 @@
 import 'package:kaze_app/app/app.locator.dart';
 import 'package:kaze_app/common/enums/match_status.dart';
+import 'package:kaze_app/common/enums/match_type.dart';
 import 'package:kaze_app/models/match.dart';
+import 'package:kaze_app/services/appuser_service.dart';
 import 'package:kaze_app/services/auth_service.dart';
 import 'package:kaze_app/services/logger_service.dart';
 import 'package:kaze_app/services/match_service.dart';
 import 'package:stacked/stacked.dart';
-import 'package:uuid/uuid.dart';
 
 class MatchViewModel extends FormViewModel {
   final _matchService = locator<MatchService>();
   final _authService = locator<AuthService>();
+  final _appUserService = locator<AppuserService>();
   final _loggerService = locator<LoggerService>();
 
   List<Match> matches = [];
+  MatchType matchType = MatchType.openMatch;
+
+  void setMatchType(MatchType? type) {
+    if (type != null) {
+      matchType = type;
+      notifyListeners();
+    }
+  }
 
   Future<void> fetchMatches() async {
     setBusy(true);
     try {
       matches = await _matchService.fetchMatches();
-
       _loggerService.info('Fetched ${matches.length} matches');
       notifyListeners();
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error fetching matches',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error fetching matches', error: e, stackTrace: stackTrace);
     } finally {
       setBusy(false);
     }
@@ -37,6 +42,7 @@ class MatchViewModel extends FormViewModel {
     String matchDescription,
     double creatorBetAmount,
     double opponentBetAmount,
+    String? opponentUsername,
   ) async {
     final user = _authService.getCurrentUser();
     if (user == null) {
@@ -44,12 +50,29 @@ class MatchViewModel extends FormViewModel {
       return;
     }
 
+    String? opponentUserId;
+
+    if (matchType == MatchType.inviteOpponent) {
+      if (opponentUsername == null || opponentUsername.isEmpty) {
+        setValidationMessage('Opponent username is required.');
+        notifyListeners();
+        return;
+      }
+
+      opponentUserId = await validateOpponentUsername(opponentUsername);
+
+      if (opponentUserId == null) {
+        setValidationMessage('Opponent username not found.');
+        notifyListeners();
+        return;
+      }
+    }
+
     setBusy(true);
     try {
       final newMatch = Match(
-        id: const Uuid().v4(),
         creatorId: user.id,
-        opponentId: null, // Fill later
+        opponentId: matchType == MatchType.inviteOpponent ? opponentUserId : null,
         matchTitle: matchTitle,
         matchDescription: matchDescription,
         creatorBetAmount: creatorBetAmount,
@@ -66,13 +89,14 @@ class MatchViewModel extends FormViewModel {
         await fetchMatches();
       }
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error creating match',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error creating match', error: e, stackTrace: stackTrace);
     } finally {
       setBusy(false);
     }
+  }
+
+  Future<String?> validateOpponentUsername(String username) async {
+    final userId = await _appUserService.getUserIdByUsername(username);
+    return userId;
   }
 }
