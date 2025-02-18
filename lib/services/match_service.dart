@@ -22,15 +22,16 @@ class MatchService {
     }
   }
 
-  Future<bool> createMatch(Match match) async {
+  Future<Match?> createMatch(Match match) async {
     try {
-      await _matchesTable.insert(match.toJson());
+      final response = await _matchesTable.insert(match.toJson()).select().single();
 
-      _loggerService.info('Match created successfully: ${match.toJson()}');
-      return true;
+      final createdMatch = Match.fromJson(response);
+      _loggerService.info('Match created: ${createdMatch.toJson()}');
+      return createdMatch;
     } catch (e, stackTrace) {
       _loggerService.error('Error creating match', error: e, stackTrace: stackTrace);
-      return false;
+      return null;
     }
   }
 
@@ -59,6 +60,41 @@ class MatchService {
       return true;
     } catch (e, stackTrace) {
       _loggerService.error('Error deleting match', error: e, stackTrace: stackTrace);
+      return false;
+    }
+  }
+
+  Future<List<Match>> fetchMatchesByCreator(String creatorId) async {
+    final response = await _matchesTable.select().eq('creator_id', creatorId).order('created_at', ascending: false);
+
+    return (response as List).map((data) => Match.fromJson(data)).toList();
+  }
+
+  Future<List<Match>> fetchOpenMatches() async {
+    try {
+      final response = await _matchesTable
+          .select()
+          .filter('opponent_id', 'is', null) // opponent_id should be null for open matches
+          .eq('invite_status', 'open')
+          .order('created_at', ascending: false);
+
+      _loggerService.debug('Open Matches Response: $response');
+
+      return (response as List).map((data) => Match.fromJson(data)).toList();
+    } catch (e, stackTrace) {
+      _loggerService.error('Error fetching open matches', error: e, stackTrace: stackTrace);
+      return [];
+    }
+  }
+
+  Future<bool> updateMatchInviteLink(String matchId, String inviteLink) async {
+    try {
+      await _matchesTable.update({'invite_link': inviteLink}).eq('id', matchId);
+
+      _loggerService.info('Match invite link updated for match: $matchId');
+      return true;
+    } catch (e, stackTrace) {
+      _loggerService.error('Failed to update match invite link', error: e, stackTrace: stackTrace);
       return false;
     }
   }

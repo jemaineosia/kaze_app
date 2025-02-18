@@ -1,48 +1,40 @@
-import 'package:kaze_app/app/app.bottomsheets.dart';
-import 'package:kaze_app/app/app.dialogs.dart';
 import 'package:kaze_app/app/app.locator.dart';
-import 'package:kaze_app/app/app.router.dart';
+import 'package:kaze_app/models/match.dart';
 import 'package:kaze_app/services/auth_service.dart';
-import 'package:kaze_app/ui/common/app_strings.dart';
+import 'package:kaze_app/services/logger_service.dart';
+import 'package:kaze_app/services/match_service.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stacked_services/stacked_services.dart';
 
 class HomeViewModel extends BaseViewModel {
-  final _dialogService = locator<DialogService>();
-  final _bottomSheetService = locator<BottomSheetService>();
+  final _matchService = locator<MatchService>();
   final _authService = locator<AuthService>();
-  final _navigationService = locator<NavigationService>();
+  final _loggerService = locator<LoggerService>();
 
-  String get counterLabel => 'Logout';
+  List<Match> createdMatches = [];
+  List<Match> openMatches = [];
 
-  String? _userEmail;
-  String? get getUserEmail => _userEmail;
+  Future<void> fetchHomeMatches() async {
+    setBusy(true);
+    try {
+      final user = _authService.getCurrentUser();
+      if (user == null) {
+        _loggerService.warning('User not logged in');
+        return;
+      }
 
-  Future<void> fetchUserEmail() async {
-    _userEmail = _authService.getCurrentUserEmail();
-    notifyListeners();
-  }
+      final createdMatchesResult = await _matchService.fetchMatchesByCreator(user.id);
+      final openMatchesResult = await _matchService.fetchOpenMatches();
 
-  final int _counter = 0;
+      createdMatches = createdMatchesResult;
+      openMatches = openMatchesResult.where((match) => match.creatorId != user.id).toList();
 
-  void incrementCounter() {
-    _authService.signOut();
-    _navigationService.replaceWithLoginView();
-  }
+      _loggerService.info('Fetched ${createdMatches.length} created matches, ${openMatches.length} open matches');
 
-  void showDialog() {
-    _dialogService.showCustomDialog(
-      variant: DialogType.infoAlert,
-      title: 'Stacked Rocks!',
-      description: 'Give stacked $_counter stars on Github',
-    );
-  }
-
-  void showBottomSheet() {
-    _bottomSheetService.showCustomSheet(
-      variant: BottomSheetType.notice,
-      title: ksHomeBottomSheetTitle,
-      description: ksHomeBottomSheetDescription,
-    );
+      notifyListeners();
+    } catch (e, stackTrace) {
+      _loggerService.error('Error fetching home matches', error: e, stackTrace: stackTrace);
+    } finally {
+      setBusy(false);
+    }
   }
 }

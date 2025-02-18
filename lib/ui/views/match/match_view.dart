@@ -36,6 +36,11 @@ class MatchView extends StackedView<MatchViewModel> with $MatchView {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(
+                'Current Balance: P${viewModel.currentBalance.toStringAsFixed(2)}',
+                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+              ),
+              Gap(10.h),
               KazeTextfield(
                 hintText: 'Match Title',
                 controller: matchTitleController,
@@ -79,19 +84,8 @@ class MatchView extends StackedView<MatchViewModel> with $MatchView {
                     }).toList(),
                 onChanged: viewModel.setMatchType,
               ),
-
               if (viewModel.matchType == MatchType.inviteOpponent)
-                KazeTextfield(
-                  hintText: 'Opponent Username',
-                  controller: opponentUsernameController,
-                  validator: (value) {
-                    if (viewModel.matchType == MatchType.inviteOpponent && (value == null || value.isEmpty)) {
-                      return 'Opponent username is required';
-                    }
-                    return null;
-                  },
-                ),
-
+                KazeTextfield(hintText: 'Opponent Username', controller: opponentUsernameController),
               Gap(20.h),
               KazeButton(
                 text: 'Create Match',
@@ -108,28 +102,6 @@ class MatchView extends StackedView<MatchViewModel> with $MatchView {
                 },
                 isLoading: viewModel.isBusy,
               ),
-              Gap(20.h),
-              if (viewModel.validationMessage != null)
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8.h),
-                  child: Text(viewModel.validationMessage!, style: const TextStyle(color: Colors.red)),
-                ),
-              Gap(20.h),
-              const Text('Matches:'),
-              Expanded(
-                child:
-                    viewModel.isBusy
-                        ? const Center(child: CircularProgressIndicator())
-                        : viewModel.matches.isEmpty
-                        ? const Center(child: Text('No matches yet'))
-                        : ListView.builder(
-                          itemCount: viewModel.matches.length,
-                          itemBuilder: (context, index) {
-                            final match = viewModel.matches[index];
-                            return ListTile(title: Text(match.matchTitle), subtitle: Text(match.matchDescription));
-                          },
-                        ),
-              ),
             ],
           ),
         ),
@@ -143,7 +115,7 @@ class MatchView extends StackedView<MatchViewModel> with $MatchView {
   @override
   void onViewModelReady(MatchViewModel viewModel) {
     syncFormWithViewModel(viewModel);
-    viewModel.fetchMatches();
+    viewModel.initialize();
   }
 
   @override

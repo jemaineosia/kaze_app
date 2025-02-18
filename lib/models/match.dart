@@ -45,20 +45,20 @@ class Match {
 
   factory Match.fromJson(Map<String, dynamic> json) {
     return Match(
-      id: json['id'],
-      creatorId: json['creator_id'],
-      opponentId: json['opponent_id'],
-      winnerId: json['winner_id'],
-      matchTitle: json['match_title'],
-      matchDescription: json['match_description'],
+      id: json['id'] as String?,
+      creatorId: json['creator_id'] as String,
+      opponentId: json['opponent_id'] as String?,
+      winnerId: json['winner_id'] as String?,
+      matchTitle: json['match_title'] as String,
+      matchDescription: json['match_description'] as String,
       schedule: json['schedule'] != null ? DateTime.parse(json['schedule']) : null,
       creatorBetAmount: (json['creator_bet_amount'] as num).toDouble(),
       totalCreatorBetAmount: (json['total_creator_bet_amount'] as num).toDouble(),
       opponentBetAmount: (json['opponent_bet_amount'] as num).toDouble(),
       totalOpponentBetAmount: (json['total_opponent_bet_amount'] as num).toDouble(),
-      status: MatchStatus.fromString(json['status'] ?? 'pending'),
-      inviteStatus: json['invite_status'] ?? 'open',
-      inviteLink: json['invite_link'],
+      status: MatchStatus.fromString(json['status'] as String? ?? 'pending'),
+      inviteStatus: json['invite_status'] as String? ?? 'open',
+      inviteLink: json['invite_link'] as String?,
       creatorUpdatedAt: json['creator_updated_at'] != null ? DateTime.parse(json['creator_updated_at']) : null,
       opponentUpdatedAt: json['opponent_updated_at'] != null ? DateTime.parse(json['opponent_updated_at']) : null,
       adminUpdatedAt: json['admin_updated_at'] != null ? DateTime.parse(json['admin_updated_at']) : null,
@@ -67,9 +67,9 @@ class Match {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
+  Map<String, dynamic> toJson({bool forInsert = false}) {
+    final data = {
+      if (!forInsert && id != null) 'id': id,
       'creator_id': creatorId,
       'opponent_id': opponentId,
       'winner_id': winnerId,
@@ -89,5 +89,7 @@ class Match {
       'created_at': createdAt.toIso8601String(),
       'deleted_at': deletedAt?.toIso8601String(),
     };
+
+    return data;
   }
 }

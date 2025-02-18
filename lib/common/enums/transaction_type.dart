@@ -31,10 +31,22 @@ enum TransactionType {
 
   /// Convert a TransactionType enum to a database-friendly string
   String toValue() {
-    return name.toLowerCase().replaceAllMapped(
-      RegExp(r'([a-z])([A-Z])'),
-      (match) => '${match.group(1)}_${match.group(2)?.toLowerCase()}',
-    );
+    switch (this) {
+      case TransactionType.cashIn:
+        return 'cash_in';
+      case TransactionType.cashInPending:
+        return 'cash_in_pending';
+      case TransactionType.cashOut:
+        return 'cash_out';
+      case TransactionType.cashOutPending:
+        return 'cash_out_pending';
+      case TransactionType.cashOutFailed:
+        return 'cash_out_failed';
+      case TransactionType.betHold:
+        return 'bet_hold';
+      case TransactionType.betRelease:
+        return 'bet_release';
+    }
   }
 
   /// Override default toString() for better readability
