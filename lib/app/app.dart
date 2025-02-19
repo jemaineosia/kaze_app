@@ -21,6 +21,7 @@ import 'package:kaze_app/ui/views/cashout/cashout_view.dart';
 import 'package:kaze_app/ui/views/cashin/cashin_view.dart';
 import 'package:kaze_app/services/match_service.dart';
 import 'package:kaze_app/ui/views/match/match_view.dart';
+import 'package:kaze_app/ui/views/match_details/match_details_view.dart';
 // @stacked-import
 
 @StackedApp(
@@ -37,6 +38,7 @@ import 'package:kaze_app/ui/views/match/match_view.dart';
     MaterialRoute(page: CashoutView),
     MaterialRoute(page: CashinView),
     MaterialRoute(page: MatchView),
+    MaterialRoute(page: MatchDetailsView),
     // @stacked-route
   ],
   dependencies: [

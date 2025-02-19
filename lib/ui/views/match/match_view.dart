@@ -26,7 +26,11 @@ class MatchView extends StackedView<MatchViewModel> with $MatchView {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
-  Widget builder(BuildContext context, MatchViewModel viewModel, Widget? child) {
+  Widget builder(
+    BuildContext context,
+    MatchViewModel viewModel,
+    Widget? child,
+  ) {
     return Scaffold(
       appBar: const KazeAppBar(),
       body: Padding(
@@ -44,13 +48,21 @@ class MatchView extends StackedView<MatchViewModel> with $MatchView {
               KazeTextfield(
                 hintText: 'Match Title',
                 controller: matchTitleController,
-                validator: (value) => (value == null || value.isEmpty) ? 'Match title is required' : null,
+                validator:
+                    (value) =>
+                        (value == null || value.isEmpty)
+                            ? 'Match title is required'
+                            : null,
               ),
               Gap(10.h),
               KazeTextfield(
                 hintText: 'Match Description',
                 controller: matchDescriptionController,
-                validator: (value) => (value == null || value.isEmpty) ? 'Match description is required' : null,
+                validator:
+                    (value) =>
+                        (value == null || value.isEmpty)
+                            ? 'Match description is required'
+                            : null,
               ),
               Gap(10.h),
               KazeTextfield(
@@ -59,8 +71,10 @@ class MatchView extends StackedView<MatchViewModel> with $MatchView {
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   final doubleValue = double.tryParse(value ?? '');
-                  if (value == null || value.isEmpty) return 'Creator bet amount is required';
-                  if (doubleValue == null || doubleValue <= 0) return 'Invalid bet amount';
+                  if (value == null || value.isEmpty)
+                    return 'Creator bet amount is required';
+                  if (doubleValue == null || doubleValue <= 0)
+                    return 'Invalid bet amount';
                   return null;
                 },
               ),
@@ -71,8 +85,10 @@ class MatchView extends StackedView<MatchViewModel> with $MatchView {
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   final doubleValue = double.tryParse(value ?? '');
-                  if (value == null || value.isEmpty) return 'Opponent bet amount is required';
-                  if (doubleValue == null || doubleValue <= 0) return 'Invalid bet amount';
+                  if (value == null || value.isEmpty)
+                    return 'Opponent bet amount is required';
+                  if (doubleValue == null || doubleValue <= 0)
+                    return 'Invalid bet amount';
                   return null;
                 },
               ),
@@ -80,12 +96,18 @@ class MatchView extends StackedView<MatchViewModel> with $MatchView {
                 value: viewModel.matchType,
                 items:
                     MatchType.values.map((type) {
-                      return DropdownMenuItem(value: type, child: Text(type.toValue()));
+                      return DropdownMenuItem(
+                        value: type,
+                        child: Text(type.toValue()),
+                      );
                     }).toList(),
                 onChanged: viewModel.setMatchType,
               ),
               if (viewModel.matchType == MatchType.inviteOpponent)
-                KazeTextfield(hintText: 'Opponent Username', controller: opponentUsernameController),
+                KazeTextfield(
+                  hintText: 'Opponent Username',
+                  controller: opponentUsernameController,
+                ),
               Gap(20.h),
               KazeButton(
                 text: 'Create Match',
@@ -96,7 +118,9 @@ class MatchView extends StackedView<MatchViewModel> with $MatchView {
                       matchDescriptionController.text,
                       double.parse(creatorBetAmountController.text),
                       double.parse(opponentBetAmountController.text),
-                      viewModel.matchType == MatchType.inviteOpponent ? opponentUsernameController.text : null,
+                      viewModel.matchType == MatchType.inviteOpponent
+                          ? opponentUsernameController.text
+                          : null,
                     );
                   }
                 },

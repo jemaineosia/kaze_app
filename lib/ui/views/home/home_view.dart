@@ -37,27 +37,11 @@ class HomeView extends StackedView<HomeViewModel> {
                                       children: [
                                         Text(match.matchDescription),
                                         Text(
-                                          'Bet: P${match.creatorBetAmount.toStringAsFixed(2)} | Win: P${match.opponentBetAmount.toStringAsFixed(2)}',
+                                          'Creator Bet: P${match.creatorBetAmount.toStringAsFixed(2)} - Opponent Bet: P${match.opponentBetAmount.toStringAsFixed(2)}',
                                         ),
-                                        if (match.inviteLink != null)
-                                          Text(
-                                            'Link: ${match.inviteLink}',
-                                            style: const TextStyle(color: Colors.blue, fontSize: 12),
-                                          ),
                                       ],
                                     ),
-                                    trailing:
-                                        match.inviteLink != null
-                                            ? IconButton(
-                                              icon: const Icon(Icons.share),
-                                              onPressed: () {
-                                                Clipboard.setData(ClipboardData(text: match.inviteLink!));
-                                                ScaffoldMessenger.of(context).showSnackBar(
-                                                  const SnackBar(content: Text('Link copied to clipboard')),
-                                                );
-                                              },
-                                            )
-                                            : null,
+                                    onTap: () => viewModel.navigateToMatchDetails(match),
                                   );
                                 },
                               ),
@@ -79,15 +63,11 @@ class HomeView extends StackedView<HomeViewModel> {
                                       children: [
                                         Text(match.matchDescription),
                                         Text(
-                                          'Creator Bet: P${match.creatorBetAmount.toStringAsFixed(2)} | Opponent Bet: P${match.opponentBetAmount.toStringAsFixed(2)}',
+                                          'Creator Bet: P${match.creatorBetAmount.toStringAsFixed(2)} - Opponent Bet: P${match.opponentBetAmount.toStringAsFixed(2)}',
                                         ),
-                                        if (match.inviteLink != null)
-                                          Text(
-                                            'Link: ${match.inviteLink}',
-                                            style: const TextStyle(color: Colors.blue, fontSize: 12),
-                                          ),
                                       ],
                                     ),
+                                    onTap: () => viewModel.navigateToMatchDetails(match),
                                     trailing:
                                         match.inviteLink != null
                                             ? IconButton(

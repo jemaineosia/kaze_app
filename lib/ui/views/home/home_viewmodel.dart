@@ -1,14 +1,17 @@
 import 'package:kaze_app/app/app.locator.dart';
+import 'package:kaze_app/app/app.router.dart';
 import 'package:kaze_app/models/match.dart';
 import 'package:kaze_app/services/auth_service.dart';
 import 'package:kaze_app/services/logger_service.dart';
 import 'package:kaze_app/services/match_service.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class HomeViewModel extends BaseViewModel {
   final _matchService = locator<MatchService>();
   final _authService = locator<AuthService>();
   final _loggerService = locator<LoggerService>();
+  final _navigationService = locator<NavigationService>();
 
   List<Match> createdMatches = [];
   List<Match> openMatches = [];
@@ -18,17 +21,14 @@ class HomeViewModel extends BaseViewModel {
     try {
       final user = _authService.getCurrentUser();
       if (user == null) {
-        _loggerService.warning('User not logged in');
+        _loggerService.warning('No logged-in user.');
         return;
       }
 
-      final createdMatchesResult = await _matchService.fetchMatchesByCreator(user.id);
-      final openMatchesResult = await _matchService.fetchOpenMatches();
+      createdMatches = await _matchService.fetchMatchesByCreator(user.id);
+      openMatches = await _matchService.fetchOpenMatches(currentUserId: user.id);
 
-      createdMatches = createdMatchesResult;
-      openMatches = openMatchesResult.where((match) => match.creatorId != user.id).toList();
-
-      _loggerService.info('Fetched ${createdMatches.length} created matches, ${openMatches.length} open matches');
+      _loggerService.debug('Fetched Matches - Created: ${createdMatches.length}, Open: ${openMatches.length}');
 
       notifyListeners();
     } catch (e, stackTrace) {
@@ -36,5 +36,10 @@ class HomeViewModel extends BaseViewModel {
     } finally {
       setBusy(false);
     }
+  }
+
+  void navigateToMatchDetails(Match match) {
+    _loggerService.info('Navigating to Match Details: ${match.id}');
+    _navigationService.navigateTo(Routes.matchDetailsView, arguments: MatchDetailsViewArguments(matchId: match.id!));
   }
 }

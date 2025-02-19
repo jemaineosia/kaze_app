@@ -897,6 +897,15 @@ class MockAppuserService extends _i1.Mock implements _i15.AppuserService {
             ),
           )
           as _i6.Future<Map<String, double>>);
+
+  @override
+  _i6.Future<String?> getUserIdByUsername(String? username) =>
+      (super.noSuchMethod(
+            Invocation.method(#getUserIdByUsername, [username]),
+            returnValue: _i6.Future<String?>.value(),
+            returnValueForMissingStub: _i6.Future<String?>.value(),
+          )
+          as _i6.Future<String?>);
 }
 
 /// A class which mocks [NotificationService].
@@ -981,13 +990,13 @@ class MockMatchService extends _i1.Mock implements _i19.MatchService {
           as _i6.Future<List<_i20.Match>>);
 
   @override
-  _i6.Future<bool> createMatch(_i20.Match? match) =>
+  _i6.Future<_i20.Match?> createMatch(_i20.Match? match) =>
       (super.noSuchMethod(
             Invocation.method(#createMatch, [match]),
-            returnValue: _i6.Future<bool>.value(false),
-            returnValueForMissingStub: _i6.Future<bool>.value(false),
+            returnValue: _i6.Future<_i20.Match?>.value(),
+            returnValueForMissingStub: _i6.Future<_i20.Match?>.value(),
           )
-          as _i6.Future<bool>);
+          as _i6.Future<_i20.Match?>);
 
   @override
   _i6.Future<bool> updateMatch(_i20.Match? match) =>
@@ -1002,6 +1011,50 @@ class MockMatchService extends _i1.Mock implements _i19.MatchService {
   _i6.Future<bool> deleteMatch(String? matchId) =>
       (super.noSuchMethod(
             Invocation.method(#deleteMatch, [matchId]),
+            returnValue: _i6.Future<bool>.value(false),
+            returnValueForMissingStub: _i6.Future<bool>.value(false),
+          )
+          as _i6.Future<bool>);
+
+  @override
+  _i6.Future<List<_i20.Match>> fetchMatchesByCreator(String? creatorId) =>
+      (super.noSuchMethod(
+            Invocation.method(#fetchMatchesByCreator, [creatorId]),
+            returnValue: _i6.Future<List<_i20.Match>>.value(<_i20.Match>[]),
+            returnValueForMissingStub: _i6.Future<List<_i20.Match>>.value(
+              <_i20.Match>[],
+            ),
+          )
+          as _i6.Future<List<_i20.Match>>);
+
+  @override
+  _i6.Future<List<_i20.Match>> fetchOpenMatches({
+    required String? currentUserId,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#fetchOpenMatches, [], {
+              #currentUserId: currentUserId,
+            }),
+            returnValue: _i6.Future<List<_i20.Match>>.value(<_i20.Match>[]),
+            returnValueForMissingStub: _i6.Future<List<_i20.Match>>.value(
+              <_i20.Match>[],
+            ),
+          )
+          as _i6.Future<List<_i20.Match>>);
+
+  @override
+  _i6.Future<_i20.Match?> getMatchById(String? matchId) =>
+      (super.noSuchMethod(
+            Invocation.method(#getMatchById, [matchId]),
+            returnValue: _i6.Future<_i20.Match?>.value(),
+            returnValueForMissingStub: _i6.Future<_i20.Match?>.value(),
+          )
+          as _i6.Future<_i20.Match?>);
+
+  @override
+  _i6.Future<bool> updateMatchInviteLink(String? matchId, String? inviteLink) =>
+      (super.noSuchMethod(
+            Invocation.method(#updateMatchInviteLink, [matchId, inviteLink]),
             returnValue: _i6.Future<bool>.value(false),
             returnValueForMissingStub: _i6.Future<bool>.value(false),
           )

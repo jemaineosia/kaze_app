@@ -5,7 +5,7 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:flutter/material.dart' as _i14;
+import 'package:flutter/material.dart' as _i15;
 import 'package:flutter/material.dart';
 import 'package:kaze_app/ui/views/admin/admin_view.dart' as _i10;
 import 'package:kaze_app/ui/views/bottomnav/bottomnav_view.dart' as _i6;
@@ -15,12 +15,14 @@ import 'package:kaze_app/ui/views/chat/chat_view.dart' as _i9;
 import 'package:kaze_app/ui/views/home/home_view.dart' as _i2;
 import 'package:kaze_app/ui/views/login/login_view.dart' as _i4;
 import 'package:kaze_app/ui/views/match/match_view.dart' as _i13;
+import 'package:kaze_app/ui/views/match_details/match_details_view.dart'
+    as _i14;
 import 'package:kaze_app/ui/views/register/register_view.dart' as _i5;
 import 'package:kaze_app/ui/views/settings/settings_view.dart' as _i8;
 import 'package:kaze_app/ui/views/startup/startup_view.dart' as _i3;
 import 'package:kaze_app/ui/views/wallet/wallet_view.dart' as _i7;
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i15;
+import 'package:stacked_services/stacked_services.dart' as _i16;
 
 class Routes {
   static const homeView = '/home-view';
@@ -47,6 +49,8 @@ class Routes {
 
   static const matchView = '/match-view';
 
+  static const matchDetailsView = '/match-details-view';
+
   static const all = <String>{
     homeView,
     startupView,
@@ -60,6 +64,7 @@ class Routes {
     cashoutView,
     cashinView,
     matchView,
+    matchDetailsView,
   };
 }
 
@@ -77,17 +82,18 @@ class StackedRouter extends _i1.RouterBase {
     _i1.RouteDef(Routes.cashoutView, page: _i11.CashoutView),
     _i1.RouteDef(Routes.cashinView, page: _i12.CashinView),
     _i1.RouteDef(Routes.matchView, page: _i13.MatchView),
+    _i1.RouteDef(Routes.matchDetailsView, page: _i14.MatchDetailsView),
   ];
 
   final _pagesMap = <Type, _i1.StackedRouteFactory>{
     _i2.HomeView: (data) {
-      return _i14.MaterialPageRoute<dynamic>(
+      return _i15.MaterialPageRoute<dynamic>(
         builder: (context) => const _i2.HomeView(),
         settings: data,
       );
     },
     _i3.StartupView: (data) {
-      return _i14.MaterialPageRoute<dynamic>(
+      return _i15.MaterialPageRoute<dynamic>(
         builder: (context) => const _i3.StartupView(),
         settings: data,
       );
@@ -96,7 +102,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<LoginViewArguments>(
         orElse: () => const LoginViewArguments(),
       );
-      return _i14.MaterialPageRoute<dynamic>(
+      return _i15.MaterialPageRoute<dynamic>(
         builder: (context) => _i4.LoginView(key: args.key),
         settings: data,
       );
@@ -105,37 +111,37 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<RegisterViewArguments>(
         orElse: () => const RegisterViewArguments(),
       );
-      return _i14.MaterialPageRoute<dynamic>(
+      return _i15.MaterialPageRoute<dynamic>(
         builder: (context) => _i5.RegisterView(key: args.key),
         settings: data,
       );
     },
     _i6.BottomnavView: (data) {
-      return _i14.MaterialPageRoute<dynamic>(
+      return _i15.MaterialPageRoute<dynamic>(
         builder: (context) => const _i6.BottomnavView(),
         settings: data,
       );
     },
     _i7.WalletView: (data) {
-      return _i14.MaterialPageRoute<dynamic>(
+      return _i15.MaterialPageRoute<dynamic>(
         builder: (context) => const _i7.WalletView(),
         settings: data,
       );
     },
     _i8.SettingsView: (data) {
-      return _i14.MaterialPageRoute<dynamic>(
+      return _i15.MaterialPageRoute<dynamic>(
         builder: (context) => const _i8.SettingsView(),
         settings: data,
       );
     },
     _i9.ChatView: (data) {
-      return _i14.MaterialPageRoute<dynamic>(
+      return _i15.MaterialPageRoute<dynamic>(
         builder: (context) => const _i9.ChatView(),
         settings: data,
       );
     },
     _i10.AdminView: (data) {
-      return _i14.MaterialPageRoute<dynamic>(
+      return _i15.MaterialPageRoute<dynamic>(
         builder: (context) => const _i10.AdminView(),
         settings: data,
       );
@@ -144,7 +150,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<CashoutViewArguments>(
         orElse: () => const CashoutViewArguments(),
       );
-      return _i14.MaterialPageRoute<dynamic>(
+      return _i15.MaterialPageRoute<dynamic>(
         builder: (context) => _i11.CashoutView(key: args.key),
         settings: data,
       );
@@ -153,7 +159,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<CashinViewArguments>(
         orElse: () => const CashinViewArguments(),
       );
-      return _i14.MaterialPageRoute<dynamic>(
+      return _i15.MaterialPageRoute<dynamic>(
         builder: (context) => _i12.CashinView(key: args.key),
         settings: data,
       );
@@ -162,8 +168,17 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<MatchViewArguments>(
         orElse: () => const MatchViewArguments(),
       );
-      return _i14.MaterialPageRoute<dynamic>(
+      return _i15.MaterialPageRoute<dynamic>(
         builder: (context) => _i13.MatchView(key: args.key),
+        settings: data,
+      );
+    },
+    _i14.MatchDetailsView: (data) {
+      final args = data.getArgs<MatchDetailsViewArguments>(nullOk: false);
+      return _i15.MaterialPageRoute<dynamic>(
+        builder:
+            (context) =>
+                _i14.MatchDetailsView(matchId: args.matchId, key: args.key),
         settings: data,
       );
     },
@@ -179,7 +194,7 @@ class StackedRouter extends _i1.RouterBase {
 class LoginViewArguments {
   const LoginViewArguments({this.key});
 
-  final _i14.Key? key;
+  final _i15.Key? key;
 
   @override
   String toString() {
@@ -201,7 +216,7 @@ class LoginViewArguments {
 class RegisterViewArguments {
   const RegisterViewArguments({this.key});
 
-  final _i14.Key? key;
+  final _i15.Key? key;
 
   @override
   String toString() {
@@ -223,7 +238,7 @@ class RegisterViewArguments {
 class CashoutViewArguments {
   const CashoutViewArguments({this.key});
 
-  final _i14.Key? key;
+  final _i15.Key? key;
 
   @override
   String toString() {
@@ -245,7 +260,7 @@ class CashoutViewArguments {
 class CashinViewArguments {
   const CashinViewArguments({this.key});
 
-  final _i14.Key? key;
+  final _i15.Key? key;
 
   @override
   String toString() {
@@ -267,7 +282,7 @@ class CashinViewArguments {
 class MatchViewArguments {
   const MatchViewArguments({this.key});
 
-  final _i14.Key? key;
+  final _i15.Key? key;
 
   @override
   String toString() {
@@ -286,7 +301,31 @@ class MatchViewArguments {
   }
 }
 
-extension NavigatorStateExtension on _i15.NavigationService {
+class MatchDetailsViewArguments {
+  const MatchDetailsViewArguments({required this.matchId, this.key});
+
+  final String matchId;
+
+  final _i15.Key? key;
+
+  @override
+  String toString() {
+    return '{"matchId": "$matchId", "key": "$key"}';
+  }
+
+  @override
+  bool operator ==(covariant MatchDetailsViewArguments other) {
+    if (identical(this, other)) return true;
+    return other.matchId == matchId && other.key == key;
+  }
+
+  @override
+  int get hashCode {
+    return matchId.hashCode ^ key.hashCode;
+  }
+}
+
+extension NavigatorStateExtension on _i16.NavigationService {
   Future<dynamic> navigateToHomeView([
     int? routerId,
     bool preventDuplicates = true,
@@ -320,7 +359,7 @@ extension NavigatorStateExtension on _i15.NavigationService {
   }
 
   Future<dynamic> navigateToLoginView({
-    _i14.Key? key,
+    _i15.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -338,7 +377,7 @@ extension NavigatorStateExtension on _i15.NavigationService {
   }
 
   Future<dynamic> navigateToRegisterView({
-    _i14.Key? key,
+    _i15.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -436,7 +475,7 @@ extension NavigatorStateExtension on _i15.NavigationService {
   }
 
   Future<dynamic> navigateToCashoutView({
-    _i14.Key? key,
+    _i15.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -454,7 +493,7 @@ extension NavigatorStateExtension on _i15.NavigationService {
   }
 
   Future<dynamic> navigateToCashinView({
-    _i14.Key? key,
+    _i15.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -472,7 +511,7 @@ extension NavigatorStateExtension on _i15.NavigationService {
   }
 
   Future<dynamic> navigateToMatchView({
-    _i14.Key? key,
+    _i15.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -482,6 +521,25 @@ extension NavigatorStateExtension on _i15.NavigationService {
     return navigateTo<dynamic>(
       Routes.matchView,
       arguments: MatchViewArguments(key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
+  }
+
+  Future<dynamic> navigateToMatchDetailsView({
+    required String matchId,
+    _i15.Key? key,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+    transition,
+  }) async {
+    return navigateTo<dynamic>(
+      Routes.matchDetailsView,
+      arguments: MatchDetailsViewArguments(matchId: matchId, key: key),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,
@@ -522,7 +580,7 @@ extension NavigatorStateExtension on _i15.NavigationService {
   }
 
   Future<dynamic> replaceWithLoginView({
-    _i14.Key? key,
+    _i15.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -540,7 +598,7 @@ extension NavigatorStateExtension on _i15.NavigationService {
   }
 
   Future<dynamic> replaceWithRegisterView({
-    _i14.Key? key,
+    _i15.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -638,7 +696,7 @@ extension NavigatorStateExtension on _i15.NavigationService {
   }
 
   Future<dynamic> replaceWithCashoutView({
-    _i14.Key? key,
+    _i15.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -656,7 +714,7 @@ extension NavigatorStateExtension on _i15.NavigationService {
   }
 
   Future<dynamic> replaceWithCashinView({
-    _i14.Key? key,
+    _i15.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -674,7 +732,7 @@ extension NavigatorStateExtension on _i15.NavigationService {
   }
 
   Future<dynamic> replaceWithMatchView({
-    _i14.Key? key,
+    _i15.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -684,6 +742,25 @@ extension NavigatorStateExtension on _i15.NavigationService {
     return replaceWith<dynamic>(
       Routes.matchView,
       arguments: MatchViewArguments(key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
+  }
+
+  Future<dynamic> replaceWithMatchDetailsView({
+    required String matchId,
+    _i15.Key? key,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+    transition,
+  }) async {
+    return replaceWith<dynamic>(
+      Routes.matchDetailsView,
+      arguments: MatchDetailsViewArguments(matchId: matchId, key: key),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,

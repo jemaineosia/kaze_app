@@ -51,19 +51,37 @@ class Match {
       winnerId: json['winner_id'] as String?,
       matchTitle: json['match_title'] as String,
       matchDescription: json['match_description'] as String,
-      schedule: json['schedule'] != null ? DateTime.parse(json['schedule']) : null,
+      schedule:
+          json['schedule'] != null ? DateTime.parse(json['schedule']) : null,
       creatorBetAmount: (json['creator_bet_amount'] as num).toDouble(),
-      totalCreatorBetAmount: (json['total_creator_bet_amount'] as num).toDouble(),
+      totalCreatorBetAmount:
+          (json['total_creator_bet_amount'] as num).toDouble(),
       opponentBetAmount: (json['opponent_bet_amount'] as num).toDouble(),
-      totalOpponentBetAmount: (json['total_opponent_bet_amount'] as num).toDouble(),
+      totalOpponentBetAmount:
+          (json['total_opponent_bet_amount'] as num).toDouble(),
       status: MatchStatus.fromString(json['status'] as String? ?? 'pending'),
       inviteStatus: json['invite_status'] as String? ?? 'open',
       inviteLink: json['invite_link'] as String?,
-      creatorUpdatedAt: json['creator_updated_at'] != null ? DateTime.parse(json['creator_updated_at']) : null,
-      opponentUpdatedAt: json['opponent_updated_at'] != null ? DateTime.parse(json['opponent_updated_at']) : null,
-      adminUpdatedAt: json['admin_updated_at'] != null ? DateTime.parse(json['admin_updated_at']) : null,
-      createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : DateTime.now(),
-      deletedAt: json['deleted_at'] != null ? DateTime.parse(json['deleted_at']) : null,
+      creatorUpdatedAt:
+          json['creator_updated_at'] != null
+              ? DateTime.parse(json['creator_updated_at'])
+              : null,
+      opponentUpdatedAt:
+          json['opponent_updated_at'] != null
+              ? DateTime.parse(json['opponent_updated_at'])
+              : null,
+      adminUpdatedAt:
+          json['admin_updated_at'] != null
+              ? DateTime.parse(json['admin_updated_at'])
+              : null,
+      createdAt:
+          json['created_at'] != null
+              ? DateTime.parse(json['created_at'])
+              : DateTime.now(),
+      deletedAt:
+          json['deleted_at'] != null
+              ? DateTime.parse(json['deleted_at'])
+              : null,
     );
   }
 
