@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kaze_app/common/enums/match_status.dart';
 import 'package:kaze_app/ui/widgets/common/kaze_appbar/kaze_appbar.dart';
 import 'package:stacked/stacked.dart';
 
@@ -36,6 +37,14 @@ class HomeView extends StackedView<HomeViewModel> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(match.matchDescription),
+                                        // Display status. If you don't have a status field, compute it.
+                                        Text(
+                                          'Status: ${match.status.toDisplay()}',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: match.opponentId == null ? Colors.green : Colors.orange,
+                                          ),
+                                        ),
                                         Text(
                                           'Creator Bet: P${match.creatorBetAmount.toStringAsFixed(2)} - Opponent Bet: P${match.opponentBetAmount.toStringAsFixed(2)}',
                                         ),
@@ -43,7 +52,7 @@ class HomeView extends StackedView<HomeViewModel> {
                                     ),
                                     onTap: () => viewModel.navigateToMatchDetails(match),
                                     trailing:
-                                        match.inviteLink != null
+                                        (match.status == MatchStatus.pending && match.inviteLink != null)
                                             ? IconButton(
                                               icon: const Icon(Icons.share),
                                               onPressed: () {

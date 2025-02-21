@@ -67,4 +67,27 @@ enum MatchStatus {
         return 'admin_declared_winner';
     }
   }
+
+  String toDisplay() {
+    switch (this) {
+      case MatchStatus.pending:
+        return 'Waiting for opponent';
+      case MatchStatus.accepted:
+        return 'Opponent accepted, both bet amounts on hold';
+      case MatchStatus.ongoing:
+        return 'Match is ongoing';
+      case MatchStatus.creatorDeclaredWinner:
+        return 'Creator declared winner';
+      case MatchStatus.opponentDeclaredWinner:
+        return 'Opponent declared winner';
+      case MatchStatus.dispute:
+        return 'Dispute raised';
+      case MatchStatus.completed:
+        return 'Winner confirmed, funds transferred';
+      case MatchStatus.canceled:
+        return 'Canceled';
+      case MatchStatus.adminDeclaredWinner:
+        return 'Admin resolved the dispute';
+    }
+  }
 }
