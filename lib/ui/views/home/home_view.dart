@@ -21,7 +21,13 @@ class HomeView extends StackedView<HomeViewModel> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('My Created Matches', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    const Text(
+                      'My Created Matches',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     Expanded(
                       child:
                           viewModel.createdMatches.isEmpty
@@ -33,7 +39,8 @@ class HomeView extends StackedView<HomeViewModel> {
                                   return ListTile(
                                     title: Text(match.matchTitle),
                                     subtitle: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(match.matchDescription),
                                         Text(
@@ -41,13 +48,22 @@ class HomeView extends StackedView<HomeViewModel> {
                                         ),
                                       ],
                                     ),
-                                    onTap: () => viewModel.navigateToMatchDetails(match),
+                                    onTap:
+                                        () => viewModel.navigateToMatchDetails(
+                                          match,
+                                        ),
                                   );
                                 },
                               ),
                     ),
                     const SizedBox(height: 16),
-                    const Text('Open Matches', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    const Text(
+                      'Open Matches',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     Expanded(
                       child:
                           viewModel.openMatches.isEmpty
@@ -59,7 +75,8 @@ class HomeView extends StackedView<HomeViewModel> {
                                   return ListTile(
                                     title: Text(match.matchTitle),
                                     subtitle: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(match.matchDescription),
                                         Text(
@@ -67,15 +84,28 @@ class HomeView extends StackedView<HomeViewModel> {
                                         ),
                                       ],
                                     ),
-                                    onTap: () => viewModel.navigateToMatchDetails(match),
+                                    onTap:
+                                        () => viewModel.navigateToMatchDetails(
+                                          match,
+                                        ),
                                     trailing:
                                         match.inviteLink != null
                                             ? IconButton(
                                               icon: const Icon(Icons.share),
                                               onPressed: () {
-                                                Clipboard.setData(ClipboardData(text: match.inviteLink!));
-                                                ScaffoldMessenger.of(context).showSnackBar(
-                                                  const SnackBar(content: Text('Link copied to clipboard')),
+                                                Clipboard.setData(
+                                                  ClipboardData(
+                                                    text: match.inviteLink!,
+                                                  ),
+                                                );
+                                                ScaffoldMessenger.of(
+                                                  context,
+                                                ).showSnackBar(
+                                                  const SnackBar(
+                                                    content: Text(
+                                                      'Link copied to clipboard',
+                                                    ),
+                                                  ),
                                                 );
                                               },
                                             )

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kaze_app/ui/widgets/common/kaze_button/kaze_button.dart';
 import 'package:stacked/stacked.dart';
 
 import 'match_details_viewmodel.dart';
@@ -23,15 +24,33 @@ class MatchDetailsView extends StackedView<MatchDetailsViewModel> {
                   Text('Match Title: ${viewModel.match!.matchTitle}'),
                   Text('Description: ${viewModel.match!.matchDescription}'),
                   Text('Status: ${viewModel.match!.status.toValue()}'),
-                  if (viewModel.isCreator)
-                    ElevatedButton(
-                      onPressed: viewModel.canEdit ? viewModel.editMatch : null,
-                      child: const Text('Edit Match'),
-                    ),
-                  if (viewModel.canCancel)
-                    ElevatedButton(onPressed: viewModel.cancelMatch, child: const Text('Cancel Match')),
-                  if (viewModel.canDeclareWinner)
-                    ElevatedButton(onPressed: viewModel.declareWinner, child: const Text('Declare Winner')),
+                  Text('Creator Bet: P${viewModel.match!.creatorBetAmount.toStringAsFixed(2)}'),
+                  Text('Opponent Bet: P${viewModel.match!.opponentBetAmount.toStringAsFixed(2)}'),
+
+                  const SizedBox(height: 20),
+
+                  // Creator Buttons
+                  if (viewModel.isCreator) ...[
+                    if (viewModel.canCancel)
+                      KazeButton(text: 'Cancel Match', onTap: viewModel.cancelMatch, isLoading: viewModel.isBusy),
+                    if (viewModel.canDeclareWinner)
+                      KazeButton(text: 'Declare Winner', onTap: viewModel.declareWinner, isLoading: viewModel.isBusy),
+                  ],
+
+                  // Opponent Buttons
+                  if (viewModel.isOpponent) ...[
+                    if (viewModel.canAccept)
+                      KazeButton(text: 'Accept Match', onTap: viewModel.acceptMatch, isLoading: viewModel.isBusy),
+                    const SizedBox(height: 10),
+                    if (viewModel.canDecline)
+                      KazeButton(text: 'Decline Match', onTap: viewModel.declineMatch, isLoading: viewModel.isBusy),
+                    const SizedBox(height: 10),
+                    if (viewModel.canCancel)
+                      KazeButton(text: 'Cancel Match', onTap: viewModel.cancelMatch, isLoading: viewModel.isBusy),
+                    const SizedBox(height: 10),
+                    if (viewModel.canDeclareWinner)
+                      KazeButton(text: 'Declare Winner', onTap: viewModel.declareWinner, isLoading: viewModel.isBusy),
+                  ],
                 ],
               ),
     );

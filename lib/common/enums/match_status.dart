@@ -1,6 +1,7 @@
 enum MatchStatus {
   pending,
   accepted,
+  ongoing,
   creatorDeclaredWinner,
   opponentDeclaredWinner,
   dispute,
@@ -9,12 +10,23 @@ enum MatchStatus {
   adminDeclaredWinner;
 
   /// Convert a string to a MatchStatus enum
+  /// pending → Waiting for opponent
+  /// accepted → Opponent accepted, both bet amounts are on hold
+  /// ongoing → Match is ongoing
+  /// creatorDeclaredWinner → Creator declared winner
+  /// opponentDeclaredWinner → Opponent declared winner
+  /// dispute → Dispute raised
+  /// completed → Winner confirmed, funds transferred
+  /// canceled → Match canceled by both sides
+  /// adminDeclaredWinner → Admin resolved the dispute
   static MatchStatus fromString(String status) {
     switch (status.toLowerCase()) {
       case 'pending':
         return MatchStatus.pending;
       case 'accepted':
         return MatchStatus.accepted;
+      case 'ongoing':
+        return MatchStatus.ongoing;
       case 'creator_declared_winner':
         return MatchStatus.creatorDeclaredWinner;
       case 'opponent_declared_winner':
@@ -39,6 +51,8 @@ enum MatchStatus {
         return 'pending';
       case MatchStatus.accepted:
         return 'accepted';
+      case MatchStatus.ongoing:
+        return 'ongoing';
       case MatchStatus.creatorDeclaredWinner:
         return 'creator_declared_winner';
       case MatchStatus.opponentDeclaredWinner:
