@@ -15,6 +15,7 @@ class HomeViewModel extends BaseViewModel {
 
   List<Match> createdMatches = [];
   List<Match> openMatches = [];
+  List<Match> matches = [];
 
   Future<void> fetchHomeMatches() async {
     setBusy(true);
@@ -26,21 +27,24 @@ class HomeViewModel extends BaseViewModel {
       }
 
       createdMatches = await _matchService.fetchMatchesByCreator(user.id);
-      openMatches = await _matchService.fetchOpenMatches(
-        currentUserId: user.id,
-      );
+      openMatches = await _matchService.fetchOpenMatches(currentUserId: user.id);
 
-      _loggerService.debug(
-        'Fetched Matches - Created: ${createdMatches.length}, Open: ${openMatches.length}',
-      );
+      // Combine both lists
+      matches = [...createdMatches, ...openMatches];
+
+      // Sort by schedule date
+      matches.sort((a, b) {
+        if (a.schedule == null && b.schedule == null) return 0;
+        if (a.schedule == null) return 1; // a is null, so sort after b
+        if (b.schedule == null) return -1; // b is null, so sort after a
+        return a.schedule!.compareTo(b.schedule!);
+      });
+
+      _loggerService.debug('Fetched Matches - Total: ${matches.length}');
 
       notifyListeners();
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error fetching home matches',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error fetching home matches', error: e, stackTrace: stackTrace);
     } finally {
       setBusy(false);
     }
@@ -48,9 +52,6 @@ class HomeViewModel extends BaseViewModel {
 
   void navigateToMatchDetails(Match match) {
     _loggerService.info('Navigating to Match Details: ${match.id}');
-    _navigationService.navigateTo(
-      Routes.matchDetailsView,
-      arguments: MatchDetailsViewArguments(matchId: match.id!),
-    );
+    _navigationService.navigateTo(Routes.matchDetailsView, arguments: MatchDetailsViewArguments(matchId: match.id!));
   }
 }

@@ -21,26 +21,19 @@ class HomeView extends StackedView<HomeViewModel> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'My Created Matches',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    const Text('Matches', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                     Expanded(
                       child:
-                          viewModel.createdMatches.isEmpty
-                              ? const Text('No matches created yet.')
+                          viewModel.matches.isEmpty
+                              ? const Text('No matches available.')
                               : ListView.builder(
-                                itemCount: viewModel.createdMatches.length,
+                                itemCount: viewModel.matches.length,
                                 itemBuilder: (context, index) {
-                                  final match = viewModel.createdMatches[index];
+                                  final match = viewModel.matches[index];
                                   return ListTile(
                                     title: Text(match.matchTitle),
                                     subtitle: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(match.matchDescription),
                                         Text(
@@ -48,64 +41,15 @@ class HomeView extends StackedView<HomeViewModel> {
                                         ),
                                       ],
                                     ),
-                                    onTap:
-                                        () => viewModel.navigateToMatchDetails(
-                                          match,
-                                        ),
-                                  );
-                                },
-                              ),
-                    ),
-                    const SizedBox(height: 16),
-                    const Text(
-                      'Open Matches',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Expanded(
-                      child:
-                          viewModel.openMatches.isEmpty
-                              ? const Text('No open matches.')
-                              : ListView.builder(
-                                itemCount: viewModel.openMatches.length,
-                                itemBuilder: (context, index) {
-                                  final match = viewModel.openMatches[index];
-                                  return ListTile(
-                                    title: Text(match.matchTitle),
-                                    subtitle: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(match.matchDescription),
-                                        Text(
-                                          'Creator Bet: P${match.creatorBetAmount.toStringAsFixed(2)} - Opponent Bet: P${match.opponentBetAmount.toStringAsFixed(2)}',
-                                        ),
-                                      ],
-                                    ),
-                                    onTap:
-                                        () => viewModel.navigateToMatchDetails(
-                                          match,
-                                        ),
+                                    onTap: () => viewModel.navigateToMatchDetails(match),
                                     trailing:
                                         match.inviteLink != null
                                             ? IconButton(
                                               icon: const Icon(Icons.share),
                                               onPressed: () {
-                                                Clipboard.setData(
-                                                  ClipboardData(
-                                                    text: match.inviteLink!,
-                                                  ),
-                                                );
-                                                ScaffoldMessenger.of(
-                                                  context,
-                                                ).showSnackBar(
-                                                  const SnackBar(
-                                                    content: Text(
-                                                      'Link copied to clipboard',
-                                                    ),
-                                                  ),
+                                                Clipboard.setData(ClipboardData(text: match.inviteLink!));
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                  const SnackBar(content: Text('Link copied to clipboard')),
                                                 );
                                               },
                                             )
