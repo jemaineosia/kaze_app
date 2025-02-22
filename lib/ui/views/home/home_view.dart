@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kaze_app/common/enums/match_status.dart';
 import 'package:kaze_app/ui/widgets/common/kaze_appbar/kaze_appbar.dart';
 import 'package:stacked/stacked.dart';
 
@@ -51,18 +49,6 @@ class HomeView extends StackedView<HomeViewModel> {
                                       ],
                                     ),
                                     onTap: () => viewModel.navigateToMatchDetails(match),
-                                    trailing:
-                                        (match.status == MatchStatus.pending && match.inviteLink != null)
-                                            ? IconButton(
-                                              icon: const Icon(Icons.share),
-                                              onPressed: () {
-                                                Clipboard.setData(ClipboardData(text: match.inviteLink!));
-                                                ScaffoldMessenger.of(context).showSnackBar(
-                                                  const SnackBar(content: Text('Link copied to clipboard')),
-                                                );
-                                              },
-                                            )
-                                            : null,
                                   );
                                 },
                               ),

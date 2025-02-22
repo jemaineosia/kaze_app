@@ -364,3 +364,44 @@ ALTER COLUMN opponent_id DROP NOT NULL;
 ALTER TABLE matches ALTER COLUMN opponent_id DROP NOT NULL;
 ALTER TABLE matches ADD COLUMN invite_status text DEFAULT 'open';
 ALTER TABLE matches ADD COLUMN invite_link text;
+ALTER TABLE matches RENAME COLUMN invite_link TO invite_code;
+
+CREATE OR REPLACE FUNCTION generate_invite_code() RETURNS text AS $$
+DECLARE
+  characters text := 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  code text := '';
+  i int;
+BEGIN
+  FOR i IN 1..6 LOOP
+    code := code || substr(characters, floor(random() * length(characters) + 1)::int, 1);
+  END LOOP;
+  RETURN code;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION set_invite_code_if_null() RETURNS trigger AS $$
+DECLARE
+  code text;
+BEGIN
+  -- Only generate a code if opponent_id is null and invite_code is not already provided.
+  IF NEW.opponent_id IS NULL AND NEW.invite_code IS NULL THEN
+    LOOP
+      code := generate_invite_code();
+      -- Check for uniqueness in active matches (or overall, depending on your logic)
+      IF NOT EXISTS (SELECT 1 FROM matches WHERE invite_code = code) THEN
+        NEW.invite_code := code;
+        EXIT;
+      END IF;
+    END LOOP;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_set_invite_code
+BEFORE INSERT ON matches
+FOR EACH ROW
+EXECUTE FUNCTION set_invite_code_if_null();
+
+ALTER TABLE matches ADD CONSTRAINT unique_invite_code UNIQUE (invite_code);

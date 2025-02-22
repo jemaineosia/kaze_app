@@ -14,7 +14,7 @@ class Match {
   final double totalOpponentBetAmount;
   final MatchStatus status;
   final String inviteStatus;
-  final String? inviteLink;
+  final String? inviteCode;
   final DateTime? creatorUpdatedAt;
   final DateTime? opponentUpdatedAt;
   final DateTime? adminUpdatedAt;
@@ -35,7 +35,7 @@ class Match {
     required this.totalOpponentBetAmount,
     this.status = MatchStatus.pending,
     this.inviteStatus = 'open',
-    this.inviteLink,
+    this.inviteCode,
     this.creatorUpdatedAt,
     this.opponentUpdatedAt,
     this.adminUpdatedAt,
@@ -58,7 +58,7 @@ class Match {
       totalOpponentBetAmount: (json['total_opponent_bet_amount'] as num).toDouble(),
       status: MatchStatus.fromString(json['status'] as String? ?? 'pending'),
       inviteStatus: json['invite_status'] as String? ?? 'open',
-      inviteLink: json['invite_link'] as String?,
+      inviteCode: json['invite_code'] as String?,
       creatorUpdatedAt: json['creator_updated_at'] != null ? DateTime.parse(json['creator_updated_at']) : null,
       opponentUpdatedAt: json['opponent_updated_at'] != null ? DateTime.parse(json['opponent_updated_at']) : null,
       adminUpdatedAt: json['admin_updated_at'] != null ? DateTime.parse(json['admin_updated_at']) : null,
@@ -82,7 +82,7 @@ class Match {
       'total_opponent_bet_amount': totalOpponentBetAmount,
       'status': status.toValue(),
       'invite_status': inviteStatus,
-      'invite_link': inviteLink,
+      'invite_code': inviteCode,
       'creator_updated_at': creatorUpdatedAt?.toIso8601String(),
       'opponent_updated_at': opponentUpdatedAt?.toIso8601String(),
       'admin_updated_at': adminUpdatedAt?.toIso8601String(),
