@@ -49,9 +49,7 @@ class MatchDetailsViewModel extends BaseViewModel {
     // Logic to accept match
   }
 
-  Future<void> declineMatch() async {
-    // Logic to decline match
-  }
+  Future<void> declineMatch() async {}
 
   Future<void> cancelMatch() async {
     final confirmResponse = await _dialogService.showConfirmationDialog(

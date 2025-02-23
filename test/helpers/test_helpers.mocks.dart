@@ -1028,11 +1028,11 @@ class MockMatchService extends _i1.Mock implements _i19.MatchService {
           as _i6.Future<List<_i20.Match>>);
 
   @override
-  _i6.Future<List<_i20.Match>> fetchOpenMatches({
+  _i6.Future<List<_i20.Match>> fetchInvitedMatches({
     required String? currentUserId,
   }) =>
       (super.noSuchMethod(
-            Invocation.method(#fetchOpenMatches, [], {
+            Invocation.method(#fetchInvitedMatches, [], {
               #currentUserId: currentUserId,
             }),
             returnValue: _i6.Future<List<_i20.Match>>.value(<_i20.Match>[]),
@@ -1101,4 +1101,13 @@ class MockMatchService extends _i1.Mock implements _i19.MatchService {
             returnValueForMissingStub: _i6.Future<void>.value(),
           )
           as _i6.Future<void>);
+
+  @override
+  _i6.Future<bool> declineMatch(String? matchId) =>
+      (super.noSuchMethod(
+            Invocation.method(#declineMatch, [matchId]),
+            returnValue: _i6.Future<bool>.value(false),
+            returnValueForMissingStub: _i6.Future<bool>.value(false),
+          )
+          as _i6.Future<bool>);
 }

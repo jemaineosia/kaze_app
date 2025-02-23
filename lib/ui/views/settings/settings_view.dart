@@ -12,7 +12,11 @@ class SettingsView extends StackedView<SettingsViewModel> {
   const SettingsView({Key? key}) : super(key: key);
 
   @override
-  Widget builder(BuildContext context, SettingsViewModel viewModel, Widget? child) {
+  Widget builder(
+    BuildContext context,
+    SettingsViewModel viewModel,
+    Widget? child,
+  ) {
     return Scaffold(
       appBar: const KazeAppBar(),
       body: Padding(
@@ -35,18 +39,34 @@ class SettingsView extends StackedView<SettingsViewModel> {
                             title: Text(notification.title),
                             subtitle: Text(notification.message),
                             trailing: Icon(
-                              notification.isRead ? Icons.check_circle : Icons.circle,
-                              color: notification.isRead ? Colors.green : Colors.grey,
+                              notification.isRead
+                                  ? Icons.check_circle
+                                  : Icons.circle,
+                              color:
+                                  notification.isRead
+                                      ? Colors.green
+                                      : Colors.grey,
                             ),
-                            onTap: () => viewModel.handleNotificationTap(notification.id),
+                            onTap:
+                                () => viewModel.handleNotificationTap(
+                                  notification.id,
+                                ),
                           );
                         },
                       ),
             ),
             const Spacer(),
-            KazeButton(text: 'Sign Out', onTap: () => viewModel.signOut(), isLoading: viewModel.isBusy),
+            KazeButton(
+              text: 'Sign Out',
+              onTap: () => viewModel.signOut(),
+              isLoading: viewModel.isBusy,
+            ),
             const Gap(5),
-            KazeButton(text: 'Admin', onTap: () => viewModel.navigateToAdmin(), isLoading: viewModel.isBusy),
+            KazeButton(
+              text: 'Admin',
+              onTap: () => viewModel.navigateToAdmin(),
+              isLoading: viewModel.isBusy,
+            ),
             Gap(20.sp),
           ],
         ),
@@ -64,14 +84,38 @@ class SettingsView extends StackedView<SettingsViewModel> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('WELCOME BACK,', style: TextStyle(fontSize: 15.sp)),
-              Text(username, style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold)),
+              Text(
+                username,
+                style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold),
+              ),
               Gap(10.sp),
               const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Column(children: [Text('P10,000', style: TextStyle(fontWeight: FontWeight.bold)), Text('EARNED')]),
-                  Column(children: [Text('0', style: TextStyle(fontWeight: FontWeight.bold)), Text('FOLLOWERS')]),
-                  Column(children: [Text('305', style: TextStyle(fontWeight: FontWeight.bold)), Text('WINS')]),
+                  Column(
+                    children: [
+                      Text(
+                        'P10,000',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text('EARNED'),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Text('0', style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text('FOLLOWERS'),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Text(
+                        '305',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text('WINS'),
+                    ],
+                  ),
                 ],
               ),
             ],
@@ -84,7 +128,11 @@ class SettingsView extends StackedView<SettingsViewModel> {
   Stack profileAvatar() {
     return Stack(
       children: [
-        CircleAvatar(backgroundColor: kcBlack, maxRadius: 30.sp, child: Icon(Icons.person, size: 40.sp)),
+        CircleAvatar(
+          backgroundColor: kcBlack,
+          maxRadius: 30.sp,
+          child: Icon(Icons.person, size: 40.sp),
+        ),
         Positioned(
           bottom: 0, // Align to the bottom
           right: 0, // Align to the right
@@ -106,5 +154,6 @@ class SettingsView extends StackedView<SettingsViewModel> {
   }
 
   @override
-  SettingsViewModel viewModelBuilder(BuildContext context) => SettingsViewModel();
+  SettingsViewModel viewModelBuilder(BuildContext context) =>
+      SettingsViewModel();
 }

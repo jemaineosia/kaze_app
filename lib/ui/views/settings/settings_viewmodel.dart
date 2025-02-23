@@ -42,18 +42,28 @@ class SettingsViewModel extends BaseViewModel {
         return;
       }
 
-      _notifications = await _notificationService.fetchUserNotifications(user.id);
+      _notifications = await _notificationService.fetchUserNotifications(
+        user.id,
+      );
       notifyListeners();
-      _loggerService.info('Fetched ${_notifications.length} notifications for user ${user.id}.');
+      _loggerService.info(
+        'Fetched ${_notifications.length} notifications for user ${user.id}.',
+      );
     } catch (e, stackTrace) {
-      _loggerService.error('Error fetching notifications.', error: e, stackTrace: stackTrace);
+      _loggerService.error(
+        'Error fetching notifications.',
+        error: e,
+        stackTrace: stackTrace,
+      );
     } finally {
       setBusy(false);
     }
   }
 
   Future<void> handleNotificationTap(String notificationId) async {
-    final success = await _notificationService.markNotificationAsRead(notificationId);
+    final success = await _notificationService.markNotificationAsRead(
+      notificationId,
+    );
 
     if (success) {
       _loggerService.info('Notification $notificationId handled successfully.');

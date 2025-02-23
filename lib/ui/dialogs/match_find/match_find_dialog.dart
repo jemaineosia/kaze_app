@@ -13,10 +13,18 @@ class MatchFindDialog extends StackedView<MatchFindDialogModel> {
   final DialogRequest request;
   final Function(DialogResponse) completer;
 
-  const MatchFindDialog({Key? key, required this.request, required this.completer}) : super(key: key);
+  const MatchFindDialog({
+    Key? key,
+    required this.request,
+    required this.completer,
+  }) : super(key: key);
 
   @override
-  Widget builder(BuildContext context, MatchFindDialogModel viewModel, Widget? child) {
+  Widget builder(
+    BuildContext context,
+    MatchFindDialogModel viewModel,
+    Widget? child,
+  ) {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       backgroundColor: Colors.white,
@@ -36,13 +44,19 @@ class MatchFindDialog extends StackedView<MatchFindDialogModel> {
                     children: [
                       Text(
                         request.title ?? 'Find Match',
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w900,
+                        ),
                       ),
                       if (request.description != null) ...[
                         verticalSpaceTiny,
                         Text(
                           request.description!,
-                          style: const TextStyle(fontSize: 14, color: kcMediumGrey),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: kcMediumGrey,
+                          ),
                           maxLines: 3,
                           softWrap: true,
                         ),
@@ -55,7 +69,9 @@ class MatchFindDialog extends StackedView<MatchFindDialogModel> {
                   height: _graphicSize,
                   decoration: const BoxDecoration(
                     color: Color(0xFFF6E7B0),
-                    borderRadius: BorderRadius.all(Radius.circular(_graphicSize / 2)),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(_graphicSize / 2),
+                    ),
                   ),
                   alignment: Alignment.center,
                   child: const Text('🔍', style: TextStyle(fontSize: 30)),
@@ -64,11 +80,17 @@ class MatchFindDialog extends StackedView<MatchFindDialogModel> {
             ),
             verticalSpaceMedium,
             // KazeTextField to input the invite code
-            KazeTextfield(controller: viewModel.inviteCodeController, hintText: 'Enter Invite Code'),
+            KazeTextfield(
+              controller: viewModel.inviteCodeController,
+              hintText: 'Enter Invite Code',
+            ),
             // Display error message if present
             if (viewModel.errorMessage != null) ...[
               verticalSpaceTiny,
-              Text(viewModel.errorMessage!, style: const TextStyle(color: Colors.red)),
+              Text(
+                viewModel.errorMessage!,
+                style: const TextStyle(color: Colors.red),
+              ),
             ],
             verticalSpaceMedium,
             GestureDetector(
@@ -77,10 +99,17 @@ class MatchFindDialog extends StackedView<MatchFindDialogModel> {
                 height: 50,
                 width: double.infinity,
                 alignment: Alignment.center,
-                decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(10)),
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 child: const Text(
                   'Find Match',
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
                 ),
               ),
             ),
@@ -91,5 +120,6 @@ class MatchFindDialog extends StackedView<MatchFindDialogModel> {
   }
 
   @override
-  MatchFindDialogModel viewModelBuilder(BuildContext context) => MatchFindDialogModel();
+  MatchFindDialogModel viewModelBuilder(BuildContext context) =>
+      MatchFindDialogModel();
 }

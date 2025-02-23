@@ -47,36 +47,11 @@ class MatchViewModel extends FormViewModel {
     String matchDescription,
     double creatorBetAmount,
     double opponentBetAmount,
-    String? opponentUsername,
   ) async {
     final user = _authService.getCurrentUser();
     if (user == null) {
       _loggerService.warning('User not logged in');
       return;
-    }
-
-    String? opponentUserId;
-
-    if (matchType == MatchType.inviteOpponent) {
-      if (opponentUsername == null || opponentUsername.isEmpty) {
-        await _dialogService.showDialog(
-          title: 'Error',
-          description: 'Opponent username is required.',
-        );
-        return;
-      }
-
-      opponentUserId = await _appUserService.getUserIdByUsername(
-        opponentUsername,
-      );
-
-      if (opponentUserId == null) {
-        await _dialogService.showDialog(
-          title: 'Error',
-          description: 'Opponent username not found.',
-        );
-        return;
-      }
     }
 
     final requiredAmount =
@@ -97,8 +72,7 @@ class MatchViewModel extends FormViewModel {
     try {
       final match = Match(
         creatorId: user.id,
-        opponentId:
-            matchType == MatchType.inviteOpponent ? opponentUserId : null,
+        opponentId: null,
         matchTitle: matchTitle,
         matchDescription: matchDescription,
         creatorBetAmount: creatorBetAmount,
@@ -120,21 +94,6 @@ class MatchViewModel extends FormViewModel {
             transactionType: TransactionType.betHold,
           ),
         );
-
-        // ✅ Generate and Save Invite Link for Open Match
-        if (matchType == MatchType.openMatch && createdMatch.id != null) {
-          final inviteLink = 'https://kazeapp.com/match/${createdMatch.id}';
-          final updated = await _matchService.updateMatchInviteLink(
-            createdMatch.id!,
-            inviteLink,
-          );
-
-          if (updated) {
-            _loggerService.info('Invite link generated: $inviteLink');
-          } else {
-            _loggerService.warning('Failed to update invite link.');
-          }
-        }
 
         await _dialogService.showDialog(
           title: 'Success',

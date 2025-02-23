@@ -34,12 +34,19 @@ class MatchFindDialogModel extends BaseViewModel {
     );
 
     if (match != null) {
-      _loggerService.info("findMatch: Match found. Navigating to match details for match id ${match.id}");
+      _loggerService.info(
+        "findMatch: Match found. Navigating to match details for match id ${match.id}",
+      );
       completer(DialogResponse(confirmed: true));
-      _navigationService.navigateTo(Routes.matchDetailsView, arguments: MatchDetailsViewArguments(matchId: match.id!));
+      _navigationService.navigateTo(
+        Routes.matchDetailsView,
+        arguments: MatchDetailsViewArguments(matchId: match.id!),
+      );
     } else {
       errorMessage = "No open match found with invite code \"$inviteCode\".";
-      _loggerService.error("findMatch: No match found with invite code '$inviteCode'.");
+      _loggerService.error(
+        "findMatch: No match found with invite code '$inviteCode'.",
+      );
       notifyListeners();
     }
   }

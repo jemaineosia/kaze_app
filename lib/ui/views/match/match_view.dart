@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:kaze_app/common/enums/match_type.dart';
 import 'package:kaze_app/ui/widgets/common/kaze_appbar/kaze_appbar.dart';
 import 'package:kaze_app/ui/widgets/common/kaze_button/kaze_button.dart';
 import 'package:kaze_app/ui/widgets/common/kaze_textfield/kaze_textfield.dart';
@@ -17,7 +16,6 @@ import 'match_viewmodel.dart';
     FormTextField(name: 'matchDescription'),
     FormTextField(name: 'creatorBetAmount'),
     FormTextField(name: 'opponentBetAmount'),
-    FormTextField(name: 'opponentUsername'),
   ],
 )
 class MatchView extends StackedView<MatchViewModel> with $MatchView {
@@ -96,22 +94,6 @@ class MatchView extends StackedView<MatchViewModel> with $MatchView {
                   return null;
                 },
               ),
-              DropdownButtonFormField<MatchType>(
-                value: viewModel.matchType,
-                items:
-                    MatchType.values.map((type) {
-                      return DropdownMenuItem(
-                        value: type,
-                        child: Text(type.toValue()),
-                      );
-                    }).toList(),
-                onChanged: viewModel.setMatchType,
-              ),
-              if (viewModel.matchType == MatchType.inviteOpponent)
-                KazeTextfield(
-                  hintText: 'Opponent Username',
-                  controller: opponentUsernameController,
-                ),
               Gap(20.h),
               KazeButton(
                 text: 'Create Match',
@@ -122,9 +104,6 @@ class MatchView extends StackedView<MatchViewModel> with $MatchView {
                       matchDescriptionController.text,
                       double.parse(creatorBetAmountController.text),
                       double.parse(opponentBetAmountController.text),
-                      viewModel.matchType == MatchType.inviteOpponent
-                          ? opponentUsernameController.text
-                          : null,
                     );
                   }
                 },
