@@ -29,9 +29,7 @@ class HomeViewModel extends BaseViewModel {
       }
 
       createdMatches = await _matchService.fetchMatchesByCreator(user.id);
-      openMatches = await _matchService.fetchOpenMatches(
-        currentUserId: user.id,
-      );
+      openMatches = await _matchService.fetchOpenMatches(currentUserId: user.id);
 
       // Combine both lists and sort by schedule date
       matches = [...createdMatches, ...openMatches];
@@ -45,11 +43,7 @@ class HomeViewModel extends BaseViewModel {
       _loggerService.debug('Fetched Matches - Total: ${matches.length}');
       notifyListeners();
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error fetching home matches',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error fetching home matches', error: e, stackTrace: stackTrace);
     } finally {
       setBusy(false);
     }
@@ -57,22 +51,18 @@ class HomeViewModel extends BaseViewModel {
 
   void navigateToMatchDetails(Match match) {
     _loggerService.info('Navigating to Match Details: ${match.id}');
-    _navigationService.navigateTo(
-      Routes.matchDetailsView,
-      arguments: MatchDetailsViewArguments(matchId: match.id!),
-    );
+    _navigationService.navigateTo(Routes.matchDetailsView, arguments: MatchDetailsViewArguments(matchId: match.id!));
   }
 
   Future<void> findMatch() async {
     // Show a dialog asking for the invite code
     final dialogResponse = await _dialogService.showCustomDialog(
-      variant:
-          DialogType
-              .matchFind, // Assumes you've configured an input dialog variant
+      variant: DialogType.matchFind, // Assumes you've configured an input dialog variant
       title: 'Enter Invite Code',
       description: 'Please enter the invite code for the match:',
       mainButtonTitle: 'OK',
       secondaryButtonTitle: 'Cancel',
+      barrierDismissible: true,
     );
 
     // if (dialogResponse?.confirmed == true && dialogResponse.responseData != null) {

@@ -1,6 +1,7 @@
 import 'package:kaze_app/app/app.locator.dart';
 import 'package:kaze_app/app/app.router.dart';
 import 'package:kaze_app/models/notification.dart';
+import 'package:kaze_app/services/appuser_service.dart';
 import 'package:kaze_app/services/auth_service.dart';
 import 'package:kaze_app/services/logger_service.dart';
 import 'package:kaze_app/services/notification_service.dart';
@@ -12,9 +13,24 @@ class SettingsViewModel extends BaseViewModel {
   final _navigationService = locator<NavigationService>();
   final _notificationService = locator<NotificationService>();
   final _loggerService = locator<LoggerService>();
+  final _appUserService = locator<AppuserService>();
 
   List<Notification> _notifications = [];
   List<Notification> get notifications => _notifications;
+
+  String? _username;
+  String get username => _username ?? 'User';
+
+  Future<void> fetchUsername() async {
+    final user = _authService.getCurrentUser();
+    if (user != null) {
+      _username = await _appUserService.getUsernameByUserId(user.id);
+      _loggerService.info('Fetched username: $_username');
+      notifyListeners();
+    } else {
+      _loggerService.warning('No user logged in while fetching username.');
+    }
+  }
 
   Future<void> fetchNotifications() async {
     setBusy(true);
@@ -26,28 +42,18 @@ class SettingsViewModel extends BaseViewModel {
         return;
       }
 
-      _notifications = await _notificationService.fetchUserNotifications(
-        user.id,
-      );
+      _notifications = await _notificationService.fetchUserNotifications(user.id);
       notifyListeners();
-      _loggerService.info(
-        'Fetched ${_notifications.length} notifications for user ${user.id}.',
-      );
+      _loggerService.info('Fetched ${_notifications.length} notifications for user ${user.id}.');
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error fetching notifications.',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error fetching notifications.', error: e, stackTrace: stackTrace);
     } finally {
       setBusy(false);
     }
   }
 
   Future<void> handleNotificationTap(String notificationId) async {
-    final success = await _notificationService.markNotificationAsRead(
-      notificationId,
-    );
+    final success = await _notificationService.markNotificationAsRead(notificationId);
 
     if (success) {
       _loggerService.info('Notification $notificationId handled successfully.');

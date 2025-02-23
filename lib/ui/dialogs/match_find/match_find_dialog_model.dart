@@ -11,7 +11,6 @@ class MatchFindDialogModel extends BaseViewModel {
   final MatchService _matchService = locator<MatchService>();
   final NavigationService _navigationService = locator<NavigationService>();
   final LoggerService _loggerService = locator<LoggerService>();
-  final DialogService _dialogService = locator<DialogService>();
 
   String? errorMessage;
 
@@ -20,26 +19,28 @@ class MatchFindDialogModel extends BaseViewModel {
     notifyListeners();
 
     final inviteCode = inviteCodeController.text.trim();
+    _loggerService.info("findMatch: Invite code entered: '$inviteCode'");
 
     if (inviteCode.isEmpty) {
       errorMessage = "Please enter an invite code.";
+      _loggerService.warning("findMatch: No invite code provided.");
       notifyListeners();
       return;
     }
 
-    // Check if the invite code exists
     final match = await _matchService.fetchMatchByInviteCode(inviteCode);
+    _loggerService.info(
+      "findMatch: Result for invite code '$inviteCode': ${match != null ? match.toJson() : 'No match found'}",
+    );
 
     if (match != null) {
-      // If found, close the dialog and navigate to match details
+      _loggerService.info("findMatch: Match found. Navigating to match details for match id ${match.id}");
       completer(DialogResponse(confirmed: true));
       _navigationService.navigateTo(Routes.matchDetailsView, arguments: MatchDetailsViewArguments(matchId: match.id!));
     } else {
-      // Otherwise, set error message
-      errorMessage = "No match found with invite code \"$inviteCode\".";
+      errorMessage = "No open match found with invite code \"$inviteCode\".";
+      _loggerService.error("findMatch: No match found with invite code '$inviteCode'.");
       notifyListeners();
-      // Optionally, show an error dialog:
-      // await _dialogService.showDialog(title: "Error", description: errorMessage);
     }
   }
 
