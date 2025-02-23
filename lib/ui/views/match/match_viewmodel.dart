@@ -59,22 +59,36 @@ class MatchViewModel extends FormViewModel {
 
     if (matchType == MatchType.inviteOpponent) {
       if (opponentUsername == null || opponentUsername.isEmpty) {
-        await _dialogService.showDialog(title: 'Error', description: 'Opponent username is required.');
+        await _dialogService.showDialog(
+          title: 'Error',
+          description: 'Opponent username is required.',
+        );
         return;
       }
 
-      opponentUserId = await _appUserService.getUserIdByUsername(opponentUsername);
+      opponentUserId = await _appUserService.getUserIdByUsername(
+        opponentUsername,
+      );
 
       if (opponentUserId == null) {
-        await _dialogService.showDialog(title: 'Error', description: 'Opponent username not found.');
+        await _dialogService.showDialog(
+          title: 'Error',
+          description: 'Opponent username not found.',
+        );
         return;
       }
     }
 
-    final requiredAmount = creatorBetAmount > opponentBetAmount ? creatorBetAmount : opponentBetAmount;
+    final requiredAmount =
+        creatorBetAmount > opponentBetAmount
+            ? creatorBetAmount
+            : opponentBetAmount;
 
     if (currentBalance < requiredAmount) {
-      await _dialogService.showDialog(title: 'Error', description: 'Insufficient balance to create match.');
+      await _dialogService.showDialog(
+        title: 'Error',
+        description: 'Insufficient balance to create match.',
+      );
       return;
     }
 
@@ -83,7 +97,8 @@ class MatchViewModel extends FormViewModel {
     try {
       final match = Match(
         creatorId: user.id,
-        opponentId: matchType == MatchType.inviteOpponent ? opponentUserId : null,
+        opponentId:
+            matchType == MatchType.inviteOpponent ? opponentUserId : null,
         matchTitle: matchTitle,
         matchDescription: matchDescription,
         creatorBetAmount: creatorBetAmount,
@@ -109,7 +124,10 @@ class MatchViewModel extends FormViewModel {
         // ✅ Generate and Save Invite Link for Open Match
         if (matchType == MatchType.openMatch && createdMatch.id != null) {
           final inviteLink = 'https://kazeapp.com/match/${createdMatch.id}';
-          final updated = await _matchService.updateMatchInviteLink(createdMatch.id!, inviteLink);
+          final updated = await _matchService.updateMatchInviteLink(
+            createdMatch.id!,
+            inviteLink,
+          );
 
           if (updated) {
             _loggerService.info('Invite link generated: $inviteLink');
@@ -118,13 +136,22 @@ class MatchViewModel extends FormViewModel {
           }
         }
 
-        await _dialogService.showDialog(title: 'Success', description: 'Match created successfully!');
+        await _dialogService.showDialog(
+          title: 'Success',
+          description: 'Match created successfully!',
+        );
         _navigationService.back();
       } else {
-        await _dialogService.showDialog(title: 'Error', description: 'Failed to create match.');
+        await _dialogService.showDialog(
+          title: 'Error',
+          description: 'Failed to create match.',
+        );
       }
     } catch (e) {
-      await _dialogService.showDialog(title: 'Error', description: 'Unexpected error occurred.');
+      await _dialogService.showDialog(
+        title: 'Error',
+        description: 'Unexpected error occurred.',
+      );
     } finally {
       setBusy(false);
     }

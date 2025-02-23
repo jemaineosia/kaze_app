@@ -59,8 +59,9 @@ mixin $MatchView {
       return _MatchViewTextEditingControllers[key]!;
     }
 
-    _MatchViewTextEditingControllers[key] =
-        TextEditingController(text: initialValue);
+    _MatchViewTextEditingControllers[key] = TextEditingController(
+      text: initialValue,
+    );
     return _MatchViewTextEditingControllers[key]!;
   }
 
@@ -103,14 +104,13 @@ mixin $MatchView {
   /// Updates the formData on the FormViewModel
   void _updateFormData(FormStateHelper model, {bool forceValidate = false}) {
     model.setData(
-      model.formValueMap
-        ..addAll({
-          MatchTitleValueKey: matchTitleController.text,
-          MatchDescriptionValueKey: matchDescriptionController.text,
-          CreatorBetAmountValueKey: creatorBetAmountController.text,
-          OpponentBetAmountValueKey: opponentBetAmountController.text,
-          OpponentUsernameValueKey: opponentUsernameController.text,
-        }),
+      model.formValueMap..addAll({
+        MatchTitleValueKey: matchTitleController.text,
+        MatchDescriptionValueKey: matchDescriptionController.text,
+        CreatorBetAmountValueKey: creatorBetAmountController.text,
+        OpponentBetAmountValueKey: opponentBetAmountController.text,
+        OpponentUsernameValueKey: opponentUsernameController.text,
+      }),
     );
 
     if (_autoTextFieldValidation || forceValidate) {
@@ -140,10 +140,9 @@ mixin $MatchView {
 }
 
 extension ValueProperties on FormStateHelper {
-  bool get hasAnyValidationMessage => this
-      .fieldsValidationMessages
-      .values
-      .any((validation) => validation != null);
+  bool get hasAnyValidationMessage => this.fieldsValidationMessages.values.any(
+    (validation) => validation != null,
+  );
 
   bool get isFormValid {
     if (!_autoTextFieldValidation) this.validateForm();
@@ -163,9 +162,7 @@ extension ValueProperties on FormStateHelper {
       this.formValueMap[OpponentUsernameValueKey] as String?;
 
   set matchTitleValue(String? value) {
-    this.setData(
-      this.formValueMap..addAll({MatchTitleValueKey: value}),
-    );
+    this.setData(this.formValueMap..addAll({MatchTitleValueKey: value}));
 
     if (_MatchViewTextEditingControllers.containsKey(MatchTitleValueKey)) {
       _MatchViewTextEditingControllers[MatchTitleValueKey]?.text = value ?? '';
@@ -173,48 +170,44 @@ extension ValueProperties on FormStateHelper {
   }
 
   set matchDescriptionValue(String? value) {
-    this.setData(
-      this.formValueMap..addAll({MatchDescriptionValueKey: value}),
-    );
+    this.setData(this.formValueMap..addAll({MatchDescriptionValueKey: value}));
 
     if (_MatchViewTextEditingControllers.containsKey(
-        MatchDescriptionValueKey)) {
+      MatchDescriptionValueKey,
+    )) {
       _MatchViewTextEditingControllers[MatchDescriptionValueKey]?.text =
           value ?? '';
     }
   }
 
   set creatorBetAmountValue(String? value) {
-    this.setData(
-      this.formValueMap..addAll({CreatorBetAmountValueKey: value}),
-    );
+    this.setData(this.formValueMap..addAll({CreatorBetAmountValueKey: value}));
 
     if (_MatchViewTextEditingControllers.containsKey(
-        CreatorBetAmountValueKey)) {
+      CreatorBetAmountValueKey,
+    )) {
       _MatchViewTextEditingControllers[CreatorBetAmountValueKey]?.text =
           value ?? '';
     }
   }
 
   set opponentBetAmountValue(String? value) {
-    this.setData(
-      this.formValueMap..addAll({OpponentBetAmountValueKey: value}),
-    );
+    this.setData(this.formValueMap..addAll({OpponentBetAmountValueKey: value}));
 
     if (_MatchViewTextEditingControllers.containsKey(
-        OpponentBetAmountValueKey)) {
+      OpponentBetAmountValueKey,
+    )) {
       _MatchViewTextEditingControllers[OpponentBetAmountValueKey]?.text =
           value ?? '';
     }
   }
 
   set opponentUsernameValue(String? value) {
-    this.setData(
-      this.formValueMap..addAll({OpponentUsernameValueKey: value}),
-    );
+    this.setData(this.formValueMap..addAll({OpponentUsernameValueKey: value}));
 
     if (_MatchViewTextEditingControllers.containsKey(
-        OpponentUsernameValueKey)) {
+      OpponentUsernameValueKey,
+    )) {
       _MatchViewTextEditingControllers[OpponentUsernameValueKey]?.text =
           value ?? '';
     }
@@ -294,8 +287,9 @@ extension Methods on FormStateHelper {
       MatchTitleValueKey: getValidationMessage(MatchTitleValueKey),
       MatchDescriptionValueKey: getValidationMessage(MatchDescriptionValueKey),
       CreatorBetAmountValueKey: getValidationMessage(CreatorBetAmountValueKey),
-      OpponentBetAmountValueKey:
-          getValidationMessage(OpponentBetAmountValueKey),
+      OpponentBetAmountValueKey: getValidationMessage(
+        OpponentBetAmountValueKey,
+      ),
       OpponentUsernameValueKey: getValidationMessage(OpponentUsernameValueKey),
     });
   }
@@ -319,7 +313,8 @@ void updateValidationData(FormStateHelper model) =>
       MatchTitleValueKey: getValidationMessage(MatchTitleValueKey),
       MatchDescriptionValueKey: getValidationMessage(MatchDescriptionValueKey),
       CreatorBetAmountValueKey: getValidationMessage(CreatorBetAmountValueKey),
-      OpponentBetAmountValueKey:
-          getValidationMessage(OpponentBetAmountValueKey),
+      OpponentBetAmountValueKey: getValidationMessage(
+        OpponentBetAmountValueKey,
+      ),
       OpponentUsernameValueKey: getValidationMessage(OpponentUsernameValueKey),
     });

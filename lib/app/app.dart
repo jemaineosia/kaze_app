@@ -22,6 +22,7 @@ import 'package:kaze_app/ui/views/cashin/cashin_view.dart';
 import 'package:kaze_app/services/match_service.dart';
 import 'package:kaze_app/ui/views/match/match_view.dart';
 import 'package:kaze_app/ui/views/match_details/match_details_view.dart';
+import 'package:kaze_app/ui/dialogs/match_find/match_find_dialog.dart';
 // @stacked-import
 
 @StackedApp(
@@ -60,6 +61,7 @@ import 'package:kaze_app/ui/views/match_details/match_details_view.dart';
   ],
   dialogs: [
     StackedDialog(classType: InfoAlertDialog),
+    StackedDialog(classType: MatchFindDialog),
     // @stacked-dialog
   ],
 )

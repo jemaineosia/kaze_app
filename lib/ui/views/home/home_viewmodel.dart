@@ -1,3 +1,4 @@
+import 'package:kaze_app/app/app.dialogs.dart';
 import 'package:kaze_app/app/app.locator.dart';
 import 'package:kaze_app/app/app.router.dart';
 import 'package:kaze_app/models/match.dart';
@@ -12,6 +13,7 @@ class HomeViewModel extends BaseViewModel {
   final _authService = locator<AuthService>();
   final _loggerService = locator<LoggerService>();
   final _navigationService = locator<NavigationService>();
+  final _dialogService = locator<DialogService>();
 
   List<Match> createdMatches = [];
   List<Match> openMatches = [];
@@ -27,24 +29,27 @@ class HomeViewModel extends BaseViewModel {
       }
 
       createdMatches = await _matchService.fetchMatchesByCreator(user.id);
-      openMatches = await _matchService.fetchOpenMatches(currentUserId: user.id);
+      openMatches = await _matchService.fetchOpenMatches(
+        currentUserId: user.id,
+      );
 
-      // Combine both lists
+      // Combine both lists and sort by schedule date
       matches = [...createdMatches, ...openMatches];
-
-      // Sort by schedule date
       matches.sort((a, b) {
         if (a.schedule == null && b.schedule == null) return 0;
-        if (a.schedule == null) return 1; // a is null, so sort after b
-        if (b.schedule == null) return -1; // b is null, so sort after a
+        if (a.schedule == null) return 1;
+        if (b.schedule == null) return -1;
         return a.schedule!.compareTo(b.schedule!);
       });
 
       _loggerService.debug('Fetched Matches - Total: ${matches.length}');
-
       notifyListeners();
     } catch (e, stackTrace) {
-      _loggerService.error('Error fetching home matches', error: e, stackTrace: stackTrace);
+      _loggerService.error(
+        'Error fetching home matches',
+        error: e,
+        stackTrace: stackTrace,
+      );
     } finally {
       setBusy(false);
     }
@@ -52,6 +57,36 @@ class HomeViewModel extends BaseViewModel {
 
   void navigateToMatchDetails(Match match) {
     _loggerService.info('Navigating to Match Details: ${match.id}');
-    _navigationService.navigateTo(Routes.matchDetailsView, arguments: MatchDetailsViewArguments(matchId: match.id!));
+    _navigationService.navigateTo(
+      Routes.matchDetailsView,
+      arguments: MatchDetailsViewArguments(matchId: match.id!),
+    );
+  }
+
+  Future<void> findMatch() async {
+    // Show a dialog asking for the invite code
+    final dialogResponse = await _dialogService.showCustomDialog(
+      variant:
+          DialogType
+              .matchFind, // Assumes you've configured an input dialog variant
+      title: 'Enter Invite Code',
+      description: 'Please enter the invite code for the match:',
+      mainButtonTitle: 'OK',
+      secondaryButtonTitle: 'Cancel',
+    );
+
+    // if (dialogResponse?.confirmed == true && dialogResponse.responseData != null) {
+    //   final inviteCode = dialogResponse.responseData as String;
+    //   // Look up the match by invite code
+    //   final match = await _matchService.fetchMatchByInviteCode(inviteCode);
+    //   if (match != null) {
+    //     _navigationService.navigateTo(
+    //       Routes.matchDetailsView,
+    //       arguments: MatchDetailsViewArguments(matchId: match.id!),
+    //     );
+    //   } else {
+    //     await _dialogService.showDialog(title: 'Error', description: 'No match found with invite code "$inviteCode".');
+    //   }
+    // }
   }
 }

@@ -71,10 +71,12 @@ class MatchView extends StackedView<MatchViewModel> with $MatchView {
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   final doubleValue = double.tryParse(value ?? '');
-                  if (value == null || value.isEmpty)
+                  if (value == null || value.isEmpty) {
                     return 'Creator bet amount is required';
-                  if (doubleValue == null || doubleValue <= 0)
+                  }
+                  if (doubleValue == null || doubleValue <= 0) {
                     return 'Invalid bet amount';
+                  }
                   return null;
                 },
               ),
@@ -85,10 +87,12 @@ class MatchView extends StackedView<MatchViewModel> with $MatchView {
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   final doubleValue = double.tryParse(value ?? '');
-                  if (value == null || value.isEmpty)
+                  if (value == null || value.isEmpty) {
                     return 'Opponent bet amount is required';
-                  if (doubleValue == null || doubleValue <= 0)
+                  }
+                  if (doubleValue == null || doubleValue <= 0) {
                     return 'Invalid bet amount';
+                  }
                   return null;
                 },
               ),

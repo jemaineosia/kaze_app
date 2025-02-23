@@ -20,7 +20,24 @@ class HomeView extends StackedView<HomeViewModel> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Matches', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    // Row with title and "Find Match" button
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Matches',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => viewModel.findMatch(),
+                          child: const Text('Find Match'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
                     Expanded(
                       child:
                           viewModel.matches.isEmpty
@@ -32,15 +49,18 @@ class HomeView extends StackedView<HomeViewModel> {
                                   return ListTile(
                                     title: Text(match.matchTitle),
                                     subtitle: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(match.matchDescription),
-                                        // Display status. If you don't have a status field, compute it.
                                         Text(
                                           'Status: ${match.status.toDisplay()}',
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            color: match.opponentId == null ? Colors.green : Colors.orange,
+                                            color:
+                                                match.opponentId == null
+                                                    ? Colors.green
+                                                    : Colors.orange,
                                           ),
                                         ),
                                         Text(
@@ -48,7 +68,10 @@ class HomeView extends StackedView<HomeViewModel> {
                                         ),
                                       ],
                                     ),
-                                    onTap: () => viewModel.navigateToMatchDetails(match),
+                                    onTap:
+                                        () => viewModel.navigateToMatchDetails(
+                                          match,
+                                        ),
                                   );
                                 },
                               ),

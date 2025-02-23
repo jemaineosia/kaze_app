@@ -35,7 +35,8 @@ class MatchDetailsViewModel extends BaseViewModel {
     return false;
   }
 
-  bool get canDeclareWinner => match?.status == MatchStatus.ongoing && (isCreator || isOpponent);
+  bool get canDeclareWinner =>
+      match?.status == MatchStatus.ongoing && (isCreator || isOpponent);
 
   Future<void> fetchMatch() async {
     setBusy(true);
@@ -71,7 +72,10 @@ class MatchDetailsViewModel extends BaseViewModel {
       // If ongoing, both creator and opponent need to cancel
       if (match?.status == MatchStatus.ongoing) {
         // Call a function to register user's intent to cancel
-        await _matchService.requestMatchCancellation(matchId: match!.id!, userId: currentUserId);
+        await _matchService.requestMatchCancellation(
+          matchId: match!.id!,
+          userId: currentUserId,
+        );
         await fetchMatch();
       }
     }
