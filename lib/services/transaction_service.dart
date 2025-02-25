@@ -13,40 +13,19 @@ class TransactionService {
 
   Future<bool> createTransaction(Transaction transaction) async {
     try {
-      _loggerService.info(
-        const JsonEncoder.withIndent('  ').convert(transaction.toJson()),
-      );
+      _loggerService.info(const JsonEncoder.withIndent('  ').convert(transaction.toJson()));
 
       final response = await _transactionTable.insert(transaction.toJson());
 
-      if (response == null) {
-        _loggerService.info(
-          'Transaction created successfully: ${transaction.id}',
-        );
-        return true;
-      }
-
       if (response.error != null) {
-        _loggerService.error('Error occurred: ${response.error!.message}');
-      }
-
-      if (response.error == null) {
-        _loggerService.info(
-          'Transaction created successfully: ${transaction.id}',
-        );
-        return true;
-      } else {
-        _loggerService.error(
-          'Failed to create transaction: ${response.error?.message}',
-        );
+        _loggerService.error('Failed to create transaction: ${response.error!.message}');
         return false;
       }
+
+      _loggerService.info('Transaction created successfully: ${transaction.id}');
+      return true;
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Unexpected error occurred while creating transaction',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Unexpected error occurred while creating transaction', error: e, stackTrace: stackTrace);
       return false;
     }
   }
@@ -97,26 +76,18 @@ class TransactionService {
       _loggerService.info('Transaction $transactionId updated successfully.');
       return true;
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error updating transaction $transactionId',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error updating transaction $transactionId', error: e, stackTrace: stackTrace);
       return false;
     }
   }
 
   Future<Transaction?> approveTransaction(String transactionId) async {
-    locator<LoggerService>().info(
-      'Approving transaction with ID: $transactionId',
-    );
+    locator<LoggerService>().info('Approving transaction with ID: $transactionId');
     try {
       final response =
           await _transactionTable
               .update({
-                'transaction_type':
-                    TransactionType.cashIn
-                        .toValue(), // Update the status to 'cash_in'
+                'transaction_type': TransactionType.cashIn.toValue(), // Update the status to 'cash_in'
               })
               .eq('id', transactionId)
               .select()
@@ -148,11 +119,7 @@ class TransactionService {
   Future<Transaction?> getTransactionById(String transactionId) async {
     try {
       final response =
-          await Supabase.instance.client
-              .from('transactions')
-              .select()
-              .eq('id', transactionId)
-              .maybeSingle();
+          await Supabase.instance.client.from('transactions').select().eq('id', transactionId).maybeSingle();
 
       if (response == null) return null;
 
@@ -171,13 +138,9 @@ class TransactionService {
     final response = await _transactionTable
         .select()
         .eq('user_id', userId)
-        .or(
-          "transaction_type.eq.cash_in, transaction_type.eq.cash_out, transaction_type.eq.cash_out_pending",
-        )
+        .or("transaction_type.eq.cash_in, transaction_type.eq.cash_out, transaction_type.eq.cash_out_pending")
         .order('created_at', ascending: false);
 
-    return (response as List)
-        .map((json) => Transaction.fromJson(json))
-        .toList();
+    return (response as List).map((json) => Transaction.fromJson(json)).toList();
   }
 }
