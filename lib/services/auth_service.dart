@@ -8,14 +8,11 @@ class AuthService {
   final _appUserService = locator<AppuserService>();
   final LoggerService _loggerService = locator<LoggerService>();
 
-  Future<dynamic> signInWithEmailPassword(
-    String username,
-    String password,
-  ) async {
+  Future<dynamic> signInWithEmailPassword(String username, String password) async {
     try {
       _loggerService.info("Attempting to log in with username: $username");
 
-      // Fetch the user from the database
+      // Fetch the user from the database (this call caches the user)
       final currentUser = await _appUserService.getUserByUsername(username);
 
       if (currentUser == null) {
@@ -23,16 +20,16 @@ class AuthService {
         return "Username or Password is invalid";
       }
 
-      // Authenticate the user with Supabase
-      final authResponse = await _supabase.auth.signInWithPassword(
-        password: password,
-        email: currentUser.email,
-      );
+      // Authenticate the user with Supabase using the fetched user's email
+      final authResponse = await _supabase.auth.signInWithPassword(password: password, email: currentUser.email);
 
       if (authResponse.user == null) {
         _loggerService.warning("Authentication failed for username: $username");
         return "Authentication failed. Please check your credentials.";
       }
+
+      // Cache the user after successful authentication
+      await _appUserService.cacheUser(currentUser);
 
       _loggerService.info("Login successful for username: $username");
       return authResponse;
@@ -40,39 +37,26 @@ class AuthService {
       _loggerService.error("AuthException during sign-in", error: e);
       return e.message; // Return Supabase error message
     } catch (e, stackTrace) {
-      _loggerService.error(
-        "Unexpected error during sign-in",
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error("Unexpected error during sign-in", error: e, stackTrace: stackTrace);
       return "An unexpected error occurred. Please try again later.";
     }
   }
 
-  Future<String?> signUpWithEmailPassword(
-    String username,
-    String email,
-    String password,
-  ) async {
+  Future<String?> signUpWithEmailPassword(String username, String email, String password) async {
     try {
       _loggerService.info("Attempting to sign up with email: $email");
 
       // Create the user in authentication
-      final response = await _supabase.auth.signUp(
-        email: email,
-        password: password,
-      );
+      final response = await _supabase.auth.signUp(email: email, password: password);
 
       if (response.user == null) {
-        _loggerService.warning(
-          "Unknown error occurred during signup for email: $email",
-        );
+        _loggerService.warning("Unknown error occurred during signup for email: $email");
         return 'Unknown error occurred during signup.';
       }
 
       final userId = response.user!.id;
 
-      // Call the Postgres RPC function to handle user creation in appUsers
+      // Call the Postgres RPC function to handle user creation in appusers table
       final rpcResponse = await _supabase.rpc(
         'handle_user_signup',
         params: {'auth_user_id': userId, 'username': username, 'email': email},
@@ -85,6 +69,12 @@ class AuthService {
         return 'Failed to create user record in the database. Please try again.';
       }
 
+      // Optionally, fetch the newly created user data and cache it.
+      final createdUser = await _appUserService.getUserByUsername(username);
+      if (createdUser != null) {
+        await _appUserService.cacheUser(createdUser);
+      }
+
       _loggerService.info("Sign up successful for email: $email");
       return null; // Success
     } on AuthException catch (e) {
@@ -94,11 +84,7 @@ class AuthService {
       }
       return 'Authentication error: ${e.message}';
     } catch (e, stackTrace) {
-      _loggerService.error(
-        "Unexpected error during sign-up",
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error("Unexpected error during sign-up", error: e, stackTrace: stackTrace);
       return 'An unexpected error occurred. Please try again later.';
     }
   }
@@ -107,13 +93,16 @@ class AuthService {
     try {
       _loggerService.info("Attempting to sign out user.");
       await _supabase.auth.signOut();
+
+      // Clear the cached user; assume that current user id is available from the session
+      final currentUser = getCurrentUser();
+      if (currentUser != null) {
+        await _appUserService.clearCachedUser(currentUser.id);
+      }
+
       _loggerService.info("User successfully signed out.");
     } catch (e, stackTrace) {
-      _loggerService.error(
-        "Error during sign-out",
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error("Error during sign-out", error: e, stackTrace: stackTrace);
     }
   }
 
@@ -143,7 +132,7 @@ class AuthService {
   Future<void> _populateCurrentUser(User? user) async {
     if (user != null) {
       _loggerService.info("Populating user data for userId: ${user.id}");
-      // TODO: Add logic to populate user data from database
+      // TODO: Add logic to populate additional user data from the database, if needed.
     } else {
       _loggerService.warning("No user to populate data for.");
     }
