@@ -6,8 +6,10 @@ import 'package:kaze_app/services/auth_service.dart';
 import 'package:kaze_app/services/logger_service.dart';
 import 'package:kaze_app/services/match_service.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
 
+@LazySingleton()
 class HomeViewModel extends BaseViewModel {
   final _matchService = locator<MatchService>();
   final _authService = locator<AuthService>();
@@ -29,7 +31,9 @@ class HomeViewModel extends BaseViewModel {
       }
 
       createdMatches = await _matchService.fetchMatchesByCreator(user.id);
-      openMatches = await _matchService.fetchInvitedMatches(currentUserId: user.id);
+      openMatches = await _matchService.fetchInvitedMatches(
+        currentUserId: user.id,
+      );
 
       // Combine both lists and sort by schedule date
       matches = [...createdMatches, ...openMatches];
@@ -43,7 +47,11 @@ class HomeViewModel extends BaseViewModel {
       _loggerService.debug('Fetched Matches - Total: ${matches.length}');
       notifyListeners();
     } catch (e, stackTrace) {
-      _loggerService.error('Error fetching home matches', error: e, stackTrace: stackTrace);
+      _loggerService.error(
+        'Error fetching home matches',
+        error: e,
+        stackTrace: stackTrace,
+      );
     } finally {
       setBusy(false);
     }
@@ -51,7 +59,10 @@ class HomeViewModel extends BaseViewModel {
 
   void navigateToMatchDetails(Match match) {
     _loggerService.info('Navigating to Match Details: ${match.id}');
-    _navigationService.navigateTo(Routes.matchDetailsView, arguments: MatchDetailsViewArguments(matchId: match.id!));
+    _navigationService.navigateTo(
+      Routes.matchDetailsView,
+      arguments: MatchDetailsViewArguments(matchId: match.id!),
+    );
   }
 
   Future<void> findMatch() async {

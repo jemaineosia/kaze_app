@@ -12,11 +12,7 @@ class MatchDetailsView extends StackedView<MatchDetailsViewModel> {
   const MatchDetailsView({required this.matchId, Key? key}) : super(key: key);
 
   @override
-  Widget builder(
-    BuildContext context,
-    MatchDetailsViewModel viewModel,
-    Widget? child,
-  ) {
+  Widget builder(BuildContext context, MatchDetailsViewModel viewModel, Widget? child) {
     return Scaffold(
       appBar: AppBar(title: const Text('Match Details')),
       body:
@@ -32,17 +28,14 @@ class MatchDetailsView extends StackedView<MatchDetailsViewModel> {
                     Text('Match Title: ${viewModel.match!.matchTitle}'),
                     Text('Description: ${viewModel.match!.matchDescription}'),
                     Text('Status: ${viewModel.match!.status.toValue()}'),
-                    Text(
-                      'Creator Bet: P${viewModel.match!.creatorBetAmount.toStringAsFixed(2)}',
-                    ),
-                    Text(
-                      'Opponent Bet: P${viewModel.match!.opponentBetAmount.toStringAsFixed(2)}',
-                    ),
+                    Text('Creator Bet: P${viewModel.match!.creatorBetAmount.toStringAsFixed(2)}'),
+                    Text('Opponent Bet: P${viewModel.match!.opponentBetAmount.toStringAsFixed(2)}'),
                     const SizedBox(height: 20),
                     // Only show the invite code if the status is waiting for opponent (pending)
                     if (viewModel.match!.status == MatchStatus.pending &&
                         viewModel.match!.inviteCode != null &&
-                        viewModel.match!.inviteCode!.isNotEmpty)
+                        viewModel.match!.inviteCode!.isNotEmpty &&
+                        viewModel.isCreator)
                       Padding(
                         padding: const EdgeInsets.only(bottom: 20),
                         child: Row(
@@ -50,77 +43,30 @@ class MatchDetailsView extends StackedView<MatchDetailsViewModel> {
                             Expanded(
                               child: Text(
                                 'Invite Code: ${viewModel.match!.inviteCode}',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                             ),
                             IconButton(
                               icon: const Icon(Icons.copy),
                               onPressed: () {
-                                Clipboard.setData(
-                                  ClipboardData(
-                                    text: viewModel.match!.inviteCode!,
-                                  ),
-                                );
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                      'Invite code copied to clipboard',
-                                    ),
-                                  ),
-                                );
+                                Clipboard.setData(ClipboardData(text: viewModel.match!.inviteCode!));
+                                ScaffoldMessenger.of(
+                                  context,
+                                ).showSnackBar(const SnackBar(content: Text('Invite code copied to clipboard')));
                               },
                             ),
                           ],
                         ),
                       ),
-                    // Creator Buttons
-                    if (viewModel.isCreator) ...[
-                      if (viewModel.canCancel)
-                        KazeButton(
-                          text: 'Cancel Match',
-                          onTap: viewModel.cancelMatch,
-                          isLoading: viewModel.isBusy,
-                        ),
-                      if (viewModel.canDeclareWinner)
-                        KazeButton(
-                          text: 'Declare Winner',
-                          onTap: viewModel.declareWinner,
-                          isLoading: viewModel.isBusy,
-                        ),
-                    ],
-                    // Opponent Buttons
-                    if (viewModel.isOpponent) ...[
-                      if (viewModel.canAccept)
-                        KazeButton(
-                          text: 'Accept Match',
-                          onTap: viewModel.acceptMatch,
-                          isLoading: viewModel.isBusy,
-                        ),
-                      const SizedBox(height: 10),
-                      if (viewModel.canDecline)
-                        KazeButton(
-                          text: 'Decline Match',
-                          onTap: viewModel.declineMatch,
-                          isLoading: viewModel.isBusy,
-                        ),
-                      const SizedBox(height: 10),
-                      if (viewModel.canCancel)
-                        KazeButton(
-                          text: 'Cancel Match',
-                          onTap: viewModel.cancelMatch,
-                          isLoading: viewModel.isBusy,
-                        ),
-                      const SizedBox(height: 10),
-                      if (viewModel.canDeclareWinner)
-                        KazeButton(
-                          text: 'Declare Winner',
-                          onTap: viewModel.declareWinner,
-                          isLoading: viewModel.isBusy,
-                        ),
-                    ],
+                    // Accept button (only when match is pending and no opponent exists)
+                    if (viewModel.canAccept)
+                      KazeButton(text: 'Accept Match', onTap: viewModel.acceptMatch, isLoading: viewModel.isBusy),
+                    // Cancel button (for creator when pending OR for opponent if accepted)
+                    if (viewModel.canCancel)
+                      KazeButton(text: 'Cancel Match', onTap: viewModel.cancelMatch, isLoading: viewModel.isBusy),
+                    // Declare Winner button (if match is ongoing and current user is either creator or opponent)
+                    if (viewModel.canDeclareWinner)
+                      KazeButton(text: 'Declare Winner', onTap: viewModel.declareWinner, isLoading: viewModel.isBusy),
                   ],
                 ),
               ),
@@ -128,8 +74,7 @@ class MatchDetailsView extends StackedView<MatchDetailsViewModel> {
   }
 
   @override
-  MatchDetailsViewModel viewModelBuilder(BuildContext context) =>
-      MatchDetailsViewModel(matchId);
+  MatchDetailsViewModel viewModelBuilder(BuildContext context) => MatchDetailsViewModel(matchId);
 
   @override
   void onViewModelReady(MatchDetailsViewModel viewModel) {

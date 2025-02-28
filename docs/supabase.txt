@@ -446,3 +446,7 @@ EXECUTE FUNCTION set_invite_code_if_null();
 
 
 ALTER TABLE matches DROP COLUMN IF EXISTS invite_status;
+
+ALTER TABLE matches 
+ADD COLUMN creator_cancel_requested boolean DEFAULT false,
+ADD COLUMN opponent_cancel_requested boolean DEFAULT false;

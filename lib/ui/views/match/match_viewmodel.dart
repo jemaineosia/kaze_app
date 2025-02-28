@@ -54,16 +54,10 @@ class MatchViewModel extends FormViewModel {
       return;
     }
 
-    final requiredAmount =
-        creatorBetAmount > opponentBetAmount
-            ? creatorBetAmount
-            : opponentBetAmount;
+    final requiredAmount = creatorBetAmount > opponentBetAmount ? creatorBetAmount : opponentBetAmount;
 
     if (currentBalance < requiredAmount) {
-      await _dialogService.showDialog(
-        title: 'Error',
-        description: 'Insufficient balance to create match.',
-      );
+      await _dialogService.showDialog(title: 'Error', description: 'Insufficient balance to create match.');
       return;
     }
 
@@ -95,22 +89,13 @@ class MatchViewModel extends FormViewModel {
           ),
         );
 
-        await _dialogService.showDialog(
-          title: 'Success',
-          description: 'Match created successfully!',
-        );
-        _navigationService.back();
+        await _dialogService.showDialog(title: 'Success', description: 'Match created successfully!');
+        _navigationService.back(result: true);
       } else {
-        await _dialogService.showDialog(
-          title: 'Error',
-          description: 'Failed to create match.',
-        );
+        await _dialogService.showDialog(title: 'Error', description: 'Failed to create match.');
       }
     } catch (e) {
-      await _dialogService.showDialog(
-        title: 'Error',
-        description: 'Unexpected error occurred.',
-      );
+      await _dialogService.showDialog(title: 'Error', description: 'Unexpected error occurred.');
     } finally {
       setBusy(false);
     }
