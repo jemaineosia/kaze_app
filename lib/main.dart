@@ -10,12 +10,12 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await setupLocator();
   await Supabase.initialize(
     anonKey:
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBjZGNqdWpwcGJpc2Nwb3llYnlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzc3MDMyMTIsImV4cCI6MjA1MzI3OTIxMn0.bMfum_VMf0V1P6oiigXn2rWSaqRa23tyYRQiLHCqcNY',
     url: 'https://pcdcjujppbiscpoyebyr.supabase.co',
   );
-  await setupLocator();
   setupDialogUi();
   setupBottomSheetUi();
   runApp(const MainApp());

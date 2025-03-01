@@ -1115,6 +1115,24 @@ class MockMatchService extends _i1.Mock implements _i19.MatchService {
           as _i6.Future<_i20.Match?>);
 
   @override
+  _i6.Stream<List<_i20.Match>> subscribeMatches() =>
+      (super.noSuchMethod(
+            Invocation.method(#subscribeMatches, []),
+            returnValue: _i6.Stream<List<_i20.Match>>.empty(),
+            returnValueForMissingStub: _i6.Stream<List<_i20.Match>>.empty(),
+          )
+          as _i6.Stream<List<_i20.Match>>);
+
+  @override
+  _i6.Stream<_i20.Match?> subscribeMatchById(String? matchId) =>
+      (super.noSuchMethod(
+            Invocation.method(#subscribeMatchById, [matchId]),
+            returnValue: _i6.Stream<_i20.Match?>.empty(),
+            returnValueForMissingStub: _i6.Stream<_i20.Match?>.empty(),
+          )
+          as _i6.Stream<_i20.Match?>);
+
+  @override
   _i6.Future<void> declareMatchWinner(String? matchId, String? winnerId) =>
       (super.noSuchMethod(
             Invocation.method(#declareMatchWinner, [matchId, winnerId]),

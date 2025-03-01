@@ -17,12 +17,25 @@ class TransactionService {
         const JsonEncoder.withIndent('  ').convert(transaction.toJson()),
       );
 
-      final response = await _transactionTable.insert(transaction.toJson());
+      final response =
+          await _transactionTable
+              .insert(transaction.toJson())
+              .select()
+              .maybeSingle();
 
-      if (response.error != null) {
-        _loggerService.error(
-          'Failed to create transaction: ${response.error!.message}',
+      // If response is null, assume success.
+      if (response == null) {
+        _loggerService.info(
+          'Transaction created successfully: ${transaction.id}',
         );
+        return true;
+      }
+
+      // Check if the response has an error property.
+      // Note: The response is expected to be of type PostgrestResponse,
+      // which contains an 'error' property.
+      if (response.containsKey('error') && response['error'] != null) {
+        _loggerService.error('Error occurred: ${response['error']}');
         return false;
       }
 
