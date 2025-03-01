@@ -163,6 +163,15 @@ class MatchService {
     });
   }
 
+  Stream<Match?> subscribeMatchById(String matchId) {
+    return _matchesTable.stream(primaryKey: ['id']).eq('id', matchId).map((data) {
+      if (data.isNotEmpty) {
+        return Match.fromJson(data.first);
+      }
+      return null;
+    });
+  }
+
   Future<void> declareMatchWinner(String matchId, String winnerId) async {
     await _matchesTable.update({'winner_id': winnerId, 'status': MatchStatus.completed.toValue()}).eq('id', matchId);
   }
