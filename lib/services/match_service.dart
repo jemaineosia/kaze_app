@@ -21,38 +21,24 @@ class MatchService {
 
       final matches = response.map((json) => Match.fromJson(json)).toList();
 
-      _loggerService.debug(
-        "Fetched Matches: ${matches.map((m) => m.toJson())}",
-      );
+      _loggerService.debug("Fetched Matches: ${matches.map((m) => m.toJson())}");
 
       return matches;
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error fetching matches',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error fetching matches', error: e, stackTrace: stackTrace);
       return [];
     }
   }
 
   Future<Match?> createMatch(Match match) async {
     try {
-      final response =
-          await _matchesTable
-              .insert(match.toJson()..remove('id'))
-              .select()
-              .single();
+      final response = await _matchesTable.insert(match.toJson()..remove('id')).select().single();
 
       final createdMatch = Match.fromJson(response);
       _loggerService.info('Match created: ${createdMatch.toJson()}');
       return createdMatch;
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error creating match',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error creating match', error: e, stackTrace: stackTrace);
       return null;
     }
   }
@@ -69,11 +55,7 @@ class MatchService {
       _loggerService.info('Match updated successfully: ${match.toJson()}');
       return true;
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error updating match',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error updating match', error: e, stackTrace: stackTrace);
       return false;
     }
   }
@@ -85,36 +67,23 @@ class MatchService {
       _loggerService.info('Match deleted successfully: $matchId');
       return true;
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error deleting match',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error deleting match', error: e, stackTrace: stackTrace);
       return false;
     }
   }
 
   Future<List<Match>> fetchMatchesByCreator(String creatorId) async {
     try {
-      final response = await _matchesTable
-          .select()
-          .eq('creator_id', creatorId)
-          .order('created_at', ascending: false);
+      final response = await _matchesTable.select().eq('creator_id', creatorId).order('created_at', ascending: false);
 
       return (response as List).map((data) => Match.fromJson(data)).toList();
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error fetching matches by creator',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error fetching matches by creator', error: e, stackTrace: stackTrace);
       return [];
     }
   }
 
-  Future<List<Match>> fetchInvitedMatches({
-    required String currentUserId,
-  }) async {
+  Future<List<Match>> fetchInvitedMatches({required String currentUserId}) async {
     try {
       final response = await _matchesTable
           .select()
@@ -125,30 +94,21 @@ class MatchService {
 
       return (response as List).map((data) => Match.fromJson(data)).toList();
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error fetching invited matches',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error fetching invited matches', error: e, stackTrace: stackTrace);
       return [];
     }
   }
 
   Future<Match?> getMatchById(String matchId) async {
     try {
-      final response =
-          await _matchesTable.select().eq('id', matchId).maybeSingle();
+      final response = await _matchesTable.select().eq('id', matchId).maybeSingle();
 
       if (response != null) {
         return Match.fromJson(response);
       }
       return null;
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error fetching match by ID',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error fetching match by ID', error: e, stackTrace: stackTrace);
       return null;
     }
   }
@@ -160,29 +120,19 @@ class MatchService {
       _loggerService.info('Match invite link updated for match: $matchId');
       return true;
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Failed to update match invite link',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Failed to update match invite link', error: e, stackTrace: stackTrace);
       return false;
     }
   }
 
   Future<bool> cancelMatch(String matchId) async {
     try {
-      await _matchesTable
-          .update({'status': MatchStatus.canceled.toValue()})
-          .eq('id', matchId);
+      await _matchesTable.update({'status': MatchStatus.canceled.toValue()}).eq('id', matchId);
 
       _loggerService.info('Match $matchId canceled successfully.');
       return true;
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error canceling match $matchId',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error canceling match $matchId', error: e, stackTrace: stackTrace);
       return false;
     }
   }
@@ -200,22 +150,21 @@ class MatchService {
       }
       return null;
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error fetching match by invite code',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error fetching match by invite code', error: e, stackTrace: stackTrace);
       return null;
     }
   }
 
+  Stream<List<Match>> subscribeMatches() {
+    // The primaryKey should match your table's primary key column(s)
+    return _matchesTable.stream(primaryKey: ['id']).map<List<Match>>((data) {
+      // data is a List of Map<String, dynamic>
+      return (data as List).map((json) => Match.fromJson(json)).toList();
+    });
+  }
+
   Future<void> declareMatchWinner(String matchId, String winnerId) async {
-    await _matchesTable
-        .update({
-          'winner_id': winnerId,
-          'status': MatchStatus.completed.toValue(),
-        })
-        .eq('id', matchId);
+    await _matchesTable.update({'winner_id': winnerId, 'status': MatchStatus.completed.toValue()}).eq('id', matchId);
   }
 
   Future<bool> acceptMatch(String matchId, String currentUserId) async {
@@ -229,9 +178,7 @@ class MatchService {
 
       // Calculate the required amount – the maximum of the two bet amounts.
       final requiredAmount =
-          match.creatorBetAmount > match.opponentBetAmount
-              ? match.creatorBetAmount
-              : match.opponentBetAmount;
+          match.creatorBetAmount > match.opponentBetAmount ? match.creatorBetAmount : match.opponentBetAmount;
 
       // Check the user's available balance.
       final balances = await _appUserService.getUserBalances(currentUserId);
@@ -255,9 +202,7 @@ class MatchService {
       );
 
       if (!transactionCreated) {
-        _loggerService.error(
-          'Failed to create bet hold transaction for user $currentUserId.',
-        );
+        _loggerService.error('Failed to create bet hold transaction for user $currentUserId.');
         return false;
       }
 
@@ -276,28 +221,19 @@ class MatchService {
               .maybeSingle();
 
       if (response == null) {
-        _loggerService.warning(
-          'Match $matchId could not be accepted (possibly already taken).',
-        );
+        _loggerService.warning('Match $matchId could not be accepted (possibly already taken).');
         return false;
       }
 
       _loggerService.info('Match $matchId accepted by user $currentUserId.');
       return true;
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error accepting match $matchId',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error accepting match $matchId', error: e, stackTrace: stackTrace);
       return false;
     }
   }
 
-  Future<bool> requestMatchCancellation({
-    required String matchId,
-    required String userId,
-  }) async {
+  Future<bool> requestMatchCancellation({required String matchId, required String userId}) async {
     try {
       // Retrieve the current match record.
       final match = await getMatchById(matchId);
@@ -313,34 +249,21 @@ class MatchService {
       }
 
       // Update the match record with the cancellation request.
-      final response =
-          await _matchesTable
-              .update(updateData)
-              .eq('id', matchId)
-              .select()
-              .maybeSingle();
+      final response = await _matchesTable.update(updateData).eq('id', matchId).select().maybeSingle();
       if (response == null) return false;
 
       // Check if both cancellation flags are set.
       final updatedMatch = Match.fromJson(response);
-      if (updatedMatch.creatorCancelRequested == true &&
-          updatedMatch.opponentCancelRequested == true) {
+      if (updatedMatch.creatorCancelRequested == true && updatedMatch.opponentCancelRequested == true) {
         // Both parties have agreed, so cancel the match.
         await _matchesTable
-            .update({
-              'status': MatchStatus.canceled.toValue(),
-              'update_date': DateTime.now().toIso8601String(),
-            })
+            .update({'status': MatchStatus.canceled.toValue(), 'update_date': DateTime.now().toIso8601String()})
             .eq('id', matchId);
       }
 
       return true;
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error requesting match cancellation for $matchId',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error requesting match cancellation for $matchId', error: e, stackTrace: stackTrace);
       return false;
     }
   }
@@ -358,11 +281,7 @@ class MatchService {
       _loggerService.info('Cancellation request reset for match: $matchId');
       return true;
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error resetting cancellation request for $matchId',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error resetting cancellation request for $matchId', error: e, stackTrace: stackTrace);
       return false;
     }
   }

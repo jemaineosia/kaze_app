@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:kaze_app/app/app.dialogs.dart';
 import 'package:kaze_app/app/app.locator.dart';
 import 'package:kaze_app/app/app.router.dart';
@@ -18,8 +20,10 @@ class HomeViewModel extends BaseViewModel {
   final _dialogService = locator<DialogService>();
 
   List<Match> createdMatches = [];
-  List<Match> openMatches = [];
+  List<Match> invitedMatches = [];
   List<Match> matches = [];
+
+  StreamSubscription<List<Match>>? _matchSubscription;
 
   Future<void> fetchHomeMatches() async {
     setBusy(true);
@@ -31,12 +35,10 @@ class HomeViewModel extends BaseViewModel {
       }
 
       createdMatches = await _matchService.fetchMatchesByCreator(user.id);
-      openMatches = await _matchService.fetchInvitedMatches(
-        currentUserId: user.id,
-      );
+      invitedMatches = await _matchService.fetchInvitedMatches(currentUserId: user.id);
 
       // Combine both lists and sort by schedule date
-      matches = [...createdMatches, ...openMatches];
+      matches = [...createdMatches, ...invitedMatches];
       matches.sort((a, b) {
         if (a.schedule == null && b.schedule == null) return 0;
         if (a.schedule == null) return 1;
@@ -47,26 +49,46 @@ class HomeViewModel extends BaseViewModel {
       _loggerService.debug('Fetched Matches - Total: ${matches.length}');
       notifyListeners();
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error fetching home matches',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error fetching home matches', error: e, stackTrace: stackTrace);
     } finally {
       setBusy(false);
     }
   }
 
+  void subscribeToMatches() {
+    final user = _authService.getCurrentUser();
+    if (user == null) return;
+
+    // Subscribe to real-time updates
+    _matchSubscription = _matchService.subscribeMatches().listen((matchList) {
+      // Optionally filter matches based on the current user
+      createdMatches = matchList.where((m) => m.creatorId == user.id).toList();
+      invitedMatches = matchList.where((m) => m.opponentId == user.id).toList();
+      // Combine the lists as you need (here we simply concatenate them)
+      matches = [...createdMatches, ...invitedMatches];
+      matches.sort((a, b) {
+        if (a.schedule == null && b.schedule == null) return 0;
+        if (a.schedule == null) return 1;
+        if (b.schedule == null) return -1;
+        return a.schedule!.compareTo(b.schedule!);
+      });
+      notifyListeners();
+    });
+  }
+
+  @override
+  void dispose() {
+    _matchSubscription?.cancel();
+    super.dispose();
+  }
+
   void navigateToMatchDetails(Match match) {
     _loggerService.info('Navigating to Match Details: ${match.id}');
-    _navigationService.navigateTo(
-      Routes.matchDetailsView,
-      arguments: MatchDetailsViewArguments(matchId: match.id!),
-    );
+    _navigationService.navigateTo(Routes.matchDetailsView, arguments: MatchDetailsViewArguments(matchId: match.id!));
   }
 
   Future<void> findMatch() async {
-    final dialogResponse = await _dialogService.showCustomDialog(
+    await _dialogService.showCustomDialog(
       variant: DialogType.matchFind,
       title: 'Enter Invite Code',
       description: 'Please enter the invite code for the match:',
