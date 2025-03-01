@@ -14,9 +14,19 @@ class BottomnavViewModel extends IndexTrackingViewModel {
     setIndex(index);
   }
 
-  final List<IconData> iconsList = [Icons.home, Icons.chat, Icons.account_balance_wallet, Icons.settings];
+  final List<IconData> iconsList = [
+    Icons.home,
+    Icons.chat,
+    Icons.account_balance_wallet,
+    Icons.settings,
+  ];
 
-  final List<Widget> screensList = [const HomeView(), const ChatView(), const WalletView(), const SettingsView()];
+  final List<Widget> screensList = [
+    const HomeView(),
+    const ChatView(),
+    const WalletView(),
+    const SettingsView(),
+  ];
 
   List<BottomNavBarItem> barItems = [
     BottomNavBarItem(icon: Icons.home, label: "Home"),
