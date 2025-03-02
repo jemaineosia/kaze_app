@@ -8,6 +8,8 @@ import 'package:kaze_app/ui/common/light_mode.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+final RouteObserver<ModalRoute<dynamic>> myRouteObserver = RouteObserver<ModalRoute<dynamic>>();
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await setupLocator();
@@ -36,7 +38,7 @@ class MainApp extends StatelessWidget {
           initialRoute: Routes.startupView,
           onGenerateRoute: StackedRouter().onGenerateRoute,
           navigatorKey: StackedService.navigatorKey,
-          navigatorObservers: [StackedService.routeObserver],
+          navigatorObservers: [myRouteObserver],
         );
       },
     );

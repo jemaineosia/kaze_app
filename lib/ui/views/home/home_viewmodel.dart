@@ -35,9 +35,7 @@ class HomeViewModel extends BaseViewModel {
       }
 
       createdMatches = await _matchService.fetchMatchesByCreator(user.id);
-      invitedMatches = await _matchService.fetchInvitedMatches(
-        currentUserId: user.id,
-      );
+      invitedMatches = await _matchService.fetchInvitedMatches(currentUserId: user.id);
 
       // Combine both lists and sort by schedule date
       matches = [...createdMatches, ...invitedMatches];
@@ -51,11 +49,7 @@ class HomeViewModel extends BaseViewModel {
       _loggerService.debug('Fetched Matches - Total: ${matches.length}');
       notifyListeners();
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error fetching home matches',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error fetching home matches', error: e, stackTrace: stackTrace);
     } finally {
       setBusy(false);
     }
@@ -72,28 +66,35 @@ class HomeViewModel extends BaseViewModel {
       invitedMatches = matchList.where((m) => m.opponentId == user.id).toList();
       // Combine the lists as you need (here we simply concatenate them)
       matches = [...createdMatches, ...invitedMatches];
+      // Sorting based on the latest timestamp among the four date columns
       matches.sort((a, b) {
-        if (a.schedule == null && b.schedule == null) return 0;
-        if (a.schedule == null) return 1;
-        if (b.schedule == null) return -1;
-        return a.schedule!.compareTo(b.schedule!);
+        DateTime? latestA = [
+          a.createdAt,
+          a.adminUpdatedAt,
+          a.creatorUpdatedAt,
+          a.opponentUpdatedAt,
+        ].whereType<DateTime>().fold<DateTime?>(null, (prev, curr) => prev == null || curr.isAfter(prev) ? curr : prev);
+
+        DateTime? latestB = [
+          b.createdAt,
+          b.adminUpdatedAt,
+          b.creatorUpdatedAt,
+          b.opponentUpdatedAt,
+        ].whereType<DateTime>().fold<DateTime?>(null, (prev, curr) => prev == null || curr.isAfter(prev) ? curr : prev);
+
+        if (latestA == null && latestB == null) return 0;
+        if (latestA == null) return 1;
+        if (latestB == null) return -1;
+
+        return latestB.compareTo(latestA); // Sort descending (latest first)
       });
       notifyListeners();
     });
   }
 
-  @override
-  void dispose() {
-    _matchSubscription?.cancel();
-    super.dispose();
-  }
-
   void navigateToMatchDetails(Match match) {
     _loggerService.info('Navigating to Match Details: ${match.id}');
-    _navigationService.navigateTo(
-      Routes.matchDetailsView,
-      arguments: MatchDetailsViewArguments(matchId: match.id!),
-    );
+    _navigationService.navigateTo(Routes.matchDetailsView, arguments: MatchDetailsViewArguments(matchId: match.id!));
   }
 
   Future<void> findMatch() async {
@@ -105,5 +106,11 @@ class HomeViewModel extends BaseViewModel {
       secondaryButtonTitle: 'Cancel',
       barrierDismissible: true,
     );
+  }
+
+  @override
+  void dispose() {
+    _matchSubscription?.cancel();
+    super.dispose();
   }
 }
