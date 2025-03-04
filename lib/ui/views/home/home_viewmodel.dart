@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:kaze_app/app/app.dialogs.dart';
 import 'package:kaze_app/app/app.locator.dart';
 import 'package:kaze_app/app/app.router.dart';
+import 'package:kaze_app/common/enums/match_status.dart';
 import 'package:kaze_app/models/match.dart';
 import 'package:kaze_app/services/auth_service.dart';
 import 'package:kaze_app/services/logger_service.dart';
@@ -25,20 +26,20 @@ class HomeViewModel extends BaseViewModel {
 
   StreamSubscription<List<Match>>? _matchSubscription;
 
-  Future<void> fetchHomeMatches() async {
-    setBusy(true);
-    try {
+  void subscribeToMatches() {
+    final user = _authService.getCurrentUser();
+    if (user == null) return;
+
+    // Subscribe to real-time updates
+    _matchSubscription = _matchService.subscribeMatches().listen((matchList) {
       final user = _authService.getCurrentUser();
-      if (user == null) {
-        _loggerService.warning('No logged-in user.');
-        return;
-      }
+      if (user == null) return;
 
-      createdMatches = await _matchService.fetchMatchesByCreator(user.id);
-      invitedMatches = await _matchService.fetchInvitedMatches(currentUserId: user.id);
-
-      // Combine both lists and sort by schedule date
+      createdMatches = matchList.where((m) => m.creatorId == user.id).toList();
+      invitedMatches = matchList.where((m) => m.opponentId == user.id).toList();
       matches = [...createdMatches, ...invitedMatches];
+
+      // Use the same sorting by schedule
       matches.sort((a, b) {
         if (a.schedule == null && b.schedule == null) return 0;
         if (a.schedule == null) return 1;
@@ -46,48 +47,6 @@ class HomeViewModel extends BaseViewModel {
         return a.schedule!.compareTo(b.schedule!);
       });
 
-      _loggerService.debug('Fetched Matches - Total: ${matches.length}');
-      notifyListeners();
-    } catch (e, stackTrace) {
-      _loggerService.error('Error fetching home matches', error: e, stackTrace: stackTrace);
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  void subscribeToMatches() {
-    final user = _authService.getCurrentUser();
-    if (user == null) return;
-
-    // Subscribe to real-time updates
-    _matchSubscription = _matchService.subscribeMatches().listen((matchList) {
-      // Optionally filter matches based on the current user
-      createdMatches = matchList.where((m) => m.creatorId == user.id).toList();
-      invitedMatches = matchList.where((m) => m.opponentId == user.id).toList();
-      // Combine the lists as you need (here we simply concatenate them)
-      matches = [...createdMatches, ...invitedMatches];
-      // Sorting based on the latest timestamp among the four date columns
-      matches.sort((a, b) {
-        DateTime? latestA = [
-          a.createdAt,
-          a.adminUpdatedAt,
-          a.creatorUpdatedAt,
-          a.opponentUpdatedAt,
-        ].whereType<DateTime>().fold<DateTime?>(null, (prev, curr) => prev == null || curr.isAfter(prev) ? curr : prev);
-
-        DateTime? latestB = [
-          b.createdAt,
-          b.adminUpdatedAt,
-          b.creatorUpdatedAt,
-          b.opponentUpdatedAt,
-        ].whereType<DateTime>().fold<DateTime?>(null, (prev, curr) => prev == null || curr.isAfter(prev) ? curr : prev);
-
-        if (latestA == null && latestB == null) return 0;
-        if (latestA == null) return 1;
-        if (latestB == null) return -1;
-
-        return latestB.compareTo(latestA); // Sort descending (latest first)
-      });
       notifyListeners();
     });
   }
@@ -109,6 +68,9 @@ class HomeViewModel extends BaseViewModel {
   }
 
   String getDisplayStatus(Match match) {
+    if (match.status == MatchStatus.canceled) {
+      return match.status.toDisplay();
+    }
     if (match.creatorCancelRequested || match.opponentCancelRequested) {
       return 'Cancellation Requested';
     }

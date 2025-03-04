@@ -20,7 +20,6 @@ class _HomeViewState extends State<HomeView> with RouteAware {
   void initState() {
     super.initState();
     _viewModel = locator<HomeViewModel>();
-    _viewModel.fetchHomeMatches();
     _viewModel.subscribeToMatches();
   }
 
@@ -34,11 +33,6 @@ class _HomeViewState extends State<HomeView> with RouteAware {
   void dispose() {
     myRouteObserver.unsubscribe(this);
     super.dispose();
-  }
-
-  @override
-  void didPopNext() {
-    _viewModel.fetchHomeMatches();
   }
 
   @override

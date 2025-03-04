@@ -208,6 +208,28 @@ class MatchDetailsViewModel extends BaseViewModel {
     }
   }
 
+  String getDisplayStatus(Match match, String currentUserId) {
+    // If the match is canceled, display its canceled status.
+    if (match.status == MatchStatus.canceled) {
+      return match.status.toDisplay();
+    }
+
+    // For the creator, show "Cancellation Requested" only if the opponent requested cancellation.
+    if (currentUserId == match.creatorId) {
+      if (match.opponentCancelRequested == true) {
+        return "Cancellation Requested";
+      }
+    } else {
+      // For a non-creator, show it if the creator requested cancellation.
+      if (match.creatorCancelRequested == true) {
+        return "Cancellation Requested";
+      }
+    }
+
+    // Otherwise, display the normal status.
+    return match.status.toDisplay();
+  }
+
   @override
   void dispose() {
     _matchSubscription?.cancel();

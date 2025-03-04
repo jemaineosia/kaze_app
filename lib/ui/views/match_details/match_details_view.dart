@@ -28,12 +28,13 @@ class MatchDetailsView extends StackedView<MatchDetailsViewModel> {
                     Text('Match Title: ${viewModel.match!.matchTitle}'),
                     Text('Description: ${viewModel.match!.matchDescription}'),
                     Text(
-                      'Status: ${viewModel.match!.creatorCancelRequested || viewModel.match!.opponentCancelRequested ? "Cancellation Requested" : viewModel.match!.status.toDisplay()}',
+                      'Status: ${viewModel.getDisplayStatus(viewModel.match!, viewModel.currentUserId)}',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: viewModel.match!.opponentId == null ? Colors.green : Colors.orange,
                       ),
                     ),
+
                     Text('Creator Bet: P${viewModel.match!.creatorBetAmount.toStringAsFixed(2)}'),
                     Text('Opponent Bet: P${viewModel.match!.opponentBetAmount.toStringAsFixed(2)}'),
                     const SizedBox(height: 20),
@@ -64,8 +65,8 @@ class MatchDetailsView extends StackedView<MatchDetailsViewModel> {
                           ],
                         ),
                       ),
-                    // If a cancellation request is pending:
-                    if (viewModel.cancellationRequested)
+                    // Only show cancellation pending messages if the match is not canceled
+                    if (viewModel.cancellationRequested && viewModel.match!.status != MatchStatus.canceled)
                       viewModel.canRespondToCancellation
                           ? Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
