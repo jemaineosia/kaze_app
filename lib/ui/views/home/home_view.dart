@@ -81,7 +81,7 @@ class _HomeViewState extends State<HomeView> with RouteAware {
                                           children: [
                                             Text(match.matchDescription),
                                             Text(
-                                              'Status: ${match.status.toDisplay()}',
+                                              'Status: ${viewModel.getDisplayStatus(match)}',
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 color: match.opponentId == null ? Colors.green : Colors.orange,

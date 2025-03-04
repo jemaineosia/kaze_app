@@ -108,6 +108,13 @@ class HomeViewModel extends BaseViewModel {
     );
   }
 
+  String getDisplayStatus(Match match) {
+    if (match.creatorCancelRequested || match.opponentCancelRequested) {
+      return 'Cancellation Requested';
+    }
+    return match.status.toDisplay();
+  }
+
   @override
   void dispose() {
     _matchSubscription?.cancel();
