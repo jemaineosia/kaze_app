@@ -233,7 +233,7 @@ class AppuserService {
   }
 
   StreamSubscription subscribeToUser(String userId, Function callback) {
-    return Supabase.instance.client.from('appusers:id=eq.$userId').stream(primaryKey: ['id']).listen((data) {
+    return _appUserTable.stream(primaryKey: ['id']).eq('id', userId).listen((data) {
       _loggerService.info("Realtime update on appusers: $data");
       callback();
     });
