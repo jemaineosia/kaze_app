@@ -13,11 +13,7 @@ class WalletView extends StackedView<WalletViewModel> {
   const WalletView({Key? key}) : super(key: key);
 
   @override
-  Widget builder(
-    BuildContext context,
-    WalletViewModel viewModel,
-    Widget? child,
-  ) {
+  Widget builder(BuildContext context, WalletViewModel viewModel, Widget? child) {
     return Scaffold(
       appBar: const KazeAppBar(),
       body: Padding(
@@ -39,11 +35,7 @@ class WalletView extends StackedView<WalletViewModel> {
             // **Pending Cashout**
             Text(
               "Pending Cashout: P${viewModel.pendingCashout.toStringAsFixed(2)}",
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w500,
-                color: Colors.red,
-              ),
+              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500, color: Colors.red),
             ),
 
             Gap(10.h),
@@ -51,11 +43,7 @@ class WalletView extends StackedView<WalletViewModel> {
             // **Cash On Hold**
             Text(
               "Cash On Hold: P${viewModel.onHoldBalance.toStringAsFixed(2)}",
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w500,
-                color: Colors.orange,
-              ),
+              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500, color: Colors.orange),
             ),
 
             Gap(20.h),
@@ -95,18 +83,12 @@ class WalletView extends StackedView<WalletViewModel> {
                         itemCount: viewModel.transactions.length,
                         itemBuilder: (context, index) {
                           final transaction = viewModel.transactions[index];
-                          final isCashIn =
-                              transaction.transactionType ==
-                              TransactionType.cashIn;
-                          final isCashOutPending =
-                              transaction.transactionType ==
-                              TransactionType.cashOutPending;
+                          final isCashIn = transaction.transactionType == TransactionType.cashIn;
+                          final isCashOutPending = transaction.transactionType == TransactionType.cashOutPending;
 
                           return ListTile(
                             leading: Icon(
-                              isCashIn
-                                  ? Icons.arrow_downward
-                                  : Icons.arrow_upward,
+                              isCashIn ? Icons.arrow_downward : Icons.arrow_upward,
                               color:
                                   isCashIn
                                       ? Colors.green
@@ -119,26 +101,18 @@ class WalletView extends StackedView<WalletViewModel> {
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14.sp,
-                                color:
-                                    isCashOutPending
-                                        ? Colors.orange
-                                        : Colors.black,
+                                color: isCashOutPending ? Colors.orange : Colors.black,
                               ),
                             ),
                             subtitle: Text(
-                              transaction.transactionType ==
-                                          TransactionType.cashOut &&
-                                      transaction.processedAt != null
+                              transaction.transactionType == TransactionType.cashOut && transaction.processedAt != null
                                   ? timeago.format(transaction.processedAt!)
                                   : timeago.format(transaction.createdAt),
                             ),
 
                             trailing: Text(
                               "P${transaction.amount.toStringAsFixed(2)}",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14.sp,
-                              ),
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp),
                             ),
                           );
                         },
@@ -156,5 +130,6 @@ class WalletView extends StackedView<WalletViewModel> {
   @override
   void onViewModelReady(WalletViewModel viewModel) {
     viewModel.fetchWalletData();
+    viewModel.subscribeToWalletData();
   }
 }

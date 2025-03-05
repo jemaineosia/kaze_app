@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:kaze_app/app/app.locator.dart';
 import 'package:kaze_app/app/app.router.dart';
 import 'package:kaze_app/common/enums/transaction_type.dart';
@@ -22,6 +24,9 @@ class WalletViewModel extends BaseViewModel {
   double totalBalance = 0.0;
   List<Transaction> transactions = [];
 
+  StreamSubscription? _userSubscription;
+  StreamSubscription? _transactionSubscription;
+
   /// Fetch wallet data (balance & transactions)
   Future<void> fetchWalletData() async {
     setBusy(true);
@@ -41,9 +46,7 @@ class WalletViewModel extends BaseViewModel {
       // Fetch transactions (cash-in & cash-out only)
       transactions = await _transactionService.getUserTransactions(user.id);
 
-      _loggerService.debug(
-        "Fetched Transactions: ${transactions.map((t) => t.toJson()).toList()}",
-      );
+      _loggerService.debug("Fetched Transactions: ${transactions.map((t) => t.toJson()).toList()}");
 
       // Filter cash_out_pending transactions
       pendingCashout = transactions
@@ -61,14 +64,21 @@ class WalletViewModel extends BaseViewModel {
 
       notifyListeners();
     } catch (e, stackTrace) {
-      _loggerService.error(
-        "Error fetching wallet data.",
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error("Error fetching wallet data.", error: e, stackTrace: stackTrace);
     } finally {
       setBusy(false);
     }
+  }
+
+  void subscribeToWalletData() {
+    final user = _authService.getCurrentUser();
+    if (user == null) return;
+
+    // Subscribe to realtime updates on the user's record
+    _userSubscription = _appUserService.subscribeToUser(user.id, fetchWalletData);
+
+    // Subscribe to realtime updates on the user's transactions
+    _transactionSubscription = _transactionService.subscribeToTransactions(user.id, fetchWalletData);
   }
 
   void navigateToCashIn() {
@@ -79,5 +89,12 @@ class WalletViewModel extends BaseViewModel {
   void navigateToCashOut() {
     _loggerService.info("Navigating to Cash Out screen.");
     _navigationService.navigateTo(Routes.cashoutView);
+  }
+
+  @override
+  void dispose() {
+    _userSubscription?.cancel();
+    _transactionSubscription?.cancel();
+    super.dispose();
   }
 }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:kaze_app/app/app.locator.dart';
@@ -52,13 +53,10 @@ class AppuserService {
 
     try {
       _loggerService.info('Refreshing user data for userId: $userId');
-      final response =
-          await _appUserTable.select().eq('id', userId).maybeSingle();
+      final response = await _appUserTable.select().eq('id', userId).maybeSingle();
 
       if (response == null) {
-        _loggerService.warning(
-          'No user found when refreshing user data for userId: $userId',
-        );
+        _loggerService.warning('No user found when refreshing user data for userId: $userId');
         return null;
       }
 
@@ -75,11 +73,7 @@ class AppuserService {
       _loggerService.info('User data refreshed and cached for userId: $userId');
       return user;
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error refreshing user data for userId: $userId',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error refreshing user data for userId: $userId', error: e, stackTrace: stackTrace);
       return null;
     }
   }
@@ -88,26 +82,13 @@ class AppuserService {
     try {
       _loggerService.info('Checking if username is taken: $username');
 
-      final response =
-          await _appUserTable
-              .select('username')
-              .eq('username', username)
-              .limit(1)
-              .maybeSingle();
+      final response = await _appUserTable.select('username').eq('username', username).limit(1).maybeSingle();
 
       final isTaken = response != null;
-      _loggerService.debug(
-        isTaken
-            ? 'Username is taken: $username'
-            : 'Username is available: $username',
-      );
+      _loggerService.debug(isTaken ? 'Username is taken: $username' : 'Username is available: $username');
       return isTaken;
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error checking if username is taken: $username',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error checking if username is taken: $username', error: e, stackTrace: stackTrace);
       return false; // Fail gracefully
     }
   }
@@ -116,8 +97,7 @@ class AppuserService {
     try {
       _loggerService.info('Fetching user by username: $username');
 
-      final response =
-          await _appUserTable.select().eq('username', username).maybeSingle();
+      final response = await _appUserTable.select().eq('username', username).maybeSingle();
 
       if (response == null) {
         _loggerService.warning('No user found with username: $username');
@@ -125,9 +105,7 @@ class AppuserService {
       }
 
       if (!response.containsKey('id') || !response.containsKey('username')) {
-        _loggerService.error(
-          'Unexpected response format for user: $username. Response: $response',
-        );
+        _loggerService.error('Unexpected response format for user: $username. Response: $response');
         return null;
       }
 
@@ -137,11 +115,7 @@ class AppuserService {
       _loggerService.debug('User fetched successfully: $username');
       return user;
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error fetching user by username: $username',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error fetching user by username: $username', error: e, stackTrace: stackTrace);
       return null;
     }
   }
@@ -156,8 +130,7 @@ class AppuserService {
     try {
       _loggerService.info('Fetching username by userId: $userId');
 
-      final response =
-          await _appUserTable.select().eq('id', userId).maybeSingle();
+      final response = await _appUserTable.select().eq('id', userId).maybeSingle();
 
       if (response == null) {
         _loggerService.warning('No user found with userId: $userId');
@@ -170,19 +143,14 @@ class AppuserService {
       await cacheUser(user);
       return user.username;
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error fetching username by userId: $userId',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error fetching username by userId: $userId', error: e, stackTrace: stackTrace);
       return null; // Return null if an error occurs
     }
   }
 
   Future<double> getUserBalance(String userId) async {
     try {
-      final response =
-          await _appUserTable.select('balance').eq('id', userId).maybeSingle();
+      final response = await _appUserTable.select('balance').eq('id', userId).maybeSingle();
 
       if (response == null || response['balance'] == null) {
         _loggerService.warning('No balance data found for userId: $userId');
@@ -193,33 +161,21 @@ class AppuserService {
       if (balance is num) {
         return balance.toDouble();
       } else {
-        _loggerService.error(
-          'Unexpected balance type for userId: $userId. Received: ${balance.runtimeType}',
-        );
+        _loggerService.error('Unexpected balance type for userId: $userId. Received: ${balance.runtimeType}');
         return 0.0;
       }
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error fetching user balance for userId: $userId',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error fetching user balance for userId: $userId', error: e, stackTrace: stackTrace);
       return 0.0;
     }
   }
 
   Future<double> getUserOnHoldBalance(String userId) async {
     try {
-      final response =
-          await _appUserTable
-              .select('on_hold_balance')
-              .eq('id', userId)
-              .maybeSingle();
+      final response = await _appUserTable.select('on_hold_balance').eq('id', userId).maybeSingle();
 
       if (response == null || response['on_hold_balance'] == null) {
-        _loggerService.warning(
-          'No on_hold_balance data found for userId: $userId',
-        );
+        _loggerService.warning('No on_hold_balance data found for userId: $userId');
         return 0.0;
       }
 
@@ -233,22 +189,14 @@ class AppuserService {
         return 0.0;
       }
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error fetching user on_hold_balance for userId: $userId',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error fetching user on_hold_balance for userId: $userId', error: e, stackTrace: stackTrace);
       return 0.0;
     }
   }
 
   Future<Map<String, double>> getUserBalances(String userId) async {
     try {
-      final response =
-          await _appUserTable
-              .select('balance, on_hold_balance')
-              .eq('id', userId)
-              .maybeSingle();
+      final response = await _appUserTable.select('balance, on_hold_balance').eq('id', userId).maybeSingle();
 
       if (response == null) {
         return {'balance': 0.0, 'on_hold_balance': 0.0};
@@ -258,17 +206,9 @@ class AppuserService {
       final onHoldBalance = (response['on_hold_balance'] as num).toDouble();
       final availableBalance = totalBalance - onHoldBalance;
 
-      return {
-        'balance': totalBalance,
-        'on_hold_balance': onHoldBalance,
-        'available_balance': availableBalance,
-      };
+      return {'balance': totalBalance, 'on_hold_balance': onHoldBalance, 'available_balance': availableBalance};
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error fetching user balances for userId: $userId',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error fetching user balances for userId: $userId', error: e, stackTrace: stackTrace);
       return {'balance': 0.0, 'on_hold_balance': 0.0, 'available_balance': 0.0};
     }
   }
@@ -276,29 +216,26 @@ class AppuserService {
   Future<String?> getUserIdByUsername(String username) async {
     try {
       final response =
-          await Supabase.instance.client
-              .from('appusers')
-              .select('id')
-              .eq('username', username)
-              .maybeSingle();
+          await Supabase.instance.client.from('appusers').select('id').eq('username', username).maybeSingle();
 
       if (response == null) return null;
 
       if (!response.containsKey('id')) {
-        _loggerService.error(
-          'Unexpected response format when fetching user ID for $username: $response',
-        );
+        _loggerService.error('Unexpected response format when fetching user ID for $username: $response');
         return null;
       }
 
       return response['id'] as String;
     } catch (e, stackTrace) {
-      _loggerService.error(
-        'Error fetching user ID by username: $username',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      _loggerService.error('Error fetching user ID by username: $username', error: e, stackTrace: stackTrace);
       return null;
     }
+  }
+
+  StreamSubscription subscribeToUser(String userId, Function callback) {
+    return Supabase.instance.client.from('appusers:id=eq.$userId').stream(primaryKey: ['id']).listen((data) {
+      _loggerService.info("Realtime update on appusers: $data");
+      callback();
+    });
   }
 }
