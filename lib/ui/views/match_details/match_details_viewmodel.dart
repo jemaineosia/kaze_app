@@ -94,14 +94,11 @@ class MatchDetailsViewModel extends BaseViewModel {
 
   Future<void> acceptMatch() async {
     setBusy(true);
-    final success = await _matchService.acceptMatch(match!.id!, currentUserId);
-    if (success) {
+    final result = await _matchService.acceptMatch(match!.id!, currentUserId);
+    if (result.success) {
       await fetchMatch();
     } else {
-      await _dialogService.showDialog(
-        title: 'Error',
-        description: 'Failed to accept match. It may have already been accepted.',
-      );
+      await _dialogService.showDialog(title: 'Error', description: result.errorMessage ?? 'Failed to accept match.');
     }
     setBusy(false);
   }

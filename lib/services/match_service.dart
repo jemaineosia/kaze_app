@@ -2,6 +2,7 @@ import 'package:kaze_app/app/app.locator.dart';
 import 'package:kaze_app/common/enums/match_status.dart';
 import 'package:kaze_app/common/enums/transaction_type.dart';
 import 'package:kaze_app/models/match.dart';
+import 'package:kaze_app/models/operation_result.dart';
 import 'package:kaze_app/models/transaction.dart';
 import 'package:kaze_app/services/appuser_service.dart';
 import 'package:kaze_app/services/logger_service.dart';
@@ -177,36 +178,30 @@ class MatchService {
     await _matchesTable.update({'winner_id': winnerId, 'status': MatchStatus.completed.toValue()}).eq('id', matchId);
   }
 
-  Future<bool> acceptMatch(String matchId, String currentUserId) async {
+  Future<OperationResult> acceptMatch(String matchId, String currentUserId) async {
     try {
-      // Fetch the match details if not already available.
       final match = await getMatchById(matchId);
       if (match == null) {
         _loggerService.warning('Match not found: $matchId');
-        await _dialogService.showDialog(title: 'Error', description: 'Match not found. Please try again later.');
-        return false;
+        return OperationResult(success: false, errorMessage: 'Match not found. Please try again later.');
       }
 
-      // Calculate the required amount – the maximum of the two bet amounts.
       final requiredAmount =
           match.creatorBetAmount > match.opponentBetAmount ? match.creatorBetAmount : match.opponentBetAmount;
 
-      // Check the user's available balance.
       final balances = await _appUserService.getUserBalances(currentUserId);
       final availableBalance = balances['available_balance'] ?? 0.0;
       if (availableBalance < requiredAmount) {
         _loggerService.warning(
           'Insufficient funds for user $currentUserId. Required: $requiredAmount, available: $availableBalance',
         );
-        await _dialogService.showDialog(
-          title: 'Insufficient Funds',
-          description:
-              'You do not have enough funds to accept this match.\nRequired: P$requiredAmount\nAvailable: P$availableBalance',
+        return OperationResult(
+          success: false,
+          errorMessage:
+              'You do not have enough funds to accept this match. Required: P$requiredAmount, available: P$availableBalance',
         );
-        return false;
       }
 
-      // Deduct and hold the funds by creating a bet hold transaction.
       final transactionCreated = await _transactionService.createTransaction(
         Transaction(
           id: const Uuid().v4(),
@@ -219,11 +214,9 @@ class MatchService {
 
       if (!transactionCreated) {
         _loggerService.error('Failed to create bet hold transaction for user $currentUserId.');
-        await _dialogService.showDialog(title: 'Error', description: 'Failed to create bet hold transaction for user.');
-        return false;
+        return OperationResult(success: false, errorMessage: 'Failed to create bet hold transaction.');
       }
 
-      // Update the match record, ensuring no opponent has been set and status is pending.
       final response =
           await _matchesTable
               .update({
@@ -239,18 +232,17 @@ class MatchService {
 
       if (response == null) {
         _loggerService.warning('Match $matchId could not be accepted (possibly already taken).');
-        await _dialogService.showDialog(
-          title: 'Error',
-          description: 'Match could not be accepted. It may have already been taken.',
+        return OperationResult(
+          success: false,
+          errorMessage: 'Match could not be accepted. It may have already been taken.',
         );
-        return false;
       }
 
       _loggerService.info('Match $matchId accepted by user $currentUserId.');
-      return true;
+      return OperationResult(success: true);
     } catch (e, stackTrace) {
       _loggerService.error('Error accepting match $matchId', error: e, stackTrace: stackTrace);
-      return false;
+      return OperationResult(success: false, errorMessage: 'An unexpected error occurred while accepting the match.');
     }
   }
 
