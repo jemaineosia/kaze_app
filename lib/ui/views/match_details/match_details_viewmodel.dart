@@ -113,9 +113,9 @@ class MatchDetailsViewModel extends BaseViewModel {
     );
 
     if (confirmResponse?.confirmed == true) {
-      final requestSuccess = await _matchService.requestMatchCancellation(matchId: match!.id!, userId: currentUserId);
+      final cancelResult = await _matchService.requestMatchCancellation(matchId: match!.id!, userId: currentUserId);
 
-      if (requestSuccess) {
+      if (cancelResult.success) {
         await fetchMatch();
         if (match!.creatorCancelRequested && match!.opponentCancelRequested) {
           // Both parties agreed—finalize cancellation.
@@ -152,15 +152,15 @@ class MatchDetailsViewModel extends BaseViewModel {
     if (confirmResponse?.confirmed == true) {
       if (accept) {
         // Record the responding party's cancellation acceptance by calling requestMatchCancellation again.
-        final requestSuccess = await _matchService.requestMatchCancellation(matchId: match!.id!, userId: currentUserId);
+        final requestResult = await _matchService.requestMatchCancellation(matchId: match!.id!, userId: currentUserId);
 
-        if (requestSuccess) {
+        if (requestResult.success) {
           // Refresh match data to update the cancellation flags.
           await fetchMatch();
           if (match!.creatorCancelRequested && match!.opponentCancelRequested) {
             // Both parties have now requested cancellation – finalize it.
-            final cancelSuccess = await _matchService.cancelMatch(match!.id!);
-            if (cancelSuccess) {
+            final cancelResult = await _matchService.cancelMatch(match!.id!, currentUserId);
+            if (cancelResult.success) {
               await _dialogService.showDialog(
                 title: 'Match Canceled',
                 description:
@@ -188,8 +188,8 @@ class MatchDetailsViewModel extends BaseViewModel {
         }
       } else {
         // Reject cancellation: reset cancellation flags.
-        final success = await _matchService.resetCancellationRequest(match!.id!);
-        if (success) {
+        final resetResult = await _matchService.resetCancellationRequest(match!.id!);
+        if (resetResult.success) {
           await _dialogService.showDialog(
             title: 'Cancellation Rejected',
             description: 'You have rejected the cancellation request. The match will continue.',

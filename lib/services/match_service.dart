@@ -46,32 +46,30 @@ class MatchService {
     }
   }
 
-  Future<bool> updateMatch(Match match) async {
+  Future<OperationResult> updateMatch(Match match) async {
     if (match.id == null) {
       _loggerService.error('Cannot update match: id is null.');
-      return false;
+      return OperationResult(success: false, errorMessage: 'Match id is null.');
     }
 
     try {
       await _matchesTable.update(match.toJson()).eq('id', match.id!);
-
       _loggerService.info('Match updated successfully: ${match.toJson()}');
-      return true;
+      return OperationResult(success: true);
     } catch (e, stackTrace) {
       _loggerService.error('Error updating match', error: e, stackTrace: stackTrace);
-      return false;
+      return OperationResult(success: false, errorMessage: 'Error updating match.');
     }
   }
 
-  Future<bool> deleteMatch(String matchId) async {
+  Future<OperationResult> deleteMatch(String matchId) async {
     try {
       await _matchesTable.delete().eq('id', matchId);
-
       _loggerService.info('Match deleted successfully: $matchId');
-      return true;
+      return OperationResult(success: true);
     } catch (e, stackTrace) {
       _loggerService.error('Error deleting match', error: e, stackTrace: stackTrace);
-      return false;
+      return OperationResult(success: false, errorMessage: 'Error deleting match.');
     }
   }
 
@@ -116,27 +114,36 @@ class MatchService {
     }
   }
 
-  Future<bool> updateMatchInviteLink(String matchId, String inviteLink) async {
+  Future<OperationResult> updateMatchInviteLink(String matchId, String inviteLink) async {
     try {
       await _matchesTable.update({'invite_link': inviteLink}).eq('id', matchId);
-
       _loggerService.info('Match invite link updated for match: $matchId');
-      return true;
+      return OperationResult(success: true);
     } catch (e, stackTrace) {
       _loggerService.error('Failed to update match invite link', error: e, stackTrace: stackTrace);
-      return false;
+      return OperationResult(success: false, errorMessage: 'Failed to update match invite link.');
     }
   }
 
-  Future<bool> cancelMatch(String matchId) async {
+  Future<OperationResult> cancelMatch(String matchId, String currentUserId) async {
     try {
-      await _matchesTable.update({'status': MatchStatus.canceled.toValue()}).eq('id', matchId);
-
+      final match = await getMatchById(matchId);
+      if (match == null) {
+        _loggerService.warning('Match not found: $matchId');
+        return OperationResult(success: false, errorMessage: 'Match not found. Please try again later.');
+      }
+      Map<String, dynamic> updateData = {'status': MatchStatus.canceled.toValue()};
+      if (currentUserId == match.creatorId) {
+        updateData['creator_updated_at'] = DateTime.now().toIso8601String();
+      } else if (currentUserId == match.opponentId) {
+        updateData['opponent_updated_at'] = DateTime.now().toIso8601String();
+      }
+      await _matchesTable.update(updateData).eq('id', matchId);
       _loggerService.info('Match $matchId canceled successfully.');
-      return true;
+      return OperationResult(success: true);
     } catch (e, stackTrace) {
       _loggerService.error('Error canceling match $matchId', error: e, stackTrace: stackTrace);
-      return false;
+      return OperationResult(success: false, errorMessage: 'Error canceling match.');
     }
   }
 
@@ -246,12 +253,13 @@ class MatchService {
     }
   }
 
-  Future<bool> requestMatchCancellation({required String matchId, required String userId}) async {
+  Future<OperationResult> requestMatchCancellation({required String matchId, required String userId}) async {
     try {
-      // Retrieve the current match record.
       final match = await getMatchById(matchId);
-      if (match == null) return false;
-
+      if (match == null) {
+        _loggerService.warning('Match not found: $matchId');
+        return OperationResult(success: false, errorMessage: 'Match not found.');
+      }
       Map<String, dynamic> updateData = {};
       if (match.creatorId == userId) {
         updateData['creator_cancel_requested'] = true;
@@ -260,28 +268,21 @@ class MatchService {
         updateData['opponent_cancel_requested'] = true;
         updateData['opponent_updated_at'] = DateTime.now().toIso8601String();
       }
-
-      // Update the match record with the cancellation request.
       final response = await _matchesTable.update(updateData).eq('id', matchId).select().maybeSingle();
-      if (response == null) return false;
-
-      // Check if both cancellation flags are set.
+      if (response == null) {
+        return OperationResult(success: false, errorMessage: 'Failed to record cancellation request.');
+      }
       final updatedMatch = Match.fromJson(response);
       if (updatedMatch.creatorCancelRequested == true && updatedMatch.opponentCancelRequested == true) {
-        // Both parties have agreed, so cancel the match.
-
-        Map<String, dynamic> updateData = {'status': MatchStatus.canceled.toValue()};
-
+        Map<String, dynamic> finalUpdate = {'status': MatchStatus.canceled.toValue()};
         if (userId == match.creatorId) {
-          updateData['creator_updated_at'] = DateTime.now().toIso8601String();
+          finalUpdate['creator_updated_at'] = DateTime.now().toIso8601String();
         } else if (userId == match.opponentId) {
-          updateData['opponent_updated_at'] = DateTime.now().toIso8601String();
+          finalUpdate['opponent_updated_at'] = DateTime.now().toIso8601String();
         }
-
-        final cancelSuccess = await _matchesTable.update(updateData).eq('id', matchId);
-
-        if (cancelSuccess != null) {
-          // Refund the creator
+        final cancelRes = await _matchesTable.update(finalUpdate).eq('id', matchId);
+        if (cancelRes != null) {
+          // Process refund transactions:
           await _transactionService.createTransaction(
             Transaction(
               id: const Uuid().v4(),
@@ -291,8 +292,6 @@ class MatchService {
               transactionType: TransactionType.betRelease,
             ),
           );
-
-          // Refund the opponent (if they joined)
           if (updatedMatch.opponentId != null) {
             await _transactionService.createTransaction(
               Transaction(
@@ -306,15 +305,14 @@ class MatchService {
           }
         }
       }
-
-      return true;
+      return OperationResult(success: true);
     } catch (e, stackTrace) {
       _loggerService.error('Error requesting match cancellation for $matchId', error: e, stackTrace: stackTrace);
-      return false;
+      return OperationResult(success: false, errorMessage: 'Error requesting match cancellation.');
     }
   }
 
-  Future<bool> resetCancellationRequest(String matchId) async {
+  Future<OperationResult> resetCancellationRequest(String matchId) async {
     try {
       await _matchesTable
           .update({
@@ -325,10 +323,10 @@ class MatchService {
           })
           .eq('id', matchId);
       _loggerService.info('Cancellation request reset for match: $matchId');
-      return true;
+      return OperationResult(success: true);
     } catch (e, stackTrace) {
       _loggerService.error('Error resetting cancellation request for $matchId', error: e, stackTrace: stackTrace);
-      return false;
+      return OperationResult(success: false, errorMessage: 'Error resetting cancellation request.');
     }
   }
 }
