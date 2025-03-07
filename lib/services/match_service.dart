@@ -6,6 +6,7 @@ import 'package:kaze_app/models/transaction.dart';
 import 'package:kaze_app/services/appuser_service.dart';
 import 'package:kaze_app/services/logger_service.dart';
 import 'package:kaze_app/services/transaction_service.dart';
+import 'package:stacked_services/stacked_services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 
@@ -14,6 +15,7 @@ class MatchService {
   final _transactionService = locator<TransactionService>();
   final _appUserService = locator<AppuserService>();
   final _matchesTable = Supabase.instance.client.from('matches');
+  final _dialogService = locator<DialogService>();
 
   Future<List<Match>> fetchMatches() async {
     try {
@@ -181,6 +183,7 @@ class MatchService {
       final match = await getMatchById(matchId);
       if (match == null) {
         _loggerService.warning('Match not found: $matchId');
+        await _dialogService.showDialog(title: 'Error', description: 'Match not found. Please try again later.');
         return false;
       }
 
@@ -194,6 +197,11 @@ class MatchService {
       if (availableBalance < requiredAmount) {
         _loggerService.warning(
           'Insufficient funds for user $currentUserId. Required: $requiredAmount, available: $availableBalance',
+        );
+        await _dialogService.showDialog(
+          title: 'Insufficient Funds',
+          description:
+              'You do not have enough funds to accept this match.\nRequired: P$requiredAmount\nAvailable: P$availableBalance',
         );
         return false;
       }
@@ -211,6 +219,7 @@ class MatchService {
 
       if (!transactionCreated) {
         _loggerService.error('Failed to create bet hold transaction for user $currentUserId.');
+        await _dialogService.showDialog(title: 'Error', description: 'Failed to create bet hold transaction for user.');
         return false;
       }
 
@@ -230,6 +239,10 @@ class MatchService {
 
       if (response == null) {
         _loggerService.warning('Match $matchId could not be accepted (possibly already taken).');
+        await _dialogService.showDialog(
+          title: 'Error',
+          description: 'Match could not be accepted. It may have already been taken.',
+        );
         return false;
       }
 
@@ -264,9 +277,42 @@ class MatchService {
       final updatedMatch = Match.fromJson(response);
       if (updatedMatch.creatorCancelRequested == true && updatedMatch.opponentCancelRequested == true) {
         // Both parties have agreed, so cancel the match.
-        await _matchesTable
-            .update({'status': MatchStatus.canceled.toValue(), 'update_date': DateTime.now().toIso8601String()})
-            .eq('id', matchId);
+
+        Map<String, dynamic> updateData = {'status': MatchStatus.canceled.toValue()};
+
+        if (userId == match.creatorId) {
+          updateData['creator_updated_at'] = DateTime.now().toIso8601String();
+        } else if (userId == match.opponentId) {
+          updateData['opponent_updated_at'] = DateTime.now().toIso8601String();
+        }
+
+        final cancelSuccess = await _matchesTable.update(updateData).eq('id', matchId);
+
+        if (cancelSuccess != null) {
+          // Refund the creator
+          await _transactionService.createTransaction(
+            Transaction(
+              id: const Uuid().v4(),
+              userId: updatedMatch.creatorId,
+              matchId: matchId,
+              amount: updatedMatch.creatorBetAmount,
+              transactionType: TransactionType.betRelease,
+            ),
+          );
+
+          // Refund the opponent (if they joined)
+          if (updatedMatch.opponentId != null) {
+            await _transactionService.createTransaction(
+              Transaction(
+                id: const Uuid().v4(),
+                userId: updatedMatch.opponentId!,
+                matchId: matchId,
+                amount: updatedMatch.opponentBetAmount,
+                transactionType: TransactionType.betRelease,
+              ),
+            );
+          }
+        }
       }
 
       return true;

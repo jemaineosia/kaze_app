@@ -154,18 +154,40 @@ class MatchDetailsViewModel extends BaseViewModel {
 
     if (confirmResponse?.confirmed == true) {
       if (accept) {
-        // Accept cancellation: finalize cancellation.
-        final success = await _matchService.cancelMatch(match!.id!);
-        if (success) {
-          await _dialogService.showDialog(
-            title: 'Match Canceled',
-            description:
-                'You have accepted the cancellation request. The match is canceled and funds will be refunded.',
-          );
+        // Record the responding party's cancellation acceptance by calling requestMatchCancellation again.
+        final requestSuccess = await _matchService.requestMatchCancellation(matchId: match!.id!, userId: currentUserId);
+
+        if (requestSuccess) {
+          // Refresh match data to update the cancellation flags.
           await fetchMatch();
-          _navigationService.back();
+          if (match!.creatorCancelRequested && match!.opponentCancelRequested) {
+            // Both parties have now requested cancellation – finalize it.
+            final cancelSuccess = await _matchService.cancelMatch(match!.id!);
+            if (cancelSuccess) {
+              await _dialogService.showDialog(
+                title: 'Match Canceled',
+                description:
+                    'You have accepted the cancellation request. The match is canceled and funds will be refunded.',
+              );
+              await fetchMatch();
+              _navigationService.back();
+            } else {
+              await _dialogService.showDialog(
+                title: 'Error',
+                description: 'Failed to cancel the match. Please try again.',
+              );
+            }
+          } else {
+            await _dialogService.showDialog(
+              title: 'Cancellation Accepted',
+              description: 'Your response has been recorded. Waiting for the other party to confirm cancellation.',
+            );
+          }
         } else {
-          await _dialogService.showDialog(title: 'Error', description: 'Failed to cancel the match. Please try again.');
+          await _dialogService.showDialog(
+            title: 'Error',
+            description: 'Failed to record your cancellation acceptance. Please try again.',
+          );
         }
       } else {
         // Reject cancellation: reset cancellation flags.
