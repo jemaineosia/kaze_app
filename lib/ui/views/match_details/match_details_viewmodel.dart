@@ -32,7 +32,9 @@ class MatchDetailsViewModel extends BaseViewModel {
   }
 
   void subscribeToMatchUpdates() {
-    _matchSubscription = _matchService.subscribeMatchById(matchId).listen((matchData) {
+    _matchSubscription = _matchService.subscribeMatchById(matchId).listen((
+      matchData,
+    ) {
       if (matchData != null) {
         match = matchData;
         notifyListeners();
@@ -55,7 +57,10 @@ class MatchDetailsViewModel extends BaseViewModel {
   // For non-creators: Accept button is shown if the match is pending and no opponent has been set.
   // If the match is pending and no opponent has joined, any non-creator can accept.
   bool get canAccept =>
-      match?.status == MatchStatus.pending && match?.opponentId == null && isNonCreator && !cancellationRequested;
+      match?.status == MatchStatus.pending &&
+      match?.opponentId == null &&
+      isNonCreator &&
+      !cancellationRequested;
 
   // For cancellation:
   // - If pending: Only allow cancellation if no cancellation request is active, and only the creator can cancel.
@@ -72,7 +77,8 @@ class MatchDetailsViewModel extends BaseViewModel {
     }
     if (match!.status == MatchStatus.ongoing) {
       // For ongoing matches, allow cancellation if the current user is either the creator or the opponent.
-      return currentUserId == match!.creatorId || currentUserId == match!.opponentId;
+      return currentUserId == match!.creatorId ||
+          currentUserId == match!.opponentId;
     }
     return false;
   }
@@ -81,7 +87,8 @@ class MatchDetailsViewModel extends BaseViewModel {
   bool get canDeclareWinner {
     if (match == null) return false;
     return match!.status == MatchStatus.ongoing &&
-        (isCreator || (match!.opponentId != null && currentUserId == match!.opponentId));
+        (isCreator ||
+            (match!.opponentId != null && currentUserId == match!.opponentId));
   }
 
   Future<void> fetchMatch() async {
@@ -98,7 +105,10 @@ class MatchDetailsViewModel extends BaseViewModel {
     if (result.success) {
       await fetchMatch();
     } else {
-      await _dialogService.showDialog(title: 'Error', description: result.errorMessage ?? 'Failed to accept match.');
+      await _dialogService.showDialog(
+        title: 'Error',
+        description: result.errorMessage ?? 'Failed to accept match.',
+      );
     }
     setBusy(false);
   }
@@ -107,13 +117,17 @@ class MatchDetailsViewModel extends BaseViewModel {
     // This method is used by the party initiating the cancellation.
     final confirmResponse = await _dialogService.showConfirmationDialog(
       title: 'Cancel Match',
-      description: 'Do you want to request cancellation of this match? Both parties must agree to cancel.',
+      description:
+          'Do you want to request cancellation of this match? Both parties must agree to cancel.',
       confirmationTitle: 'Request Cancellation',
       cancelTitle: 'No',
     );
 
     if (confirmResponse?.confirmed == true) {
-      final cancelResult = await _matchService.requestMatchCancellation(matchId: match!.id!, userId: currentUserId);
+      final cancelResult = await _matchService.requestMatchCancellation(
+        matchId: match!.id!,
+        userId: currentUserId,
+      );
 
       if (cancelResult.success) {
         await fetchMatch();
@@ -121,19 +135,22 @@ class MatchDetailsViewModel extends BaseViewModel {
           // Both parties agreed—finalize cancellation.
           await _dialogService.showDialog(
             title: 'Match Canceled',
-            description: 'Both parties have agreed to cancel the match. Funds will be released.',
+            description:
+                'Both parties have agreed to cancel the match. Funds will be released.',
           );
           _navigationService.back();
         } else {
           await _dialogService.showDialog(
             title: 'Cancellation Requested',
-            description: 'Your cancellation request has been recorded. Waiting for the other party to respond.',
+            description:
+                'Your cancellation request has been recorded. Waiting for the other party to respond.',
           );
         }
       } else {
         await _dialogService.showDialog(
           title: 'Error',
-          description: 'Failed to record your cancellation request. Please try again.',
+          description:
+              'Failed to record your cancellation request. Please try again.',
         );
       }
     }
@@ -144,7 +161,10 @@ class MatchDetailsViewModel extends BaseViewModel {
   Future<void> respondToCancellation({required bool accept}) async {
     final confirmResponse = await _dialogService.showConfirmationDialog(
       title: 'Respond to Cancellation',
-      description: accept ? 'Do you accept cancellation of this match?' : 'Do you reject the cancellation request?',
+      description:
+          accept
+              ? 'Do you accept cancellation of this match?'
+              : 'Do you reject the cancellation request?',
       confirmationTitle: accept ? 'Accept Cancellation' : 'Reject Cancellation',
       cancelTitle: 'Cancel',
     );
@@ -152,14 +172,20 @@ class MatchDetailsViewModel extends BaseViewModel {
     if (confirmResponse?.confirmed == true) {
       if (accept) {
         // Record the responding party's cancellation acceptance by calling requestMatchCancellation again.
-        final requestResult = await _matchService.requestMatchCancellation(matchId: match!.id!, userId: currentUserId);
+        final requestResult = await _matchService.requestMatchCancellation(
+          matchId: match!.id!,
+          userId: currentUserId,
+        );
 
         if (requestResult.success) {
           // Refresh match data to update the cancellation flags.
           await fetchMatch();
           if (match!.creatorCancelRequested && match!.opponentCancelRequested) {
             // Both parties have now requested cancellation – finalize it.
-            final cancelResult = await _matchService.cancelMatch(match!.id!, currentUserId);
+            final cancelResult = await _matchService.cancelMatch(
+              match!.id!,
+              currentUserId,
+            );
             if (cancelResult.success) {
               await _dialogService.showDialog(
                 title: 'Match Canceled',
@@ -177,28 +203,34 @@ class MatchDetailsViewModel extends BaseViewModel {
           } else {
             await _dialogService.showDialog(
               title: 'Cancellation Accepted',
-              description: 'Your response has been recorded. Waiting for the other party to confirm cancellation.',
+              description:
+                  'Your response has been recorded. Waiting for the other party to confirm cancellation.',
             );
           }
         } else {
           await _dialogService.showDialog(
             title: 'Error',
-            description: 'Failed to record your cancellation acceptance. Please try again.',
+            description:
+                'Failed to record your cancellation acceptance. Please try again.',
           );
         }
       } else {
         // Reject cancellation: reset cancellation flags.
-        final resetResult = await _matchService.resetCancellationRequest(match!.id!);
+        final resetResult = await _matchService.resetCancellationRequest(
+          match!.id!,
+        );
         if (resetResult.success) {
           await _dialogService.showDialog(
             title: 'Cancellation Rejected',
-            description: 'You have rejected the cancellation request. The match will continue.',
+            description:
+                'You have rejected the cancellation request. The match will continue.',
           );
           await fetchMatch();
         } else {
           await _dialogService.showDialog(
             title: 'Error',
-            description: 'Failed to reject the cancellation request. Please try again.',
+            description:
+                'Failed to reject the cancellation request. Please try again.',
           );
         }
       }

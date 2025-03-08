@@ -7,6 +7,7 @@ import 'package:kaze_app/models/transaction.dart';
 import 'package:kaze_app/models/transaction_dto.dart';
 import 'package:kaze_app/services/logger_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
 
 class TransactionService {
   final _transactionTable = Supabase.instance.client.from('transactions');
@@ -159,5 +160,53 @@ class TransactionService {
       _loggerService.info("Realtime update on transactions: $data");
       callback();
     });
+  }
+
+  Future<bool> updateBetHoldToBetRelease(String matchId, String userId, double amount) async {
+    try {
+      // Query for the bet hold transaction for this match and user.
+      final response =
+          await _transactionTable
+              .select()
+              .eq('match_id', matchId)
+              .eq('user_id', userId)
+              .eq('transaction_type', TransactionType.betHold.toValue())
+              .maybeSingle();
+
+      if (response == null) {
+        // If no betHold transaction exists, create a new betRelease transaction.
+        _loggerService.info(
+          'No betHold found for user $userId on match $matchId. Creating new betRelease transaction.',
+        );
+        return await createTransaction(
+          Transaction(
+            id: const Uuid().v4(),
+            userId: userId,
+            matchId: matchId,
+            amount: amount,
+            transactionType: TransactionType.betRelease,
+          ),
+        );
+      }
+
+      // Otherwise, update the transaction type to betRelease.
+      final updateResponse =
+          await _transactionTable
+              .update({
+                'transaction_type': TransactionType.betRelease.toValue(),
+                'processed_at': DateTime.now().toIso8601String(),
+              })
+              .eq('id', response['id'])
+              .maybeSingle();
+
+      return updateResponse != null;
+    } catch (e, stackTrace) {
+      _loggerService.error(
+        'Error updating bet hold to bet release for user $userId on match $matchId',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      return false;
+    }
   }
 }

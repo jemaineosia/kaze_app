@@ -12,7 +12,11 @@ class MatchDetailsView extends StackedView<MatchDetailsViewModel> {
   const MatchDetailsView({required this.matchId, Key? key}) : super(key: key);
 
   @override
-  Widget builder(BuildContext context, MatchDetailsViewModel viewModel, Widget? child) {
+  Widget builder(
+    BuildContext context,
+    MatchDetailsViewModel viewModel,
+    Widget? child,
+  ) {
     return Scaffold(
       appBar: AppBar(title: const Text('Match Details')),
       body:
@@ -31,12 +35,19 @@ class MatchDetailsView extends StackedView<MatchDetailsViewModel> {
                       'Status: ${viewModel.getDisplayStatus(viewModel.match!, viewModel.currentUserId)}',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: viewModel.match!.opponentId == null ? Colors.green : Colors.orange,
+                        color:
+                            viewModel.match!.opponentId == null
+                                ? Colors.green
+                                : Colors.orange,
                       ),
                     ),
 
-                    Text('Creator Bet: P${viewModel.match!.creatorBetAmount.toStringAsFixed(2)}'),
-                    Text('Opponent Bet: P${viewModel.match!.opponentBetAmount.toStringAsFixed(2)}'),
+                    Text(
+                      'Creator Bet: P${viewModel.match!.creatorBetAmount.toStringAsFixed(2)}',
+                    ),
+                    Text(
+                      'Opponent Bet: P${viewModel.match!.opponentBetAmount.toStringAsFixed(2)}',
+                    ),
                     const SizedBox(height: 20),
                     // For pending matches, show the invite code to the creator.
                     if (viewModel.match!.status == MatchStatus.pending &&
@@ -50,41 +61,62 @@ class MatchDetailsView extends StackedView<MatchDetailsViewModel> {
                             Expanded(
                               child: Text(
                                 'Invite Code: ${viewModel.match!.inviteCode}',
-                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                             IconButton(
                               icon: const Icon(Icons.copy),
                               onPressed: () {
-                                Clipboard.setData(ClipboardData(text: viewModel.match!.inviteCode!));
-                                ScaffoldMessenger.of(
-                                  context,
-                                ).showSnackBar(const SnackBar(content: Text('Invite code copied to clipboard')));
+                                Clipboard.setData(
+                                  ClipboardData(
+                                    text: viewModel.match!.inviteCode!,
+                                  ),
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Invite code copied to clipboard',
+                                    ),
+                                  ),
+                                );
                               },
                             ),
                           ],
                         ),
                       ),
                     // Only show cancellation pending messages if the match is not canceled
-                    if (viewModel.cancellationRequested && viewModel.match!.status != MatchStatus.canceled)
+                    if (viewModel.cancellationRequested &&
+                        viewModel.match!.status != MatchStatus.canceled)
                       viewModel.canRespondToCancellation
                           ? Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text(
                                 'Your opponent has requested to cancel the match.',
-                                style: TextStyle(fontSize: 16, color: Colors.red),
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.red,
+                                ),
                               ),
                               const SizedBox(height: 10),
                               Row(
                                 children: [
                                   TextButton(
-                                    onPressed: () => viewModel.respondToCancellation(accept: true),
+                                    onPressed:
+                                        () => viewModel.respondToCancellation(
+                                          accept: true,
+                                        ),
                                     child: const Text('Accept Cancellation'),
                                   ),
                                   const SizedBox(width: 10),
                                   TextButton(
-                                    onPressed: () => viewModel.respondToCancellation(accept: false),
+                                    onPressed:
+                                        () => viewModel.respondToCancellation(
+                                          accept: false,
+                                        ),
                                     child: const Text('Reject Cancellation'),
                                   ),
                                 ],
@@ -99,13 +131,25 @@ class MatchDetailsView extends StackedView<MatchDetailsViewModel> {
                       // Normal action buttons when no cancellation is pending.
                       // For non-creators: Show Accept button if allowed.
                       if (viewModel.isNonCreator && viewModel.canAccept)
-                        KazeButton(text: 'Accept Match', onTap: viewModel.acceptMatch, isLoading: viewModel.isBusy),
+                        KazeButton(
+                          text: 'Accept Match',
+                          onTap: viewModel.acceptMatch,
+                          isLoading: viewModel.isBusy,
+                        ),
                       // For both parties in ongoing match: Show Cancel and Declare Winner buttons.
                       if (viewModel.canCancel)
-                        KazeButton(text: 'Cancel Match', onTap: viewModel.cancelMatch, isLoading: viewModel.isBusy),
+                        KazeButton(
+                          text: 'Cancel Match',
+                          onTap: viewModel.cancelMatch,
+                          isLoading: viewModel.isBusy,
+                        ),
                       const SizedBox(height: 10),
                       if (viewModel.canDeclareWinner)
-                        KazeButton(text: 'Declare Winner', onTap: viewModel.declareWinner, isLoading: viewModel.isBusy),
+                        KazeButton(
+                          text: 'Declare Winner',
+                          onTap: viewModel.declareWinner,
+                          isLoading: viewModel.isBusy,
+                        ),
                     ],
                   ],
                 ),
@@ -114,7 +158,8 @@ class MatchDetailsView extends StackedView<MatchDetailsViewModel> {
   }
 
   @override
-  MatchDetailsViewModel viewModelBuilder(BuildContext context) => MatchDetailsViewModel(matchId);
+  MatchDetailsViewModel viewModelBuilder(BuildContext context) =>
+      MatchDetailsViewModel(matchId);
 
   @override
   void onViewModelReady(MatchDetailsViewModel viewModel) {

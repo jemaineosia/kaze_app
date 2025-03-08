@@ -55,8 +55,17 @@ class _HomeViewState extends State<HomeView> with RouteAware {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text('Matches', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                            ElevatedButton(onPressed: () => viewModel.findMatch(), child: const Text('Find Match')),
+                            const Text(
+                              'Matches',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            ElevatedButton(
+                              onPressed: () => viewModel.findMatch(),
+                              child: const Text('Find Match'),
+                            ),
                           ],
                         ),
                         const SizedBox(height: 16),
@@ -71,14 +80,18 @@ class _HomeViewState extends State<HomeView> with RouteAware {
                                       return ListTile(
                                         title: Text(match.matchTitle),
                                         subtitle: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(match.matchDescription),
                                             Text(
                                               'Status: ${viewModel.getDisplayStatus(match)}',
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                color: match.opponentId == null ? Colors.green : Colors.orange,
+                                                color:
+                                                    match.opponentId == null
+                                                        ? Colors.green
+                                                        : Colors.orange,
                                               ),
                                             ),
                                             Text(
@@ -86,7 +99,9 @@ class _HomeViewState extends State<HomeView> with RouteAware {
                                             ),
                                           ],
                                         ),
-                                        onTap: () => viewModel.navigateToMatchDetails(match),
+                                        onTap:
+                                            () => viewModel
+                                                .navigateToMatchDetails(match),
                                       );
                                     },
                                   ),

@@ -53,7 +53,10 @@ class HomeViewModel extends BaseViewModel {
 
   void navigateToMatchDetails(Match match) {
     _loggerService.info('Navigating to Match Details: ${match.id}');
-    _navigationService.navigateTo(Routes.matchDetailsView, arguments: MatchDetailsViewArguments(matchId: match.id!));
+    _navigationService.navigateTo(
+      Routes.matchDetailsView,
+      arguments: MatchDetailsViewArguments(matchId: match.id!),
+    );
   }
 
   Future<void> findMatch() async {

@@ -35,9 +35,8 @@ mixin $CashinView {
       return _CashinViewTextEditingControllers[key]!;
     }
 
-    _CashinViewTextEditingControllers[key] = TextEditingController(
-      text: initialValue,
-    );
+    _CashinViewTextEditingControllers[key] =
+        TextEditingController(text: initialValue);
     return _CashinViewTextEditingControllers[key]!;
   }
 
@@ -72,7 +71,10 @@ mixin $CashinView {
   /// Updates the formData on the FormViewModel
   void _updateFormData(FormStateHelper model, {bool forceValidate = false}) {
     model.setData(
-      model.formValueMap..addAll({AmountValueKey: amountController.text}),
+      model.formValueMap
+        ..addAll({
+          AmountValueKey: amountController.text,
+        }),
     );
 
     if (_autoTextFieldValidation || forceValidate) {
@@ -102,9 +104,10 @@ mixin $CashinView {
 }
 
 extension ValueProperties on FormStateHelper {
-  bool get hasAnyValidationMessage => this.fieldsValidationMessages.values.any(
-    (validation) => validation != null,
-  );
+  bool get hasAnyValidationMessage => this
+      .fieldsValidationMessages
+      .values
+      .any((validation) => validation != null);
 
   bool get isFormValid {
     if (!_autoTextFieldValidation) this.validateForm();
@@ -115,7 +118,9 @@ extension ValueProperties on FormStateHelper {
   String? get amountValue => this.formValueMap[AmountValueKey] as String?;
 
   set amountValue(String? value) {
-    this.setData(this.formValueMap..addAll({AmountValueKey: value}));
+    this.setData(
+      this.formValueMap..addAll({AmountValueKey: value}),
+    );
 
     if (_CashinViewTextEditingControllers.containsKey(AmountValueKey)) {
       _CashinViewTextEditingControllers[AmountValueKey]?.text = value ?? '';
@@ -163,6 +168,7 @@ String? getValidationMessage(String key) {
 }
 
 /// Updates the fieldsValidationMessages on the FormViewModel
-void updateValidationData(FormStateHelper model) => model.setValidationMessages(
-  {AmountValueKey: getValidationMessage(AmountValueKey)},
-);
+void updateValidationData(FormStateHelper model) =>
+    model.setValidationMessages({
+      AmountValueKey: getValidationMessage(AmountValueKey),
+    });

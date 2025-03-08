@@ -273,7 +273,8 @@ class MatchService {
         return OperationResult(success: false, errorMessage: 'Failed to record cancellation request.');
       }
       final updatedMatch = Match.fromJson(response);
-      if (updatedMatch.creatorCancelRequested == true && updatedMatch.opponentCancelRequested == true) {
+      if (updatedMatch.creatorCancelRequested && updatedMatch.opponentCancelRequested) {
+        // Both parties have agreed, so update the match status to canceled.
         Map<String, dynamic> finalUpdate = {'status': MatchStatus.canceled.toValue()};
         if (userId == match.creatorId) {
           finalUpdate['creator_updated_at'] = DateTime.now().toIso8601String();
@@ -282,26 +283,23 @@ class MatchService {
         }
         final cancelRes = await _matchesTable.update(finalUpdate).eq('id', matchId);
         if (cancelRes != null) {
-          // Process refund transactions:
-          await _transactionService.createTransaction(
-            Transaction(
-              id: const Uuid().v4(),
-              userId: updatedMatch.creatorId,
-              matchId: matchId,
-              amount: updatedMatch.creatorBetAmount,
-              transactionType: TransactionType.betRelease,
-            ),
+          // Instead of creating new refund transactions, update the existing betHold transactions.
+          final refundCreator = await _transactionService.updateBetHoldToBetRelease(
+            matchId,
+            updatedMatch.creatorId,
+            updatedMatch.creatorBetAmount,
           );
           if (updatedMatch.opponentId != null) {
-            await _transactionService.createTransaction(
-              Transaction(
-                id: const Uuid().v4(),
-                userId: updatedMatch.opponentId!,
-                matchId: matchId,
-                amount: updatedMatch.opponentBetAmount,
-                transactionType: TransactionType.betRelease,
-              ),
+            final refundOpponent = await _transactionService.updateBetHoldToBetRelease(
+              matchId,
+              updatedMatch.opponentId!,
+              updatedMatch.opponentBetAmount,
             );
+            if (!refundCreator || !refundOpponent) {
+              return OperationResult(success: false, errorMessage: 'Error processing refund transactions.');
+            }
+          } else if (!refundCreator) {
+            return OperationResult(success: false, errorMessage: 'Error processing refund for creator.');
           }
         }
       }
