@@ -104,7 +104,10 @@ class WalletView extends StackedView<WalletViewModel> {
                                       : Colors.red,
                             ),
                             title: Text(
-                              transaction.referenceNote.toString(),
+                              transaction.transactionType == TransactionType.cashInPending ||
+                                      transaction.transactionType == TransactionType.cashOutPending
+                                  ? transaction.transactionType.toString()
+                                  : transaction.referenceNote.toString(),
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14.sp,
