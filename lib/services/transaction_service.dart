@@ -149,7 +149,9 @@ class TransactionService {
     final response = await _transactionTable
         .select()
         .eq('user_id', userId)
-        .or("transaction_type.eq.cash_in, transaction_type.eq.cash_out, transaction_type.eq.cash_out_pending")
+        .or(
+          "transaction_type.eq.cash_in, transaction_type.eq.cash_in_pending, transaction_type.eq.cash_out,transaction_type.eq.cash_out_pending",
+        )
         .order('created_at', ascending: false);
 
     return (response as List).map((json) => Transaction.fromJson(json)).toList();

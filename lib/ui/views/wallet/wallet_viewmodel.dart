@@ -18,6 +18,7 @@ class WalletViewModel extends BaseViewModel {
   final _navigationService = locator<NavigationService>();
   final _loggerService = locator<LoggerService>();
 
+  double pendingCashIn = 0.0;
   double currentBalance = 0.0;
   double pendingCashout = 0.0;
   double onHoldBalance = 0.0;
@@ -53,6 +54,11 @@ class WalletViewModel extends BaseViewModel {
           .where((t) => t.transactionType == TransactionType.cashOutPending)
           .fold(0.0, (sum, t) => sum + t.amount);
 
+      // Sum up pending cash-in amounts.
+      pendingCashIn = transactions
+          .where((t) => t.transactionType == TransactionType.cashInPending)
+          .fold(0.0, (sum, t) => sum + t.amount);
+
       // Available balance should exclude pending cashout
       currentBalance = totalBalance - onHoldBalance - pendingCashout;
 
@@ -61,6 +67,7 @@ class WalletViewModel extends BaseViewModel {
       _loggerService.debug("Pending Cashout: $pendingCashout");
       _loggerService.debug("Cash On Hold: $onHoldBalance");
       _loggerService.debug("Current Balance: $currentBalance");
+      _loggerService.debug("Pending Cash-In: $pendingCashIn");
 
       notifyListeners();
     } catch (e, stackTrace) {

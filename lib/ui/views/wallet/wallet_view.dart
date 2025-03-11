@@ -42,16 +42,6 @@ class WalletView extends StackedView<WalletViewModel> {
                 ),
               ),
             ),
-            // Display Pending Cashout
-            Card(
-              child: ListTile(
-                title: const Text("Pending Cashout"),
-                trailing: Text(
-                  "P${viewModel.pendingCashout.toStringAsFixed(2)}",
-                  style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
-                ),
-              ),
-            ),
             // Display Available Balance
             Card(
               child: ListTile(
