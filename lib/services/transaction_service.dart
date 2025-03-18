@@ -158,10 +158,19 @@ class TransactionService {
   }
 
   StreamSubscription subscribeToTransactions(String userId, Function callback) {
-    return _transactionTable.stream(primaryKey: ['id']).eq('user_id', userId).listen((data) {
-      _loggerService.info("Realtime update on transactions: $data");
-      callback();
-    });
+    return _transactionTable
+        .stream(primaryKey: ['id'])
+        .eq('user_id', userId)
+        .listen(
+          (data) {
+            _loggerService.info("Realtime update on transactions: $data");
+            callback();
+          },
+          onError: (error) {
+            _loggerService.error("Realtime update error on transactions", error: error);
+            // Optionally, call your callback or trigger a resubscription here.
+          },
+        );
   }
 
   Future<bool> updateBetHoldToBetRelease(String matchId, String userId, double amount) async {
